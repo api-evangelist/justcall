@@ -1,0 +1,65 @@
+aid: justcall
+name: JustCall
+description: >-
+  JustCall is a cloud-based phone system and contact center platform that
+  provides voice calling, SMS/MMS messaging, IVR, call analytics, and contact
+  management for small and mid-sized businesses. The platform integrates with
+  CRMs, helpdesks, and automation tools. JustCall exposes REST APIs and
+  webhooks for programmatically managing calls, SMS, contacts, phone numbers,
+  and call dispositions, authenticated via API key plus API secret in headers.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Voice
+  - SMS
+  - Cloud Phone
+  - Contact Center
+  - Telephony
+  - Communications
+url: >-
+  https://raw.githubusercontent.com/api-evangelist/justcall/refs/heads/main/apis.yml
+created: '2026-05-11'
+modified: '2026-05-11'
+specificationVersion: '0.19'
+apis:
+  - aid: justcall:rest-api
+    name: JustCall REST API
+    description: >-
+      REST API for placing calls, sending SMS and MMS messages, managing
+      contacts, phone numbers, users, and call dispositions in JustCall.
+      Authentication uses an API key and API secret passed in the
+      Authorization header. Webhooks notify on completed calls and SMS events.
+    humanURL: https://developer.justcall.io/docs/overview
+    baseURL: https://api.justcall.io/v2.1
+    tags:
+      - Voice
+      - SMS
+      - Telephony
+      - Contact Center
+      - Webhooks
+    properties:
+      - type: Documentation
+        url: https://developer.justcall.io/docs/overview
+      - type: API Reference
+        url: https://developer.justcall.io/reference
+      - type: Send SMS Endpoint
+        url: https://developer.justcall.io/reference/texts_new_v21
+      - type: Webhooks
+        url: https://justcall.io/product/api-and-webhooks/
+
+common:
+  - type: Website
+    url: https://justcall.io
+  - type: Documentation
+    url: https://developer.justcall.io/docs/overview
+  - type: Developer Portal
+    url: https://justcall.io/developer-docs/
+  - type: Pricing
+    url: https://justcall.io/pricing
+  - type: Sign Up
+    url: https://justcall.io/signup
+  - type: Support
+    url: https://help.justcall.io
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
