@@ -40,7 +40,7 @@ apis:
     properties:
       - type: Documentation
         url: https://developer.justcall.io/docs/overview
-      - type: API Reference
+      - type: APIReference
         url: https://developer.justcall.io/reference
       - type: Send SMS Endpoint
         url: https://developer.justcall.io/reference/texts_new_v21
@@ -56,7 +56,7 @@ common:
     url: https://justcall.io/developer-docs/
   - type: Pricing
     url: https://justcall.io/pricing
-  - type: Sign Up
+  - type: SignUp
     url: https://justcall.io/signup
   - type: Support
     url: https://help.justcall.io
