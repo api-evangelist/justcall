@@ -48,6 +48,8 @@ apis:
         url: https://justcall.io/product/api-and-webhooks/
 
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/justcall-io
   - type: Website
     url: https://justcall.io
   - type: Documentation
