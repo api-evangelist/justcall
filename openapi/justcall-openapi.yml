@@ -1,0 +1,84 @@
+openapi: 3.1.0
+info:
+  title: JustCall REST API
+  description: >-
+    REST API for the JustCall cloud phone and contact center platform. Covers
+    placing and listing calls, sending SMS, managing contacts, users, phone
+    numbers, and related resources. Authentication uses an API key and API
+    secret obtained from the JustCall dashboard.
+  version: "2.1"
+  contact:
+    name: JustCall Developer Portal
+    url: https://developer.justcall.io/docs/overview
+servers:
+  - url: https://api.justcall.io/v2.1
+    description: JustCall production API (v2.1)
+security:
+  - ApiKeyAuth: []
+paths:
+  /calls:
+    get:
+      summary: List calls
+      description: >-
+        Retrieves all calls linked to an account, with optional filters to
+        refine the call selection (such as date range, agent, contact, or
+        direction).
+      operationId: listCalls
+      tags:
+        - Calls
+      responses:
+        "200":
+          description: A list of calls.
+  /contacts:
+    post:
+      summary: Create a contact
+      description: Adds a new contact to the JustCall Contacts section.
+      operationId: createContact
+      tags:
+        - Contacts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: New contact payload.
+      responses:
+        "200":
+          description: The created contact.
+  /texts:
+    post:
+      summary: Send SMS or MMS
+      description: >-
+        Sends an SMS or MMS message via JustCall. Useful for automation and
+        outbound messaging flows.
+      operationId: sendText
+      tags:
+        - SMS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Outbound text message payload (from number, to number, body, optional media).
+      responses:
+        "200":
+          description: The accepted outbound message.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >-
+        JustCall authentication. Pass the API key and API secret as defined in
+        the JustCall Authentication documentation (typically combined and
+        passed in the Authorization header).
+tags:
+  - name: Calls
+    description: Manage and query voice calls handled through JustCall.
+  - name: Contacts
+    description: Create and manage contacts in the JustCall directory.
+  - name: SMS
+    description: Send and manage SMS/MMS messages.
