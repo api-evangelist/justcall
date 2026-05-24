@@ -62,6 +62,8 @@ common:
     url: https://justcall.io/signup
   - type: Support
     url: https://help.justcall.io
+  - type: LLMsTxt
+    url: https://developer.justcall.io/llms.txt
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
