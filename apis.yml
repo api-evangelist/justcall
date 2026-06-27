@@ -54,15 +54,15 @@ common:
     url: https://justcall.io
   - type: Documentation
     url: https://developer.justcall.io/docs/overview
-  - type: Developer Portal
+  - type: DeveloperPortal
     url: https://justcall.io/developer-docs/
   - type: Pricing
     url: https://justcall.io/pricing
-  - type: SignUp
+  - type: Signup
     url: https://justcall.io/signup
   - type: Support
     url: https://help.justcall.io
-  - type: LLMsTxt
+  - type: LlmsText
     url: https://developer.justcall.io/llms.txt
 maintainers:
   - FN: Kin Lane
