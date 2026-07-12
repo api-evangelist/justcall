@@ -48,6 +48,12 @@ apis:
         url: https://justcall.io/product/api-and-webhooks/
 
 common:
+  - type: TrustCenter
+    url: security/justcall-trust-center.yml
+  - type: DomainSecurity
+    url: security/justcall-domain-security.yml
+  - type: Authentication
+    url: authentication/justcall-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/justcall-io
   - type: Website
@@ -64,6 +70,8 @@ common:
     url: https://help.justcall.io
   - type: LlmsText
     url: https://developer.justcall.io/llms.txt
+  - url: https://justcall.io/blog/
+    type: Blog
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
