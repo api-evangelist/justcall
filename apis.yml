@@ -48,6 +48,8 @@ apis:
         url: https://justcall.io/product/api-and-webhooks/
 
 common:
+  - type: AgenticAccess
+    url: agentic-access/justcall-agentic-access.yml
   - type: TrustCenter
     url: security/justcall-trust-center.yml
   - type: DomainSecurity
