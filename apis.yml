@@ -8,7 +8,19 @@ description: >-
   webhooks for programmatically managing calls, SMS, contacts, phone numbers,
   and call dispositions, authenticated via API key plus API secret in headers.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/justcall.png
 tags:
   - Voice
   - SMS
@@ -22,31 +34,59 @@ created: '2026-05-11'
 modified: '2026-05-11'
 specificationVersion: '0.19'
 apis:
-  - aid: justcall:rest-api
-    name: JustCall REST API
-    description: >-
-      REST API for placing calls, sending SMS and MMS messages, managing
-      contacts, phone numbers, users, and call dispositions in JustCall.
-      Authentication uses an API key and API secret passed in the
-      Authorization header. Webhooks notify on completed calls and SMS events.
-    humanURL: https://developer.justcall.io/docs/overview
-    baseURL: https://api.justcall.io/v2.1
-    tags:
-      - Voice
-      - SMS
-      - Telephony
-      - Contact Center
-      - Webhooks
-    properties:
-      - type: Documentation
-        url: https://developer.justcall.io/docs/overview
-      - type: APIReference
-        url: https://developer.justcall.io/reference
-      - type: Send SMS Endpoint
-        url: https://developer.justcall.io/reference/texts_new_v21
-      - type: Webhooks
-        url: https://justcall.io/product/api-and-webhooks/
-
+- aid: justcall:rest-api
+  name: JustCall REST API
+  description: >-
+    REST API for placing calls, sending SMS and MMS messages, managing contacts, phone numbers, users,
+    and call dispositions in JustCall. Authentication uses an API key and API secret passed in the Authorization
+    header. Webhooks notify on completed calls and SMS events.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Voice
+  - SMS
+  - Telephony
+  - Contact Center
+  - Webhooks
+  properties:
+  - type: Documentation
+    url: https://developer.justcall.io/docs/overview
+  - type: APIReference
+    url: https://developer.justcall.io/reference
+  - type: Send SMS Endpoint
+    url: https://developer.justcall.io/reference/texts_new_v21
+  - type: Webhooks
+    url: https://justcall.io/product/api-and-webhooks/
+- aid: justcall:justcall-calls-api
+  name: JustCall Calls API
+  description: Manage and query voice calls handled through JustCall.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Calls
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-calls-api-openapi.yml
+- aid: justcall:justcall-contacts-api
+  name: JustCall Contacts API
+  description: Create and manage contacts in the JustCall directory.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-contacts-api-openapi.yml
+- aid: justcall:justcall-sms-api
+  name: JustCall SMS API
+  description: Send and manage SMS/MMS messages.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - SMS
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-sms-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/justcall-agentic-access.yml
