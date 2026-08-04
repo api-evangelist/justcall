@@ -1,0 +1,18 @@
+{
+  "provider": "justcall",
+  "sources": [
+    "justcall-calls-api-openapi.yml",
+    "justcall-contacts-api-openapi.yml",
+    "justcall-sms-api-openapi.yml"
+  ],
+  "outputs": [
+    "justcall-calls-api-openapi.yml",
+    "justcall-contacts-api-openapi.yml",
+    "justcall-sms-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
