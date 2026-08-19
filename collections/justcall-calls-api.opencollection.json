@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "JustCall REST Calls API",
+    "version": "2.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Calls",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List calls",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.justcall.io/v2.1/calls"
+          },
+          "docs": "Retrieves all calls linked to an account, with optional filters to refine the call selection (such as date range, agent, contact, or direction)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

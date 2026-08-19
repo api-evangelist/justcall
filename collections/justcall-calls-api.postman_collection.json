@@ -1,0 +1,117 @@
+{
+  "item": [
+    {
+      "id": "34b0746d-8a52-4227-bc9f-e77785783aa0",
+      "name": "Calls",
+      "description": {
+        "content": "Manage and query voice calls handled through JustCall.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7b7788fd-ef2d-44a4-87d7-791d078003fb",
+          "name": "List calls",
+          "request": {
+            "name": "List calls",
+            "description": {
+              "content": "Retrieves all calls linked to an account, with optional filters to refine the call selection (such as date range, agent, contact, or direction).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "calls"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "414c53a8-32d0-4fb9-94c1-1d66f19871df",
+              "name": "A list of calls.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "calls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.justcall.io/v2.1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f43e84ef-95d4-4da9-81ac-12c3475bb7c8",
+    "name": "JustCall REST Calls API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for the JustCall cloud phone and contact center platform. Covers placing and listing calls, sending SMS, managing contacts, users, phone numbers, and related resources. Authentication uses an API key and API secret obtained from the JustCall dashboard.\n\nContact Support:\n Name: JustCall Developer Portal",
+      "type": "text/plain"
+    }
+  }
+}

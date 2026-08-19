@@ -1,0 +1,140 @@
+{
+  "item": [
+    {
+      "id": "22c3baba-f265-4b3c-a638-ab57285b356d",
+      "name": "SMS",
+      "description": {
+        "content": "Send and manage SMS/MMS messages.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0db06acd-0ac9-413b-a04a-8b8956b00617",
+          "name": "Send SMS or MMS",
+          "request": {
+            "name": "Send SMS or MMS",
+            "description": {
+              "content": "Sends an SMS or MMS message via JustCall. Useful for automation and outbound messaging flows.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "texts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2de24bc9-f9df-402c-be74-18ebacd730eb",
+              "name": "The accepted outbound message.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "texts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<object>",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.justcall.io/v2.1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7e868270-3082-4fef-b88a-aa9b5282e1df",
+    "name": "JustCall REST Calls SMS API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for the JustCall cloud phone and contact center platform. Covers placing and listing calls, sending SMS, managing contacts, users, phone numbers, and related resources. Authentication uses an API key and API secret obtained from the JustCall dashboard.\n\nContact Support:\n Name: JustCall Developer Portal",
+      "type": "text/plain"
+    }
+  }
+}
