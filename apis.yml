@@ -47,6 +47,12 @@ apis:
   - SMS
   - Telephony
   - Contact Center
+  - Webhook
+  tags_raw:
+  - Voice
+  - SMS
+  - Telephony
+  - Contact Center
   - Webhooks
   properties:
   - type: Documentation
