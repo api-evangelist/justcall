@@ -1,0 +1,25 @@
+slug: justcall
+provider: JustCall
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Calls
+  spec_file: justcall-calls-api-openapi.yml
+  capability_id: BC-430.30
+  capability_id_l1: BC-430
+  capability_name: Contact Centre Operations Management
+  confidence: 0.7
+  evidence: GET /calls listCalls List calls — "cloud-based phone system and contact center platform"
+  reason: JustCall's Calls surface lists voice calls placed through a contact-centre phone system; closest
+    honest fit is contact centre operations (telephony) under Customer Service Management. Not telecom
+    carrier operations — JustCall is a cloud phone app, not a network operator.
