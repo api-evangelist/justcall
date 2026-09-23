@@ -1,0 +1,32 @@
+# Front Door AI Index — justcall — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: justcall
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: justcall.io
+  final_host: justcall.io
+  ownership: own
+  owner: justcall
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 62
+  host_score: 62
+  density: 28.89
+  words: 2146
+  tiers:
+    agentic: 14
+    core: 48
+    model: 0
+  ambiguous: 42
+  top_terms:
+    AI: 48
+    agent: 29
+    AI agent: 9
+    automation: 6
+    copilot: 5
+    predictive: 3
+    intelligence: 2
+    smart: 2
