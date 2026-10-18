@@ -135,7 +135,7 @@
     - alpha
     in_cloud: true
     builder: unknown (community connector; contributor not in the record)
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: justcall-fivetran
   label: Fivetran
@@ -161,7 +161,7 @@
     - connectors/applications/justcall
     vendor_link: https://justcall.io/
     builder: Fivetran
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: justcall-microsoft-teams-own
   label: Microsoft Teams (own)
