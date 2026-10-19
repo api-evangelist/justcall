@@ -215,3 +215,28 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: justcall-gorgias-own
+  label: Gorgias (own)
+  partner: gorgias
+  partner_name: Gorgias (own)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.gorgias.com/apps/justcall
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: justcall-zendesk-own
+  label: Zendesk (own)
+  partner: zendesk
+  partner_name: Zendesk (own)
+  category: Contact Center
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.zendesk.com/marketplace/apps/support/108007/justcall-for-support/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
