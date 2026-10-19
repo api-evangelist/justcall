@@ -1,0 +1,494 @@
+openapi: 3.2.0
+info:
+  title: JustCall Webhooks API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: Webhooks
+paths:
+  /v2/webhooks:
+    post:
+      operationId: webhook_create
+      summary: Add URL to webhook
+      description: Use this endpoint to add a new URL to a webhook event.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookCreateDTO'
+      responses:
+        '200':
+          description: Updated webhook object after URL is added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Webhooks
+      security:
+      - AccessToken: []
+    get:
+      operationId: webhook_list
+      summary: List subscribed webhooks
+      description: Retrieve all subscribed events for an account or refine the search by specific event type.
+      parameters:
+      - name: type
+        required: false
+        in: query
+        description: Select a type to search for subscribed events of a specific type.
+        schema:
+          enum:
+          - call.completed
+          - call.answered
+          - call.initiated
+          - call.incoming
+          - call.updated
+          - call.enters_queue
+          - call.exits_queue
+          - jc.call_ai_generated
+          - call.voicemail
+          - call.missed
+          - call.ai_voice_agent
+          - sms.sent_received
+          - sms.sent
+          - sms.received
+          - sms.status_updated
+          - sd.call_completed
+          - sd.call_updated
+          - sd.call_ai_generated
+          - whatsapp.message_sent
+          - whatsapp.message_received
+          - whatsapp.message_status_updated
+          - appointment.scheduled
+          - jc.contact_status_updated
+          type: string
+      responses:
+        '200':
+          description: Array of webhook objects.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookListResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Webhooks
+      security:
+      - AccessToken: []
+  /v2.1/webhooks:
+    post:
+      operationId: webhook_create_v21
+      summary: Add URL to webhook
+      description: Use this endpoint to add a new URL to a webhook event.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookCreateDTO'
+      responses:
+        '200':
+          description: Updated webhook object after URL is added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Webhooks
+      security:
+      - AccessToken: []
+    get:
+      operationId: webhook_list_v21
+      summary: List subscribed webhooks
+      description: Retrieve all subscribed events for an account or refine the search by specific event type.
+      parameters:
+      - name: type
+        required: false
+        in: query
+        description: Select a type to search for subscribed events of a specific type.
+        schema:
+          enum:
+          - call.completed
+          - call.answered
+          - call.initiated
+          - call.incoming
+          - call.updated
+          - call.enters_queue
+          - call.exits_queue
+          - jc.call_ai_generated
+          - call.voicemail
+          - call.missed
+          - call.ai_voice_agent
+          - sms.sent_received
+          - sms.sent
+          - sms.received
+          - sms.status_updated
+          - sd.call_completed
+          - sd.call_updated
+          - sd.call_ai_generated
+          - whatsapp.message_sent
+          - whatsapp.message_received
+          - whatsapp.message_status_updated
+          - appointment.scheduled
+          - jc.contact_status_updated
+          type: string
+      responses:
+        '200':
+          description: Array of webhook objects.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookListResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Webhooks
+      security:
+      - AccessToken: []
+  /v2/webhooks/url/{url_id}:
+    delete:
+      operationId: webhook_delete_url
+      summary: Remove URL from webhook
+      description: Use this endpoint to remove a URL from a webhook event.
+      parameters:
+      - name: url_id
+        required: true
+        in: path
+        description: Enter the id of the URL which needs to be deleted. If required, please lookup the ‘url_id’ using the ‘List subscribed webhooks’ endpoint.
+        schema:
+          example: 65b17425xxxxx
+          type: string
+      responses:
+        '200':
+          description: Updated webhook object after URL is deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Webhooks
+      security:
+      - AccessToken: []
+  /v2.1/webhooks/url/{url_id}:
+    delete:
+      operationId: webhook_delete_url_v21
+      summary: Remove URL from webhook
+      description: Use this endpoint to remove a URL from a webhook event.
+      parameters:
+      - name: url_id
+        required: true
+        in: path
+        description: Enter the id of the URL which needs to be deleted. If required, please lookup the ‘url_id’ using the ‘List subscribed webhooks’ endpoint.
+        schema:
+          example: 65b17425xxxxx
+          type: string
+      responses:
+        '200':
+          description: Updated webhook object after URL is deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Webhooks
+      security:
+      - AccessToken: []
+  /v2/webhooks/v1/test/api:
+    post:
+      operationId: WebhooksV1Controller_testCallWebhookApi
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      security:
+      - AccessToken: []
+      tags:
+      - Webhooks
+      summary: Webhooks V1Controller test call webhook api
+      x-summary-source: derived
+  /v2.1/webhooks/v1/test/api:
+    post:
+      operationId: WebhooksV1Controller_testCallWebhookApi_v21
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      security:
+      - AccessToken: []
+      tags:
+      - Webhooks
+      summary: Webhooks V1Controller test call webhook api v21
+      x-summary-source: derived
+  /v2/webhooks/v1/test/pubsub:
+    post:
+      operationId: WebhooksV1Controller_testV1WebhookPubSub
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      security:
+      - AccessToken: []
+      tags:
+      - Webhooks
+      summary: Webhooks V1Controller test V1Webhook pub sub
+      x-summary-source: derived
+  /v2.1/webhooks/v1/test/pubsub:
+    post:
+      operationId: WebhooksV1Controller_testV1WebhookPubSub_v21
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      security:
+      - AccessToken: []
+      tags:
+      - Webhooks
+      summary: Webhooks V1Controller test V1Webhook pub sub v21
+      x-summary-source: derived
+  /v2/webhooks/v1/url/{url_id}:
+    delete:
+      operationId: webhook_v1_delete_url_by_id
+      summary: Webhook v1 delete url by id
+      parameters:
+      - name: url_id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+      security:
+      - AccessToken: []
+      tags:
+      - Webhooks
+      x-summary-source: derived
+  /v2.1/webhooks/v1/url/{url_id}:
+    delete:
+      operationId: webhook_v1_delete_url_by_id_v21
+      summary: Webhook v1 delete url by id v21
+      parameters:
+      - name: url_id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+      security:
+      - AccessToken: []
+      tags:
+      - Webhooks
+      x-summary-source: derived
+components:
+  schemas:
+    WebhookCreateDTO:
+      type: object
+      properties:
+        webhook_url:
+          type: string
+          example: https://webhook.site/3afbb926-39a2-4f18-a95e-69e20b2d9aa0
+          description: Configure the URL on which you want to receive the response.
+        type:
+          type: string
+          example: call.completed
+          description: Select an event type to add URL.
+          enum:
+          - call.completed
+          - call.answered
+          - call.initiated
+          - call.incoming
+          - call.updated
+          - call.enters_queue
+          - call.exits_queue
+          - jc.call_ai_generated
+          - call.voicemail
+          - call.missed
+          - call.ai_voice_agent
+          - sms.sent_received
+          - sms.sent
+          - sms.received
+          - sms.status_updated
+          - sd.call_completed
+          - sd.call_updated
+          - sd.call_ai_generated
+          - whatsapp.message_sent
+          - whatsapp.message_received
+          - whatsapp.message_status_updated
+          - appointment.scheduled
+          - jc.contact_status_updated
+      required:
+      - webhook_url
+      - type
+    WebhookListResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of events on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of events fetched.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of events appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing events.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of events.
+        data:
+          default:
+          - type: call.completed
+            latest_api_version: '2.1'
+            url_count: 1
+            warning_url_count: 0
+            blacklisted_url_count: 0
+            webhook_urls:
+            - webhook_url: https://webhook.site/2912255e-7fe1-43f5
+              url_id: 65b17425xxxxx
+              api_version: '2.1'
+              datetime: '2024-02-06 15:36:38'
+              status: Active
+          description: Array of webhook objects
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookResponseDTO'
+    WebhookUrlsResponseDTO:
+      type: object
+      properties:
+        webhook_url:
+          type: string
+          default: https://webhook.site/2912255e-7fe1-43f5xxx
+          description: Configured URL on which you will receive the event response.
+        url_id:
+          type: string
+          default: 65b17425xxxx
+          description: Unique id of the URL
+        api_version:
+          type: string
+          default: '2.1'
+          description: API version
+        datetime:
+          type: string
+          default: '2017-12-17 15:36:38'
+          description: Date time of webhook creation.
+        status:
+          type: string
+          default: Active
+          description: URL status
+    WebhookResponseDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          default: call.completed
+          description: Name of the event.
+        latest_api_version:
+          type: string
+          default: '2.1'
+          description: The latest available API version. When you add a new URL to any webhook event, you will receive data compatible with this API version.
+        url_count:
+          type: number
+          default: 0
+          description: Total number of URLs added to the event.
+        warning_url_count:
+          type: number
+          default: 0
+          description: Total number of URLs with Warning status.
+        blacklisted_url_count:
+          type: number
+          default: 0
+          description: Total number of URLs with Blacklisted status.
+        webhook_urls:
+          default:
+          - webhook_url: https://webhook.site/2912255e-7fe1-43f5
+            url_id: 65b17425xxxxx
+            api_version: '2.1'
+            datetime: '2024-02-06 15:36:38'
+            status: Active
+          description: Array of objects with each object consisting of webhook_url, url_id, datetime, api_version and status
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookUrlsResponseDTO'
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

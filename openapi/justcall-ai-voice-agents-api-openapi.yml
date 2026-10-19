@@ -1,0 +1,351 @@
+openapi: 3.2.0
+info:
+  title: JustCall AI Voice Agents API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: AI Voice Agents
+paths:
+  /v2.1/voice-agents/list:
+    get:
+      operationId: list_voice_agents_v21
+      summary: List all voice agents
+      description: Use this endpoint to retrieve a list of all voice agents. This includes details such as voice agents names, actions, assigned numbers, and other metadata.
+      parameters:
+      - name: per_page
+        required: false
+        in: query
+        description: Number of voice agents to be fetched per page. Default value is 50 and maximum value is 100.
+        schema:
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number for which voice agents are to be fetched. Page 0 = first page.
+        schema:
+          example: 0
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the voice agents should appear sorted by the creation time. Defaults to desc.
+        schema:
+          example: desc
+          type: string
+      - name: is_active
+        required: false
+        in: query
+        description: Use is_active=true to fetch only those AI voice agents that are currently active and available. By default, the API returns all AI voice agents, regardless of their availability status.
+        schema:
+          default: ''
+          example: true
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListVoiceBotResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - AI Voice Agents
+      security:
+      - AccessToken: []
+  /v2.1/voice-agents/calls:
+    post:
+      operationId: initiate_outbound_call_v21
+      summary: Initiate an outbound AI voice agent call
+      description: Use this endpoint to initiate an outbound AI voice agent call. This endpoint allows you to specify the AI voice agent, contact number, and dynamic variables for the call.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoiceBotInitiateOutboundCallRequestDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceBotOutboundCallResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - AI Voice Agents
+      security:
+      - AccessToken: []
+components:
+  schemas:
+    VoiceBotInitiateOutboundCallRequestDto:
+      type: object
+      properties:
+        ai_agent_id:
+          type: string
+          description: Unique identifier for the AI voice agent
+          example: agent_1638da016d3233a6196ee2d225
+        contact_number:
+          type: string
+          description: Phone number of the contact in E.164 format
+          example: 1681381XXXX
+        dynamic_variables:
+          description: Key-value pairs for conversation personalization. Keys must match agent's configured Dynamic Variable Manager (DVM) variables.
+          default: []
+          type: array
+          items:
+            $ref: '#/components/schemas/VoiceBotRequestDynamicVariablesDto'
+        has_consent:
+          type: boolean
+          description: Must be true. Confirms prior express written consent obtained
+          example: true
+          default: false
+      required:
+      - ai_agent_id
+      - contact_number
+      - has_consent
+    VoiceBotOutboundCallResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of API call
+          example: success
+        data:
+          description: Response data of the API call
+          allOf:
+          - $ref: '#/components/schemas/VoiceBotResponseData'
+    VoiceBotResponseAgentDataDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the Voice agent
+          example: agent_6b092e6ac84135dd3b7
+        name:
+          type: string
+          description: Name of the Voice agent
+          example: Front Desk
+        created_date:
+          type: string
+          description: Creation date of the voice agent.
+          example: '2021-01-01'
+        created_time:
+          type: string
+          description: Creation time of the voice agent.
+          example: '12:00:00'
+        assigned_numbers:
+          description: Numbers assigned to the voice agent.
+          example:
+          - justcall_number_id: 1234567890
+            justcall_number: '1234567890'
+            justcall_line_name: Call Route 1
+          type: array
+          items:
+            type: string
+        is_active:
+          type: boolean
+          description: Active/Inactive state of the voice agent.
+          example: true
+        actions_count:
+          type: number
+          description: Number of actions of the Voice agent
+          example: 2
+        actions:
+          description: Array containing details of actions configured in the voice agent.
+          example:
+          - state: after_call
+            action_id: action_25a9a3e9-8435-76b5f07fc361
+            name: Transfer call to Support
+            type: call_transfer
+          type: array
+          items:
+            $ref: '#/components/schemas/VoiceBotListActionsDataDto'
+        dynamic_variables:
+          description: Dynamic variables used to personalize the AI Voice Agent’s behavior or conversation. Each variable stores data used during runtime for context-aware interactions.
+          type: array
+          items:
+            $ref: '#/components/schemas/VoiceBotDynamicVariablesDto'
+    VoiceBotListActionsDataDto:
+      type: object
+      properties:
+        state:
+          type: string
+          description: Action to be executed during or after the call.
+          example: after_call
+        action_id:
+          type: string
+          description: ID of the action.
+          example: action_25a9a3e9-8435-76b5f07fc361
+        name:
+          type: string
+          description: Name of the action.
+          example: Transfer call to Support
+        type:
+          type: string
+          description: Type of the action.
+          example: call_transfer
+    ListVoiceBotResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request : ‘success’ for successful request; error message with description of error for failed request'
+          example: success
+        count:
+          type: number
+          description: Number of voice agents present on the current page
+          example: 2
+        current_page:
+          type: number
+          description: Number of the current page
+          example: 2
+        per_page:
+          type: number
+          description: Maximum number of voice agent records appearing per page
+          example: 50
+        next_page_link:
+          type: string
+          description: Link to the next page containing voice agents
+          example: https://api.justcall.io/v2.1/voice-agents/list?page=3&per_page=50
+        prev_page_link:
+          type: string
+          description: Link to the previous page of voice agents
+          example: https://api.justcall.io/v2.1/voice-agents/list?page=1&per_page=50
+        data:
+          description: Array of JustCall Voice agents objects
+          type: array
+          items:
+            $ref: '#/components/schemas/VoiceBotResponseAgentDataDto'
+    VoiceBotRequestDynamicVariablesDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique identifier used to reference this variable within the agent's logic, prompts, or scripts.
+          example: contact_name
+        value:
+          type: string
+          description: Value of the dynamic variable. Represents the actual data passed at runtime (e.g., caller's name, appointment time, etc)
+          example: John Doe
+        type:
+          type: string
+          description: 'Defines the expected data type of the variable (e.g., string, number, boolean, date). Default: String'
+          example: string
+          default: string
+    VoiceBotResponseData:
+      type: object
+      properties:
+        call_sid:
+          type: string
+          description: Unique call sid of the call as generated by JustCall
+          example: CA0247d967e9bb3c284163a37a43XXXX
+        contact_number:
+          type: string
+          description: Phone number of the contact
+          example: 1681381XXXX
+        justcall_number:
+          type: string
+          description: JustCall number used by the AI Voice Agent to make or receive the call
+          example: 12707705XXX
+        ai_agent_name:
+          type: string
+          default: ''
+          example: AI SDR [DO NOT EDIT/DELETE/SAVE] (3)
+          description: Name of the AI Agent setup by the user
+        ai_agent_id:
+          type: string
+          default: ''
+          example: agent_1638da016d3233a6196ee2d225
+          description: Unique id of the AI Agent setup by the user
+        call_date:
+          type: string
+          description: Date of call in UTC
+          example: '2017-12-18'
+        call_user_date:
+          type: string
+          description: Date of call in users timezone
+          example: '2017-12-17'
+        call_time:
+          type: string
+          description: Timestamp of call in UTC
+          example: '13:55:43'
+        call_user_time:
+          type: string
+          description: Timestamp of call in users timezone
+          example: 08:25:43
+        call_info:
+          description: Direction and status of the call
+          example:
+            direction: Outgoing
+            status: initiated
+          allOf:
+          - $ref: '#/components/schemas/VoiceBotCallInfoDto'
+        dynamic_variables:
+          description: Key-value pairs for conversation personalization. Keys must match agent's configured Dynamic Variable Manager (DVM) variables.
+          default: []
+          type: array
+          items:
+            $ref: '#/components/schemas/VoiceBotRequestDynamicVariablesDto'
+    VoiceBotCallInfoDto:
+      type: object
+      properties:
+        direction:
+          type: string
+          description: Direction of the call.
+          enum:
+          - Incoming
+          - Outgoing
+        status:
+          type: string
+          description: Status of the call.
+          example: Queued
+    VoiceBotDynamicVariablesDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The unique identifier used to reference this variable within the agent's logic or script.
+          example: CallerName
+        description:
+          type: string
+          description: A brief explanation of what the variable represents or how it's used.
+          example: Name of the caller, dynamically captured from the conversation.
+        type:
+          type: string
+          description: Defines the data format of the variable (e.g., text, number, date, boolean, etc.).
+          example: string
+        fallback_value:
+          type: string
+          description: The default value AI Agent will use if no data is provided or retrieved for this variable.
+          example: ''
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

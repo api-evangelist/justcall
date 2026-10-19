@@ -1,0 +1,895 @@
+openapi: 3.2.0
+info:
+  title: JustCall WhatsApp API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: Whats App
+paths:
+  /v2.1/whatsapp/messages:
+    get:
+      operationId: whatsapp_messages_list_v21
+      summary: List all messages
+      description: Retrieve all WhatsApp messages linked to a JustCall account, or refine the message selection as required by utilizing the various query parameter fields.
+      parameters:
+      - name: fetch_template_data
+        required: false
+        in: query
+        description: Set fetch_template_data to true to fetch template name, category and other template specific data. Default value is “false”.
+        schema:
+          default: false
+          type: boolean
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the messages are to be fetched.
+        schema:
+          example: '2025-03-12 00:00:00'
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the messages are to be fetched.
+        schema:
+          example: '2025-03-13 23:59:59'
+          type: string
+      - name: last_message_id_fetched
+        required: false
+        in: query
+        description: Id of the last WhatsApp message fetched in the previous query. This Id ensures that you won't receive any duplicate data when using the 'next_page_link' parameter.
+        schema:
+          type: number
+      - name: contact_number
+        required: false
+        in: query
+        description: Number of the contact for which messages are to be fetched. Please follow the E.164 number format.
+        schema:
+          example: 13801136XXX
+          type: string
+      - name: justcall_number
+        required: false
+        in: query
+        description: JustCall number for which the messages are to be fetched. Please follow the E.164 number format.
+        schema:
+          example: 12707705XXX
+          type: string
+      - name: message_direction
+        required: false
+        in: query
+        description: 'Enter the direction of the message to be fetched.<br><br> <b>Note: Filtering on <i>message_direction</i> requires at least one from <i>justcall_number</i> or <i>contact_number</i> to be sent in the API request.</b><br>'
+        schema:
+          enum:
+          - incoming
+          - outgoing
+          type: string
+      - name: message_content
+        required: false
+        in: query
+        description: 'If WhatsApp messages with specific keywords or phrases are to be fetched, enter the keywords in this field to fetch the message containing the keywords/phrases.<br>Enter a minimum or 3 and maximum of 15 characters.Entering more than 15 characters will lead to the endpoint responding by considering only the first 15 characters.<br><br> <b>Note: Filtering on <i>message_content</i> requires at least one from <i>justcall_number</i> or <i>contact_number</i> to be sent in the API request.</b><br>'
+        schema:
+          type: string
+      - name: delivery_status
+        required: false
+        in: query
+        description: "Fetch all the messages basis of the delivery status. Values can be from among: <br>\n      <b>- delivered </b><br><b>- read </b><br><b>- sent </b><br><b>- received </b><br><b>- failed </b><br><br> <b>Note: Filtering on <i>delivery_status</i> requires at least one from <i>justcall_number</i> or <i>contact_number</i> to be sent in the API request.</b><br>"
+        schema:
+          enum:
+          - read
+          - delivered
+          - sent
+          - received
+          - failed
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which messages are to be fetched.
+        schema:
+          default: 0
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of WhatsApp messages to be fetched per page. Default value is 30 and maximum value is 50.
+        schema:
+          default: 30
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the WhatsApp message list should appear based on ‘Date created’ for the message.
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagesPaginatedResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Whats App
+      security:
+      - AccessToken: []
+  /v2.1/whatsapp/messages/{id}:
+    get:
+      operationId: whatsapp_message_get_v21
+      summary: Get a message
+      description: Use this endpoint to access WhatsApp message data, including information like direction, associated agent number and delivery status.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the WhatsApp message generated by JustCall.
+        schema:
+          example: 123456
+          type: number
+      - name: fetch_template_data
+        required: false
+        in: query
+        description: Set fetch_template_data to true to fetch template name, category and other template specific data. Default value is “false”.
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppMessageResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Whats App
+      security:
+      - AccessToken: []
+  /v2.1/whatsapp/messages/send:
+    post:
+      operationId: whatsapp_message_send_v21
+      summary: Send message
+      description: Use this endpoint to send WhatsApp messages from your JustCall WhatsApp integrated number. This can be used to send both templated and non-templated messages.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppSendMessageBodyDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppMessageResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Whats App
+      security:
+      - AccessToken: []
+  /v2.1/whatsapp/messages/templates:
+    get:
+      operationId: whatsapp_message_templates_list_v21
+      summary: List all templates
+      description: Use this endpoint to fetch a list of all the templates added to your JustCall WhatsApp integrated account.
+      parameters:
+      - name: justcall_number
+        required: true
+        in: query
+        description: JustCall WhatsApp integrated number. Please follow the E.164 number format.
+        schema:
+          example: 12707705XXX
+          type: string
+      - name: template_name
+        required: false
+        in: query
+        description: Name of the template used.
+        schema:
+          example: welcome_message
+          type: string
+      - name: language
+        required: false
+        in: query
+        description: Language used.
+        schema:
+          example: English
+          enum:
+          - English
+          - English (UK)
+          - English (US)
+          - Spanish
+          - German
+          - Swedish
+          - Finnish
+          - Dutch
+          - French
+          - Turkish
+          - Italian
+          - Polish
+          - Danish
+          - Portuguese (BR)
+          - Portuguese (POR)
+          type: string
+      - name: category
+        required: false
+        in: query
+        description: Type of Template from Marketing or Utility
+        schema:
+          enum:
+          - Marketing
+          - Utility
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which templates are to be fetched.
+        schema:
+          default: 0
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of templates to be fetched per page. Default value is 50 and maximum value is 250.
+        schema:
+          default: 30
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the WhatsApp templated list should appear based on ‘Date created’ for the template.
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplatesPaginatedResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Whats App
+      security:
+      - AccessToken: []
+  /v2.1/whatsapp/messages/check-reply:
+    get:
+      operationId: whatsapp_check_reply_v21
+      summary: Check message reply
+      description: Use this endpoint to check if a WhatsApp reply has been received from a number on any of your JustCall numbers.
+      parameters:
+      - name: justcall_number
+        required: true
+        in: query
+        description: JustCall WhatsApp integrated number. Please follow the E.164 number format.
+        schema:
+          example: 12707705XXX
+          type: string
+      - name: contact_number
+        required: true
+        in: query
+        description: Number of the contact. Please follow the E.164 number format.
+        schema:
+          example: 13801136XXX
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppMessageResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Whats App
+      security:
+      - AccessToken: []
+components:
+  schemas:
+    RcsTemplateListDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1234
+        name:
+          type: string
+          example: welcome_message
+        language:
+          type: string
+          example: en
+        category:
+          type: string
+          example: UTILITY
+        header_type:
+          type: string
+          example: Image
+        header_value:
+          type: string
+          example: https://cdn.example.com/header.jpg
+        footer:
+          type: string
+          example: Reply STOP to unsubscribe
+        actions_count:
+          type: number
+          example: 1
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsActionDTO'
+        body:
+          type: string
+          example: Hello! Welcome to JustCall
+        status:
+          type: string
+          enum:
+          - Approved
+          - Pending
+          - Deleted
+          - Rejected
+          example: Approved
+        content_type:
+          type: string
+          enum:
+          - text
+          - media
+          - card
+          - carousel
+          example: text
+        fallback_enabled:
+          type: boolean
+          example: false
+        fallback_text:
+          type: string
+          example: SMS fallback text
+    RcsActionDTO:
+      type: object
+      properties:
+        action_type:
+          type: string
+          example: URL
+        action_text:
+          type: string
+          example: Visit our site
+        action_value:
+          type: string
+          example: https://example.com
+    RcsMessageInfoDTO:
+      type: object
+      properties:
+        body:
+          type: string
+          example: Hello, how can I help you today?
+        is_mms:
+          type: string
+          example: 'No'
+        mms:
+          $ref: '#/components/schemas/RcsMmsDTO'
+        is_template:
+          type: string
+          example: 'No'
+          enum:
+          - 'Yes'
+          - 'No'
+        template:
+          $ref: '#/components/schemas/RcsTemplateDTO'
+        content_type:
+          type: string
+          enum:
+          - text
+          - media
+          - card
+          - carousel
+        rcs_content:
+          type: object
+        fallback:
+          $ref: '#/components/schemas/RcsFallbackDTO'
+    WhatsAppSendMessageBodyDTO:
+      type: object
+      properties:
+        justcall_number:
+          type: string
+          description: JustCall WhatsApp integrated number. Please follow the E.164 number format.
+          example: 12707705XXX
+        contact_number:
+          type: string
+          description: Number of the contact. Please follow the E.164 number format.
+          example: 13801136XXX
+        body:
+          type: string
+          description: Content of the WhatsApp message. Maximum character limit is 4000.
+        media_url:
+          type: string
+          description: Add URL of the media file to be sent with the message. Only one file is supported with a message.
+        media_file_name:
+          type: string
+          description: Enter the name of the file in the media URL
+        restrict_once:
+          type: string
+          description: No - default. Yes - prevents you from sending the same message to the same receiver in past 24 hours
+          enum:
+          - 'Yes'
+          - 'No'
+          default: 'No'
+        template_id:
+          type: number
+          description: Id of the approved template.
+          example: 1234
+        template_variables:
+          description: Custom variables of the template.
+          type: array
+          items:
+            type: string
+      required:
+      - justcall_number
+      - contact_number
+    WhatsAppMmsDTO:
+      type: object
+      properties:
+        media_url:
+          type: string
+          example: https://example.com/media/image1.jpg
+          description: URL of the media file incase is_mms is true
+        content_type:
+          type: string
+          example: pdf
+          description: content type/mime type of the media url like pdf, image, audio etc.
+    RcsFallbackDTO:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          example: true
+        text:
+          type: string
+          example: SMS fallback text
+        sent:
+          type: boolean
+          example: false
+        fallback_message_id:
+          type: number
+          example: 123456
+      required:
+      - enabled
+      - text
+      - sent
+    WhatsAppActionDTO:
+      type: object
+      properties:
+        action_type:
+          type: string
+          example: Visit Website
+          description: Chosen type of action
+          enum:
+          - Visit Website
+          - Call Phone
+          - Copy offer code
+        action_text:
+          type: string
+          example: Visit our site
+          description: Text provided for the action button (not applicable in case of Copy offer code)
+        action_value:
+          type: string
+          example: https://example.com
+          description: Value provided for each action type
+    WhatsAppMessageInfoDTO:
+      type: object
+      properties:
+        body:
+          type: string
+          example: Hello, how can I help you today?
+          description: Contents of the WhatsApp message
+        is_mms:
+          type: string
+          example: 'No'
+          description: Is this an MMS or not
+        mms:
+          description: MMS details object
+          allOf:
+          - $ref: '#/components/schemas/WhatsAppMmsDTO'
+        is_template:
+          type: string
+          example: 'No'
+          description: Whether this is a Template or not
+          enum:
+          - 'Yes'
+          - 'No'
+        template:
+          description: Template details object
+          allOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateDTO'
+    TemplatesPaginatedResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of templates present on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of templates fetched by the API query.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of templates appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing templates.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of templates.
+        data:
+          default: []
+          description: Array of template objects
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsTemplateListDTO'
+    MessagesPaginatedResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of messages present on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of messages fetched by the API query.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of messages appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing messages.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of messages.
+        data:
+          default: []
+          description: Array of message objects
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsMessageResponseDTO'
+    WhatsAppMessageResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 123456
+          description: Id of the WhatsApp message created by JustCall
+        contact_number:
+          type: string
+          example: 13801136XXX
+          description: Phone number of the contact
+        contact_name:
+          type: string
+          example: Rachel G.
+          description: Name of the contact
+        contact_email:
+          type: string
+          example: john@suits.co
+          description: Email id of the contact
+        justcall_number:
+          type: string
+          example: 12707705XXX
+          description: JustCall number from which WhatsApp message was sent or received
+        justcall_line_name:
+          type: string
+          example: Sales Line
+          description: Name of the JustCall number used to send the message
+        agent_id:
+          type: number
+          example: 1308
+          description: Id of the agent who made or received the message
+        agent_name:
+          type: string
+          example: John Doe
+          description: Name of the agent who made or received the message
+        agent_email:
+          type: string
+          example: john.doe@gmail.com
+          description: Email id of the agent who sent the message
+        message_date:
+          type: string
+          example: '2025-03-12'
+          description: Date of message in UTC
+        message_user_date:
+          type: string
+          example: '2025-03-13'
+          description: Date of message in users timezone
+        message_time:
+          type: string
+          example: '19:28:45'
+          description: Timestamp of message in UTC
+        message_user_time:
+          type: string
+          example: 00:28:45
+          description: Timestamp of message in users timezone
+        direction:
+          type: string
+          example: outgoing
+          description: Value will be from Incoming or Outgoing
+          enum:
+          - incoming
+          - outgoing
+        reaction_outbound:
+          type: string
+          example: 👍
+          description: User's reaction on the message
+        reaction_outbound_time:
+          type: string
+          example: '2023-05-15 14:32:00'
+          description: Time at which user reacted on the message
+        reaction_inbound:
+          type: string
+          example: ❤️
+          description: Contact's reaction on the message
+        reaction_inbound_time:
+          type: string
+          example: '2023-05-15 14:33:00'
+          description: Time at which contact reacted on the message
+        delivery_status:
+          type: string
+          example: delivered
+          description: Describes the delivery status of current message.
+          enum:
+          - read
+          - delivered
+          - sent
+          - received
+          - failed
+        delivery_date:
+          type: string
+          example: '2025-03-12'
+          description: Date when the message was delivered
+        delivery_time:
+          type: string
+          example: '19:28:45'
+          description: Time when the message was delivered
+        read_date:
+          type: string
+          example: '2025-03-12'
+          description: Date when the message was read
+        read_time:
+          type: string
+          example: '19:28:45'
+          description: Time when the message was read
+        failure_reason:
+          type: string
+          example: Invalid number
+          description: Reason of delivery failure incase message is in failed status
+        message_origin:
+          type: string
+          example: web
+          description: From where message triggered (web only as of now)
+        message_info:
+          description: Object containing message details
+          allOf:
+          - $ref: '#/components/schemas/WhatsAppMessageInfoDTO'
+    RcsTemplateDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1234
+        name:
+          type: string
+          example: welcome_message
+        language:
+          type: string
+          example: en
+        category:
+          type: string
+          example: UTILITY
+        header_type:
+          type: string
+          example: Image
+        header_value:
+          type: string
+          example: https://cdn.example.com/header.jpg
+        footer:
+          type: string
+          example: Reply STOP to unsubscribe
+        actions_count:
+          type: number
+          example: 1
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsActionDTO'
+    RcsMessageResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 123456
+        rcs_phone_id:
+          type: number
+          example: 123456
+        contact_number:
+          type: string
+          example: 13801136XXX
+        contact_name:
+          type: string
+          example: Rachel G.
+        contact_email:
+          type: string
+          example: john@suits.co
+        justcall_number:
+          type: string
+          example: 12707705XXX
+        agent_id:
+          type: number
+          example: 1308
+        agent_name:
+          type: string
+          example: John Doe
+        message_date:
+          type: string
+          example: '2025-03-12'
+        message_user_date:
+          type: string
+          example: '2025-03-13'
+        message_time:
+          type: string
+          example: '19:28:45'
+        message_user_time:
+          type: string
+          example: 00:28:45
+        direction:
+          type: string
+          example: outgoing
+          enum:
+          - incoming
+          - outgoing
+        delivery_status:
+          type: string
+          example: delivered
+          enum:
+          - read
+          - delivered
+          - sent
+          - received
+          - failed
+          - undelivered
+        message_info:
+          $ref: '#/components/schemas/RcsMessageInfoDTO'
+    RcsMmsDTO:
+      type: object
+      properties:
+        media_url:
+          type: string
+          example: https://example.com/media/image1.jpg
+          description: URL of the media file when is_mms is yes
+        content_type:
+          type: string
+          example: image/jpeg
+          description: MIME type of the media URL
+    WhatsAppTemplateDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1234
+          description: Unique Id of the template
+        name:
+          type: string
+          example: Marketing template
+          description: Name of the template used
+        language:
+          type: string
+          example: English
+          description: Language used
+        category:
+          type: string
+          example: Marketing
+          description: Type of Template.
+          enum:
+          - Marketing
+          - Utility
+        header_type:
+          type: string
+          example: Image
+          description: "Specifies the format of the header in the template message. Allowed values:<br>\n\n    "
+          enum:
+          - Normal Text
+          - Image
+          - Video
+          - PDF
+        header_value:
+          type: string
+          example: https://www.filepicker.io/api/file/NZsgbzvkTirEewmX79Sh
+          description: The actual content assigned to the header at runtime
+        footer:
+          type: string
+          example: Contact us for more information
+          description: The text content for the footer in the template message typically used for disclaimers, additional information, or support details
+        actions_count:
+          type: number
+          example: 2
+          description: Number of buttons added
+        actions:
+          description: Array of action objects (max 3 actions can be added)
+          type: array
+          items:
+            $ref: '#/components/schemas/WhatsAppActionDTO'
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

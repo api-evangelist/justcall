@@ -109,6 +109,147 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/justcall-sms-api-openapi.yml
+- aid: justcall:justcall-ai-voice-agents-api
+  name: JustCall AI Voice Agents API
+  description: The AI Voice Agents API from JustCall — 2 operation(s) for ai voice agents.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - AI Voice Agents
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-ai-voice-agents-api-openapi.yml
+- aid: justcall:justcall-appointments-api
+  name: JustCall Appointments API
+  description: The Appointments API from JustCall — 3 operation(s) for appointments.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Appointments
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-appointments-api-openapi.yml
+- aid: justcall:justcall-justcall-ai-api
+  name: JustCall JustCall AI API
+  description: The JustCall AI API from JustCall — 13 operation(s) for justcall ai.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - JustCall AI
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-justcall-ai-api-openapi.yml
+- aid: justcall:justcall-oauth-api
+  name: JustCall OAuth API
+  description: The Oauth API from JustCall — 5 operation(s) for oauth.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Oauth
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-oauth-api-openapi.yml
+- aid: justcall:justcall-phone-numbers-api
+  name: JustCall Phone Numbers API
+  description: The Phone Numbers API from JustCall — 3 operation(s) for phone numbers.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Phone Numbers
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-phone-numbers-api-openapi.yml
+- aid: justcall:justcall-rcs-api
+  name: JustCall RCS API
+  description: The RCS API from JustCall — 9 operation(s) for rcs.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - RCS
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-rcs-api-openapi.yml
+- aid: justcall:justcall-sales-dialer-api
+  name: JustCall Sales Dialer API
+  description: The Sales Dialer API from JustCall — 21 operation(s) for sales dialer.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Sales Dialer
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-sales-dialer-api-openapi.yml
+- aid: justcall:justcall-sales-dialer-phone-numbers-api
+  name: JustCall Sales Dialer - Phone Numbers API
+  description: >-
+    The Sales Dialer - Phone Numbers API from JustCall — 2 operation(s) for sales dialer - phone numbers.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Sales Dialer - Phone Numbers
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-sales-dialer-phone-numbers-api-openapi.yml
+- aid: justcall:justcall-special-dates-api
+  name: JustCall Special Dates API
+  description: The Special Dates API from JustCall — 2 operation(s) for special dates.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Special Dates
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-special-dates-api-openapi.yml
+- aid: justcall:justcall-unified-analytics-api
+  name: JustCall Unified Analytics API
+  description: The Unified Analytics API from JustCall — 62 operation(s) for unified analytics.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Unified Analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-unified-analytics-api-openapi.yml
+- aid: justcall:justcall-user-groups-api
+  name: JustCall User Groups API
+  description: The User Groups API from JustCall — 3 operation(s) for user groups.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - User Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-user-groups-api-openapi.yml
+- aid: justcall:justcall-users-api
+  name: JustCall Users API
+  description: The Users API from JustCall — 3 operation(s) for users.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-users-api-openapi.yml
+- aid: justcall:justcall-webhooks-api
+  name: JustCall Webhooks API
+  description: The Webhooks API from JustCall — 10 operation(s) for webhooks.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-webhooks-api-openapi.yml
+- aid: justcall:justcall-whats-app-api
+  name: JustCall Whats App API
+  description: The Whats App API from JustCall — 5 operation(s) for whats app.
+  humanURL: https://developer.justcall.io/docs/overview
+  baseURL: https://api.justcall.io/v2.1
+  tags:
+  - Whats App
+  properties:
+  - type: OpenAPI
+    url: openapi/justcall-whats-app-api-openapi.yml
 common:
   - type: CapabilityMap
     url: capabilities/justcall-capability-edges.yml

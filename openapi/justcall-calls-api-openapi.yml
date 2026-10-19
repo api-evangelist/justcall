@@ -1,34 +1,1882 @@
 openapi: 3.2.0
 info:
-  title: JustCall REST Calls API
-  description: REST API for the JustCall cloud phone and contact center platform. Covers placing and listing calls, sending SMS, managing contacts, users, phone numbers, and related resources. Authentication uses an API key and API secret obtained from the JustCall dashboard.
-  version: '2.1'
-  contact:
-    name: JustCall Developer Portal
-    url: https://developer.justcall.io/docs/overview
+  title: JustCall Calls API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
 servers:
-- url: https://api.justcall.io/v2.1
-  description: JustCall production API (v2.1)
-security:
-- ApiKeyAuth: []
+- url: https://api.justcall.io
 tags:
 - name: Calls
-  description: Manage and query voice calls handled through JustCall.
 paths:
-  /calls:
+  /v2/calls:
     get:
-      summary: List calls
-      description: Retrieves all calls linked to an account, with optional filters to refine the call selection (such as date range, agent, contact, or direction).
-      operationId: listCalls
-      tags:
-      - Calls
+      operationId: call_list
+      summary: List all calls
+      description: Retrieve all calls linked to an account or refine the call selection as needed by utilizing the numerous query parameter fields.
+      parameters:
+      - name: fetch_queue_data
+        required: false
+        in: query
+        description: Set fetch_queue_data to true to fetch queue data like callback time, callback status, callback wait duration, etc. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the calls are to be fetched in <b>UTC Timezone</b>.
+        schema:
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the calls are to be fetched in <b>UTC Timezone</b>.
+        schema:
+          type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: 'Number of the contact for which calls are to be fetched.<br>Important: Please provide a valid contact number with country code.'
+        schema:
+          type: string
+      - name: justcall_number
+        required: false
+        in: query
+        description: JustCall number for which the calls are to be fetched.
+        schema:
+          type: string
+      - name: agent_id
+        required: false
+        in: query
+        description: ID of the agent for whom the calls are to be fetched. Agent ID can be accessed using <a href="https://developer.justcall.io/reference/users_list_v21">List all users API</a>.
+        schema:
+          type: number
+      - name: ivr_digit
+        required: false
+        in: query
+        description: 'Enter the IVR digit the calls routed through which need to be filtered (optional) <br><b><font color=''red''>Note: <i>call_direction and call_type filter</i> won''t work in case you send ivr_digit.</font></b> <br>'
+        schema:
+          type: number
+      - name: call_direction
+        required: false
+        in: query
+        description: Enter the direction of calls (incoming/outgoing) to be fetched
+        schema:
+          enum:
+          - Incoming
+          - Outgoing
+          type: string
+      - name: call_type
+        required: false
+        in: query
+        description: Enter the type of calls (answered, unanswered, missed, voicemail, abandoned) that need to be fetched.
+        schema:
+          enum:
+          - OUTGOING_ANSWERED
+          - OUTGOING_UNANSWERED
+          - OUTGOING_BUSY
+          - OUTGOING_FAILED
+          - OUTGOING_RESTRICTED
+          - OUTGOING_BLOCKED
+          - OUTGOING_CANCELLED
+          - INCOMING_ANSWERED
+          - INCOMING_BUSY
+          - INCOMING_FAILED
+          - INCOMING_MISSED
+          - INCOMING_ABANDONED
+          - INCOMING_VOICEMAIL
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which calls are to be fetched
+        schema:
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of calls to be fetched per page. Default value is 20 and maximum value is 100.
+        schema:
+          type: number
+      - name: sort
+        required: false
+        in: query
+        description: Select a parameter to sort the order of calls. By default we apply sorting on id field.
+        schema:
+          default: id
+          enum:
+          - id
+          - datetime
+          type: string
+      - name: order
+        required: false
+        in: query
+        description: Order in which the calls list should appear based on the 'sort' parameter selected above
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      - name: fetch_iq_data
+        required: false
+        in: query
+        description: Set fetch_iq_data to true to fetch coaching data by Justcall IQ. Default entry is false.
+        schema:
+          default: false
+          type: boolean
       responses:
         '200':
-          description: A list of calls.
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2.1/calls:
+    get:
+      operationId: call_list_v21
+      summary: List all calls
+      description: Retrieve all calls linked to an account or refine the call selection as needed by utilizing the numerous query parameter fields.
+      parameters:
+      - name: fetch_queue_data
+        required: false
+        in: query
+        description: Set fetch_queue_data to true to fetch queue data like callback time, callback status, callback wait duration, etc. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the calls are to be fetched in <b>user's timezone</b>.
+        schema:
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the calls are to be fetched in <b>user's timezone</b>.
+        schema:
+          type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: 'Number of the contact for which calls are to be fetched.<br>Important: Please provide a valid contact number with country code.'
+        schema:
+          type: string
+      - name: justcall_number
+        required: false
+        in: query
+        description: JustCall number for which the calls are to be fetched.
+        schema:
+          type: string
+      - name: agent_id
+        required: false
+        in: query
+        description: ID of the agent for whom the calls are to be fetched. Agent ID can be accessed using <a href="https://developer.justcall.io/reference/users_list_v21">List all users API</a>.
+        schema:
+          type: number
+      - name: ivr_digit
+        required: false
+        in: query
+        description: 'Enter the IVR digit the calls routed through which need to be filtered (optional) <br><b><font color=''red''>Note: <i>call_direction and call_type filter</i> won''t work in case you send ivr_digit.</font></b> <br>'
+        schema:
+          type: number
+      - name: call_direction
+        required: false
+        in: query
+        description: Enter the direction of calls (incoming/outgoing) to be fetched
+        schema:
+          enum:
+          - Incoming
+          - Outgoing
+          type: string
+      - name: call_type
+        required: false
+        in: query
+        description: Enter the type of calls (answered, unanswered, missed, voicemail, abandoned) that need to be fetched.
+        schema:
+          enum:
+          - OUTGOING_ANSWERED
+          - OUTGOING_UNANSWERED
+          - OUTGOING_BUSY
+          - OUTGOING_FAILED
+          - OUTGOING_RESTRICTED
+          - OUTGOING_BLOCKED
+          - OUTGOING_CANCELLED
+          - INCOMING_ANSWERED
+          - INCOMING_BUSY
+          - INCOMING_FAILED
+          - INCOMING_MISSED
+          - INCOMING_ABANDONED
+          - INCOMING_VOICEMAIL
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which calls are to be fetched
+        schema:
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of calls to be fetched per page. Default value is 20 and maximum value is 100.
+        schema:
+          type: number
+      - name: sort
+        required: false
+        in: query
+        description: Select a parameter to sort the order of calls. By default we apply sorting on id field.
+        schema:
+          default: id
+          enum:
+          - id
+          - datetime
+          type: string
+      - name: order
+        required: false
+        in: query
+        description: Order in which the calls list should appear based on the 'sort' parameter selected above
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      - name: fetch_ai_data
+        required: false
+        in: query
+        description: Set fetch_ai_data to true to fetch coaching data by Justcall AI. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      - name: last_call_id_fetched
+        required: false
+        in: query
+        description: Id of the last call fetched in the previous query. This Id ensures that you won't receive any duplicate data when using the 'next_page_link' parameter.
+        schema:
+          type: number
+      - name: call_traits
+        required: false
+        in: query
+        description: Select one or more traits associated with a call to fetch all calls containing those traits.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - QUEUE
+            - CALLBACK
+            - FORWARD
+            - TRANSFER
+            - MERGE
+            - IVR
+            - VOICE_AGENT
+      - name: disposition_codes
+        required: false
+        in: query
+        description: 'Filter calls by the disposition code (call outcome) added by the agent at the end of each call. You can enter an array of codes to filter calls with either of the dispositions from the list. Entered codes must already be present in your JustCall account. Expected format example - if your list title is ‘Sales‘ and your code is ‘Follow Up’ then your input in disposition field should be ‘Sales: Follow Up’.'
+        schema:
+          type: array
+          items:
+            type: string
+      - name: ai_agent_ids
+        required: false
+        in: query
+        description: IDs of the AI agents for which the calls are to be fetched. AI Agent IDs can be accessed using <a href="https://developer.justcall.io/reference/list_voice_agents_v21"> List all AI agents API</a>.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResponse21DTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2/calls/{id}:
+    get:
+      operationId: call_get
+      summary: Get a call
+      description: Utilize this endpoint for retrieval of data for a Call, including details such as duration, direction, status, timestamps, notes, and dispositions.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by JustCall
+        schema:
+          type: number
+      - name: fetch_queue_data
+        required: false
+        in: query
+        description: Set fetch_queue_data to true to fetch queue data like callback time, callback status, callback wait duration, etc. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      - name: fetch_iq_data
+        required: false
+        in: query
+        description: Set fetch_iq_data to true to fetch coaching data by Justcall IQ. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2.1/calls/{id}:
+    get:
+      operationId: call_get_v21
+      summary: Get a call
+      description: Utilize this endpoint for retrieval of data for a Call, including details such as duration, direction, status, timestamps, notes, and dispositions.
+      parameters:
+      - name: fetch_queue_data
+        required: false
+        in: query
+        description: Set fetch_queue_data to true to fetch queue data like callback time, callback status, callback wait duration, etc. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      - name: fetch_ai_data
+        required: false
+        in: query
+        description: Set fetch_ai_data to true to fetch coaching data by Justcall AI. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by JustCall
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResponse21DTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+    put:
+      operationId: call_update_v21
+      summary: Update a call
+      description: Utilize this endpoint to modify the notes, disposition, or rating linked to a call.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by JustCall
+        schema:
+          type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCallDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallResponse21DTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2.1/calls/{id}/journey:
+    get:
+      operationId: call_get_journey_v21
+      summary: Get call journey
+      description: Utilize this endpoint to fetch call journey details.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by JustCall
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallJourneyResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2.1/calls/{id}/voice-agent:
+    get:
+      operationId: call_get_voice_agent_v21
+      summary: Get voice agent data
+      description: Utilize this endpoint for retrieval of voice agent data associated with a JustCall call.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by JustCall
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallVoiceAgentResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2/calls/{id}/recording/download:
+    get:
+      operationId: call_recording_download
+      summary: Download call recording
+      description: Download the recording associated with a call by using the unique ID of the call.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by JustCall
+        schema:
+          type: number
+      responses:
+        '200':
+          description: 'Curl to download calls : <br/><br/>curl --location ''https://api.justcall.io/v2/calls/{id}/recording/download'' \ <br/>--header ''Authorization: apikey:secretkey'' --output recording.mp3 <br/><br/>The file in this case will be downloaded as recording.mp3 on your server'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2.1/calls/{id}/recording/download:
+    get:
+      operationId: call_recording_download_v21
+      summary: Download call recording
+      description: Download the recording associated with a call by using the unique ID of the call.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by JustCall
+        schema:
+          type: number
+      responses:
+        '200':
+          description: 'Curl to download calls : <br/><br/>curl --location ''https://api.justcall.io/v2/calls/{id}/recording/download'' \ <br/>--header ''Authorization: apikey:secretkey'' --output recording.mp3 <br/><br/>The file in this case will be downloaded as recording.mp3 on your server'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2.1/calls/analytics/account:
+    get:
+      operationId: call_account_analytics_v21
+      summary: Account analytics
+      description: Utilize this endpoint to access detailed account analytics, including metrics such as total call volume, average ring time, total call duration, SLA performance, and connect and answer rates.
+      parameters:
+      - name: from_date
+        required: true
+        in: query
+        description: Start date for the analytics (YYYY-MM-DD format)
+        schema:
+          example: '2025-08-01'
+          type: string
+      - name: to_date
+        required: true
+        in: query
+        description: End date for the analytics (YYYY-MM-DD format)
+        schema:
+          example: '2025-09-01'
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallAccountAnalyticsDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2.1/calls/analytics/agent:
+    get:
+      operationId: call_agent_analytics_v21
+      summary: Agent analytics
+      description: Utilize this endpoint to obtain comprehensive analytics for an agent, including specific metrics such as ring time, total call duration, SLA and connect and answer rates.
+      parameters:
+      - name: from_date
+        required: true
+        in: query
+        description: Start date for the analytics (YYYY-MM-DD format)
+        schema:
+          example: '2025-08-01'
+          type: string
+      - name: to_date
+        required: true
+        in: query
+        description: End date for the analytics (YYYY-MM-DD format)
+        schema:
+          example: '2025-09-01'
+          type: string
+      - name: agent_id
+        required: false
+        in: query
+        description: Id of the agent for whom the analytics are to be fetched.
+        schema:
+          example: 12345
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallAgentAnalyticsDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
+  /v2.1/calls/analytics/number:
+    get:
+      operationId: call_number_analytics_v21
+      summary: Number analytics
+      description: Utilize this endpoint to access detailed phone number analytics, including metrics such as total call volume, average ring time, total call duration, SLA performance, and connect and answer rates.
+      parameters:
+      - name: from_date
+        required: true
+        in: query
+        description: Start date for the analytics (YYYY-MM-DD format)
+        schema:
+          example: '2025-08-01'
+          type: string
+      - name: to_date
+        required: true
+        in: query
+        description: End date for the analytics (YYYY-MM-DD format)
+        schema:
+          example: '2025-09-01'
+          type: string
+      - name: justcall_number
+        required: false
+        in: query
+        description: JustCall number for which the analytics are to be fetched.
+        schema:
+          example: '1234567890'
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallNumberAnalyticsDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Calls
+      security:
+      - AccessToken: []
 components:
+  schemas:
+    CallVoiceAgentDynamicVariableResponseDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The unique identifier used to reference this variable within the agent's logic or script.
+          default: ''
+          example: CallerName
+        value:
+          type: string
+          description: The dynamic variable value injected before the call or captured during the call.
+          default: ''
+          example: John
+        type:
+          type: string
+          description: 'Defines the expected data type of the variable (e.g., string, number, boolean, date). Default: String'
+          default: string
+          example: string
+    CallVoiceAgentDtmfInputResponseDTO:
+      type: object
+      properties:
+        user_input:
+          type: string
+          default: ''
+          example: '1523'
+          description: The digit pressed by the user and detected by the AI Voice Agent during the call. This will always be a single-character string such as "1", "2", "3", "*", or "#".
+        executed_at:
+          type: string
+          default: ''
+          example: '2025-07-18 10:00:00'
+          description: Timestamp at which the DTMF input was received
+    JustCallIQDTO:
+      type: object
+      properties:
+        call_moments:
+          example:
+          - exams
+          - math
+          - confidence
+          description: List of most important keywords associated with a call
+          type: array
+          items:
+            type: string
+        customer_sentiment:
+          type: string
+          example: Positive
+          description: Overall analysis of the sentiment of the customer based on words and tone
+        call_score:
+          type: number
+          default: 0
+          description: Overall score of the call out of 10
+        call_score_parameters:
+          $ref: '#/components/schemas/CallScoreParameter'
+        tags:
+          default: []
+          example:
+          - demo
+          - follow-up
+          description: Tags added by the user(agent) for a call
+          type: array
+          items:
+            type: string
+        manual_call_score:
+          type: number
+          default: 0
+          example: 4
+          description: Average of all manual scores added
+        call_summary:
+          type: string
+          example: Call summary
+          description: A summary of the key highlights and takeaways from a call
+        call_transcription:
+          default: []
+          example:
+          - speaker_id: 1
+            sentence: Hey, Can I know the status with the deal?
+            timestamp:
+              starttime: 0
+              endtime: 0
+          description: A translation of the audio call into written text in a script like format
+          allOf:
+          - $ref: '#/components/schemas/CallTranscriptionDTO'
+    CallInfoDTO:
+      type: object
+      properties:
+        direction:
+          type: string
+          default: Outgoing/Incoming
+          description: Whether the call was an Outgoing call or an Incoming Calls
+        type:
+          type: string
+          default: Answered
+          description: A further breakdown of direction - <br><b>For Incoming direction</b> <br>Answered <br>Missed <br>Voicemail <br>Abandoned before ringing <br>Busy <br>Failed <br>Blocked <br>Unanswered <br>In Progress <br>Restricted <br><b>For Outgoing direction</b> <br>Answered <br>Unanswered <br>Abandoned before ringing <br>Busy <br>Failed <br>Blocked <br>Unanswered <br>In Progress <br>Restricted <br>
+        missed_call_reason:
+          type: string
+          default: Call arrived after your working hours
+          description: A reason for the call being missed. It can be out of - <br> Call arrived after your working hours <br>Call was not picked by any agent <br>Call never rang any of the available agents
+        status:
+          type: string
+          default: Unarchived/Archived
+          description: Returns “Archived” for calls which have been archived in JustCall, and returns “Unarchived” otherwise.
+        disposition:
+          type: string
+          default: 'Sales: Lead'
+          description: Call outcome selected by agent at the end of a call in the JustCall dialer
+        notes:
+          type: string
+          default: abc
+          description: Notes taken during the call or after the call from the Call Logs
+        rating:
+          type: string
+          default: '5'
+          description: Rating added by the agent at the end of a call in the JustCall Dialer
+        recording:
+          type: string
+          default: https://bifrost.justcall.io/voice-tools-calling/v1/recording/get-presigned-url?recSid=REXXXXXac0aae0fXXXXXXedXXXXXa90&redirect=1&getSize=0&companyId=XXXX49
+          description: Recording link of the call
+        recording_child:
+          type: string
+          default: https://bifrost.justcall.io/voice-tools-calling/v1/recording/get-presigned-url?recSid=REXXXXXac0aae0fXXXXXXedXXXXXa90&redirect=1&getSize=0&companyId=XXXX49
+          description: Recording child link of the call
+        voicemail_transcription:
+          type: string
+          default: Transcription text
+          description: A translation of the voicemail recording into written text
+        call_traits:
+          default:
+          - IVR
+          - Merge
+          description: Comma separated list of traits associated with the call
+          type: array
+          items:
+            type: string
+        voicemail_dropped:
+          type: string
+          default: 'Yes'
+          description: Whether the call has a voicemail drop
+        voicemail_drop_url:
+          type: string
+          default: https://s3.xyz.com/voicemail/dummy.mp3
+          description: Voicemail drop audio URL from call insights when a voicemail drop occurred.
+    IvrCallsDTO:
+      type: object
+      properties:
+        digit_pressed:
+          type: string
+          default: 0 (can be empty,0,1,2 etc)
+          description: Digit of IVR pressed by user for the call
+        content:
+          type: string
+          default: Forward call to Sales
+          description: Content associated with the pressed IVR digit
+    CallAccountAnalyticsSummaryDto:
+      type: object
+      properties:
+        total_calls:
+          type: number
+          description: Total number of calls during the period (Incoming + Outgoing)
+          example: 150
+        outgoing_calls:
+          type: number
+          description: Total number of outgoing calls
+          example: 100
+        outgoing_connected_calls:
+          type: number
+          description: Number of outgoing calls that were connected (answered)
+          example: 85
+        outgoing_not_connected_calls:
+          type: number
+          description: Number of outgoing calls not connected (busy, unanswered, failed, restricted or blocked)
+          example: 15
+        outgoing_connect_rate:
+          type: number
+          description: '% of outgoing calls that were connected'
+          example: 85
+        incoming_calls:
+          type: number
+          description: Total number of incoming calls
+          example: 50
+        incoming_answered_calls:
+          type: number
+          description: Number of incoming calls that were answered
+          example: 45
+        incoming_answer_rate:
+          type: number
+          description: '% of incoming calls that were answered'
+          example: 90
+        incoming_missed_calls:
+          type: number
+          description: Number of incoming calls that were missed
+          example: 5
+        missed_during_agent_hours:
+          type: number
+          description: Number of incoming calls that were missed calls during working hours (missed by agent)
+          example: 3
+        avg_ring_time:
+          type: number
+          description: Average time before pickup in seconds
+          example: 15
+        avg_call_duration:
+          type: number
+          description: Average call duration in seconds
+          example: 180
+        avg_talk_time:
+          type: number
+          description: Average talk time per call in seconds
+          example: 180
+        avg_hold_time:
+          type: number
+          description: Average hold time per call in seconds
+          example: 30
+        avg_wrap_up_time:
+          type: number
+          description: Average wrap-up/post-call time in seconds
+          example: 45
+        avg_handle_time:
+          type: number
+          description: Average time spent handling each call in seconds (talk time + hold time + wrap-up)
+          example: 255
+        sla_rate_30sec:
+          type: number
+          description: Percentage of calls answered within 30 sec (SLA)
+          example: 95
+        unique_outgoing_calls:
+          type: number
+          description: Unique contact numbers dialed by your team
+          example: 75
+        unique_incoming_calls:
+          type: number
+          description: Unique contact numbers that called you
+          example: 40
+        missed_after_office_hours:
+          type: number
+          description: Number of incoming calls that were missed after office hours
+          example: 60
+        missed_abandoned_before_ringing:
+          type: number
+          description: Number of incoming calls that were missed as the contact abandoned the call before it rang your team.
+          example: 15
+        avg_queue_time:
+          type: number
+          description: Average queue time before pickup (in seconds)
+          example: 13
+        voicemails_received:
+          type: number
+          description: Number of incoming voicemails
+          example: 45
+        avg_post_call_survey_rating:
+          type: number
+          description: Average post call survey rating
+          example: 3.8
+    CallAccountAnalyticsDto:
+      type: object
+      properties:
+        metadata:
+          description: Object containing metadata related to the analytics request.
+          allOf:
+          - $ref: '#/components/schemas/BaseCallAnalyticsMetadataDto'
+        summary:
+          description: Object containing all the metrics for account level analytics.
+          allOf:
+          - $ref: '#/components/schemas/CallAccountAnalyticsSummaryDto'
+    CallJourneyResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          default: 123456
+          description: Unique id of the call as generated by JustCall
+        call_sid:
+          type: string
+          default: CA0247d967e9bb3c284163a37a43XXXX
+          description: Unique call sid of the call as generated by JustCall
+        journey:
+          default: []
+          example:
+          - sequence: 1
+            stage: predial_settings
+            payload:
+              record_call: 'ON'
+              ring_time: '30'
+              ring_tone: US
+              geo_location_restricted: 'no'
+          - sequence: 2
+            stage: incoming_call_type
+            payload:
+              action: Call Answered by Voice Agent
+              value: ''
+          - sequence: 3
+            stage: agents_call_timeline
+            payload:
+            - name: Voice Agent
+              agent_id: null
+              agent_status: Answered
+              availability_status: available
+              unavailability_reason: ''
+              ring_modes:
+              - web
+              ringtime: 1
+              call_web_timeline:
+              - action: Call initiated
+                time: 03:37:46 PM
+              - action: Ringing
+                time: 03:37:46 PM
+              - action: Answered
+                time: 03:37:47 PM
+              - action: Call forwarded by voice agent
+                time: 03:38:03 PM
+              call_mobile_timeline: []
+          - sequence: 4
+            stage: post_call_action
+            payload:
+              action: Call Route 1 activated
+              action_data:
+                auto_reconnect: 'no'
+                queue_time: '0'
+                call_timeline: []
+          - sequence: 5
+            stage: forwarding_details
+            payload:
+              forwarding_type: Ring groups - Ring All
+              forwarding_details:
+                agent_id: null
+                phone_number: ''
+                user_group_name: Inhouse Team
+                smart_route_info: {}
+          - sequence: 6
+            stage: agents_call_timeline
+            payload:
+            - name: John Smith
+              agent_id: 1234321
+              agent_status: Dialer Not Connected
+              availability_status: available
+              unavailability_reason: ''
+              ring_modes:
+              - web
+              ringtime: 0
+              call_web_timeline:
+              - action: Call initiated
+                time: 03:38:03 PM
+              - action: No answer
+                time: 03:38:03 PM
+              call_mobile_timeline: []
+          - sequence: 7
+            stage: greeting_message
+            payload:
+            - is_mp3: false
+              title: Unanswered text message
+              content: All agents are currently unavailable. Please try calling back later.
+          - sequence: 8
+            stage: call_ended
+            payload: {}
+          type: array
+          items:
+            $ref: '#/components/schemas/CallJourneysDTO'
+    QueueCallDTO:
+      type: object
+      properties:
+        entered_at_position:
+          type: string
+          default: '1'
+          description: The position assigned to the caller while entering the queue basis the number of callers already waiting in the queue.
+        exit_reason:
+          type: string
+          default: ''
+          description: 'Reason for the caller exiting from the queue. This can be out of: <br>- Caller got connected to a JustCall agent <br>- Caller exceeded maximum wait time for the JustCall number <br>- Caller hangup while waiting in queue <br>'
+    CallNumberAnalyticsDto:
+      type: object
+      properties:
+        metadata:
+          description: Object containing metadata related to the analytics request.
+          allOf:
+          - $ref: '#/components/schemas/BaseCallAnalyticsMetadataDto'
+        records:
+          description: Array of objects containing analytics records for each justcall number.
+          type: array
+          items:
+            $ref: '#/components/schemas/CallNumberAnalyticsRecordDto'
+    CallVoiceAgentActionDTO:
+      type: object
+      properties:
+        state:
+          type: string
+          default: ''
+          example: during_call
+          description: Represents the state or phase of the call lifecycle during which the action was executed.
+          enum:
+          - during_call
+          - after_call
+        action_id:
+          type: string
+          default: ''
+          example: act_01HZYBB3TQW9YDK1A6KV
+          description: Unique identifier for the action.
+        name:
+          type: string
+          default: ''
+          example: Send SMS
+          description: Name of the action as defined in the voice agent configuration.
+        type:
+          type: string
+          default: ''
+          example: send_sms
+          description: Type of the action as defined in the voice agent configuration.
+          enum:
+          - appointment_scheduled
+          - call_transfer
+          - data_collection
+          - send_sms
+          - set_disposition
+          - ivr_navigation
+        status:
+          type: string
+          default: success
+          example: success
+          description: Represents the current status of the action execution.
+          enum:
+          - success
+          - fail
+        executed_at:
+          type: string
+          default: ''
+          example: '2025-06-23 10:00:00'
+          description: Timestamp at which the action was executed.
+        output:
+          type: object
+          default: {}
+          example:
+            sms_id: 123456
+          description: Additional data related to the executed action. Contents vary based on the action type.
+          additionalProperties: true
+    CallAgentAnalyticsSummaryDto:
+      type: object
+      properties:
+        total_calls:
+          type: number
+          description: Total number of calls during the period (Incoming + Outgoing)
+          example: 150
+        outgoing_calls:
+          type: number
+          description: Total number of outgoing calls
+          example: 100
+        outgoing_connected_calls:
+          type: number
+          description: Number of outgoing calls that were connected (answered)
+          example: 85
+        outgoing_not_connected_calls:
+          type: number
+          description: Number of outgoing calls not connected (busy, unanswered, failed, restricted or blocked)
+          example: 15
+        outgoing_connect_rate:
+          type: number
+          description: '% of outgoing calls that were connected'
+          example: 85
+        incoming_calls:
+          type: number
+          description: Total number of incoming calls
+          example: 50
+        incoming_answered_calls:
+          type: number
+          description: Number of incoming calls that were answered
+          example: 45
+        incoming_answer_rate:
+          type: number
+          description: '% of incoming calls that were answered'
+          example: 90
+        incoming_missed_calls:
+          type: number
+          description: Number of incoming calls that were missed
+          example: 5
+        missed_during_agent_hours:
+          type: number
+          description: Number of incoming calls that were missed calls during working hours (missed by agent)
+          example: 3
+        avg_ring_time:
+          type: number
+          description: Average time before pickup in seconds
+          example: 15
+        avg_call_duration:
+          type: number
+          description: Average call duration in seconds
+          example: 180
+        avg_talk_time:
+          type: number
+          description: Average talk time per call in seconds
+          example: 180
+        avg_hold_time:
+          type: number
+          description: Average hold time per call in seconds
+          example: 30
+        avg_wrap_up_time:
+          type: number
+          description: Average wrap-up/post-call time in seconds
+          example: 45
+        avg_handle_time:
+          type: number
+          description: Average time spent handling each call in seconds (talk time + hold time + wrap-up)
+          example: 255
+        sla_rate_30sec:
+          type: number
+          description: Percentage of calls answered within 30 sec (SLA)
+          example: 95
+        unique_outgoing_calls:
+          type: number
+          description: Unique contact numbers dialed by your team
+          example: 75
+        unique_incoming_calls:
+          type: number
+          description: Unique contact numbers that called you
+          example: 40
+        avg_post_call_survey_rating:
+          type: number
+          description: Average post-call survey rating
+          example: 4.2
+        avg_queue_time:
+          type: number
+          description: Average queue time before pickup (in seconds)
+          example: 13
+    TranscriptionTimeStampDTO:
+      type: object
+      properties:
+        starttime:
+          type: number
+          default: 0
+        endtime:
+          type: number
+          default: 0
+    QueueCallbackDTO:
+      type: object
+      properties:
+        callback_requested:
+          type: string
+          default: Yes/No
+          description: Whether or not the end customer requested a call back
+        callback_requested_time:
+          type: string
+          default: '2023-08-22 11:21:14'
+          description: Time when callback was requested
+        callback_attempted:
+          type: string
+          default: Yes/No
+          description: Whether or not our system attempted a call back
+        callback_attempted_time:
+          type: string
+          default: '2023-08-22 11:22:16'
+          description: Time when callback was attempted for the first time
+        callback_reached:
+          type: string
+          default: Yes/No
+          description: Whether or not the agent picks up successfully
+        callback_status:
+          type: string
+          default: Yes/No
+          description: Whether or not the user picks up successfully
+        callback_wait_duration:
+          type: string
+          default: 0:00:50
+          description: Duration between customer requesting the callback and our service trying for the first time
+        callback_reached_time:
+          type: string
+          default: '2023-08-22 11:22:21'
+          description: Time when the agent picks up the call
+        callback_reached_duration:
+          type: string
+          default: 0:00:30
+          description: Duration between request and when the call was picked up by the agent
+    CallNumberAnalyticsRecordDto:
+      type: object
+      properties:
+        metadata:
+          description: Object containing metadata related to the analytics request.
+          allOf:
+          - $ref: '#/components/schemas/BaseCallAnalyticsMetadataDto'
+        justcall_number:
+          type: string
+          description: JustCall number associated with the call.
+          example: '1234567890'
+        summary:
+          description: Object containing all the metrics for phone number level analytics.
+          allOf:
+          - $ref: '#/components/schemas/CallNumberAnalyticsSummaryDto'
+    JustCallAIDTO:
+      type: object
+      properties:
+        call_moments:
+          example:
+          - exams
+          - math
+          - confidence
+          description: List of most important keywords associated with a call
+          type: array
+          items:
+            type: string
+        customer_sentiment:
+          type: string
+          example: Positive
+          description: Overall analysis of the sentiment of the customer based on words and tone
+        call_score:
+          type: number
+          default: 0
+          description: Overall score of the call out of 10
+        call_score_parameters:
+          $ref: '#/components/schemas/CallScoreParameter'
+        tags:
+          default: []
+          example:
+          - demo
+          - follow-up
+          description: Tags added by the user(agent) for a call
+          type: array
+          items:
+            type: string
+        manual_call_score:
+          type: number
+          default: 0
+          example: 4
+          description: Average of all manual scores added
+        call_summary:
+          type: string
+          example: Call summary
+          description: A summary of the key highlights and takeaways from a call
+    CallVoiceAgentResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          default: 0
+          example: 123456
+          description: Unique id of the call as generated by JustCall
+        call_sid:
+          type: string
+          default: ''
+          example: CA0247d967e9bb3c284163a37a43XXXX
+          description: Unique call sid of the call as generated by JustCall
+        call_direction:
+          type: string
+          description: Direction of the call.
+          enum:
+          - Incoming
+          - Outgoing
+        ai_agent_name:
+          type: string
+          default: ''
+          example: John Smith
+          description: Name of the AI Agent setup by the user
+        ai_agent_id:
+          type: string
+          default: ''
+          example: agent_1638da016d3233a6196ee2d225
+          description: Unique id of the AI Agent setup by the user
+        call_answered_by:
+          type: string
+          default: ''
+          description: 'Indicates who or what answered the call. Possible values: Human, Machine, or Unclassified. When Voicemail Detection (AMD) is enabled, this field is automatically classified as Human or Machine based on detection results. If AMD is disabled, the field defaults to Unclassified.'
+          enum:
+          - Machine
+          - Human
+          - Unclassified
+        voicemail_dropped:
+          type: boolean
+          default: false
+          description: Indicates whether the voicemail was dropped or the call was terminated after detection.
+        action_count:
+          type: number
+          default: 0
+          example: 2
+          description: Number of actions executed during the call
+        actions:
+          default: []
+          description: Details of all the actions executed during the call.
+          example:
+          - state: during_call
+            action_id: action_25a9a3e9-8435-76b5f07fc361
+            name: Schedule Appointment 1
+            type: appointment_scheduled
+            status: success
+            executed_at: '2025-07-18 10:00:00'
+            output:
+              calendar_id: abcde12345
+              appointment_id: abcde12345
+          - state: after_call
+            action_id: action_54a9a3e9-1235-b655f07fb543
+            name: Send SMS
+            type: send_sms
+            status: succeeded
+            executed_at: '2025-06-23 10:01:00'
+            output:
+              sms_id: 123456
+          type: array
+          items:
+            $ref: '#/components/schemas/CallVoiceAgentActionDTO'
+        dynamic_variables:
+          default: {}
+          description: Store and access dynamic data that AI Voice Agent captures before or during the call. These variables help personalize conversations, automate actions, and keep context throughout the interaction.
+          allOf:
+          - $ref: '#/components/schemas/CallVoiceAgentDynamicVariablesResponseDTO'
+        dtmf_input:
+          default: []
+          description: DTMF (Dual-Tone Multi-Frequency) inputs received from the caller during the call — for example, keypad inputs like menu selections.
+          type: array
+          items:
+            $ref: '#/components/schemas/CallVoiceAgentDtmfInputResponseDTO'
+    CallNumberAnalyticsSummaryDto:
+      type: object
+      properties:
+        total_calls:
+          type: number
+          description: Total number of calls during the period (Incoming + Outgoing)
+          example: 150
+        outgoing_calls:
+          type: number
+          description: Total number of outgoing calls
+          example: 100
+        outgoing_connected_calls:
+          type: number
+          description: Number of outgoing calls that were connected (answered)
+          example: 85
+        outgoing_not_connected_calls:
+          type: number
+          description: Number of outgoing calls not connected (busy, unanswered, failed, restricted or blocked)
+          example: 15
+        outgoing_connect_rate:
+          type: number
+          description: '% of outgoing calls that were connected'
+          example: 85
+        incoming_calls:
+          type: number
+          description: Total number of incoming calls
+          example: 50
+        incoming_answered_calls:
+          type: number
+          description: Number of incoming calls that were answered
+          example: 45
+        incoming_answer_rate:
+          type: number
+          description: '% of incoming calls that were answered'
+          example: 90
+        incoming_missed_calls:
+          type: number
+          description: Number of incoming calls that were missed
+          example: 5
+        missed_during_agent_hours:
+          type: number
+          description: Number of incoming calls that were missed calls during working hours (missed by agent)
+          example: 3
+        avg_ring_time:
+          type: number
+          description: Average time before pickup in seconds
+          example: 15
+        avg_call_duration:
+          type: number
+          description: Average call duration in seconds
+          example: 180
+        avg_talk_time:
+          type: number
+          description: Average talk time per call in seconds
+          example: 180
+        avg_hold_time:
+          type: number
+          description: Average hold time per call in seconds
+          example: 30
+        avg_wrap_up_time:
+          type: number
+          description: Average wrap-up/post-call time in seconds
+          example: 45
+        avg_handle_time:
+          type: number
+          description: Average time spent handling each call in seconds (talk time + hold time + wrap-up)
+          example: 255
+        sla_rate_30sec:
+          type: number
+          description: Percentage of calls answered within 30 sec (SLA)
+          example: 95
+        unique_outgoing_calls:
+          type: number
+          description: Unique contact numbers dialed by your team
+          example: 75
+        unique_incoming_calls:
+          type: number
+          description: Unique contact numbers that called you
+          example: 40
+        avg_queue_time:
+          type: number
+          description: Average queue time before pickup (in seconds)
+          example: 13
+        avg_post_call_survey_rating:
+          type: number
+          description: Average post call survey rating
+          example: 3.8
+    CallAgentAnalyticsDto:
+      type: object
+      properties:
+        metadata:
+          description: Object containing metadata related to the analytics request.
+          allOf:
+          - $ref: '#/components/schemas/BaseCallAnalyticsMetadataDto'
+        records:
+          description: Array of objects containing analytics records for each agent.
+          type: array
+          items:
+            $ref: '#/components/schemas/CallAgentAnalyticsRecordDto'
+    CallResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          default: 123456
+          description: Unique id of the call as generated by JustCall
+        call_sid:
+          type: string
+          default: CA0247d967e9bb3c284163a37a43XXXX
+          description: Unique call sid of the call as generated by JustCall
+        contact_number:
+          type: string
+          default: 13801136XXX
+          description: Phone number of the contact
+        contact_name:
+          type: string
+          default: Rachel G.
+          description: Name of the contact
+        contact_email:
+          type: string
+          default: john@suits.co
+          description: Email id of the contact
+        justcall_number:
+          type: string
+          default: 12707705XXX
+          description: JustCall number used by the agent to make or receive the call
+        justcall_line_name:
+          type: string
+          default: Sales Line
+          description: If line name added, the name is sent otherwise blank
+        agent_id:
+          type: number
+          default: 1308
+          description: Id of the agent who made or received the call
+        agent_name:
+          type: string
+          default: John Smith
+          description: Name of the agent who made or received the call
+        agent_email:
+          type: string
+          default: john@abc.com
+          description: Email id of the agent who made or received the call
+        agent_active:
+          type: string
+          default: Active
+          description: Whether the agent associated with the call is active or not
+        call_date:
+          type: string
+          default: '2017-12-18'
+          description: Date of call in UTC
+        call_user_date:
+          type: string
+          default: '2017-12-17'
+          description: Date of call in users timezone
+        call_time:
+          type: string
+          default: '13:55:43'
+          description: Timestamp of call in UTC
+        call_user_time:
+          type: string
+          default: '8:25:43'
+          description: Timestamp of call in users timezone
+        cost_incurred:
+          type: number
+          default: 0.005
+          description: Charge for the particular call
+        call_info:
+          $ref: '#/components/schemas/CallInfoDTO'
+        call_duration:
+          $ref: '#/components/schemas/CallDurationDTO'
+        ivr_info:
+          $ref: '#/components/schemas/IvrCallsDTO'
+        queue_callback:
+          $ref: '#/components/schemas/QueueCallbackDTO'
+        justcall_iq:
+          $ref: '#/components/schemas/JustCallIQDTO'
+    CallScoreParameter:
+      type: object
+      properties:
+        dead_air_time:
+          type: number
+          default: 0
+          description: dead_air_time
+        filler_word:
+          type: number
+          default: 0
+          description: filler_word
+        de_escalation:
+          type: number
+          default: 0
+          description: de_escalation
+        empathy:
+          type: number
+          default: 0
+          description: empathy
+        talk_listen_ratio:
+          type: number
+          default: 0
+          description: talk_listen_ratio
+        greetings:
+          type: number
+          default: 0
+          description: greetings
+        words_per_minute:
+          type: number
+          default: 0
+          description: words_per_minute
+        monologue_duration:
+          type: number
+          default: 0
+          description: monologue_duration
+        call_etiquette:
+          type: number
+          default: 0
+          description: call_etiquette
+        customer_sentiment_score:
+          type: number
+          default: 0
+          description: customer_sentiment_score
+    CallJourneysDTO:
+      type: object
+      properties:
+        sequence:
+          type: number
+          default: 1
+          example: 1
+        stage:
+          type: string
+          default: ''
+          example: predial_settings
+        payload:
+          default: []
+          example:
+          - sequence: 1
+            stage: predial_settings
+            payload:
+              record_call: 'ON'
+              ring_time: '30'
+              ring_tone: US
+              geo_location_restricted: 'no'
+          type: array
+          items:
+            type: string
+    CallResponse21DTO:
+      type: object
+      properties:
+        id:
+          type: number
+          default: 123456
+          description: Unique id of the call as generated by JustCall
+        call_sid:
+          type: string
+          default: CA0247d967e9bb3c284163a37a43XXXX
+          description: Unique call sid of the call as generated by JustCall
+        contact_number:
+          type: string
+          default: 13801136XXX
+          description: Phone number of the contact
+        contact_name:
+          type: string
+          default: Rachel G.
+          description: Name of the contact
+        contact_email:
+          type: string
+          default: john@suits.co
+          description: Email id of the contact
+        justcall_number:
+          type: string
+          default: 12707705XXX
+          description: JustCall number used by the agent to make or receive the call
+        justcall_line_name:
+          type: string
+          default: Sales Line
+          description: If line name added, the name is sent otherwise blank
+        agent_id:
+          type: number
+          default: 1308
+          description: Id of the agent who made or received the call
+        agent_name:
+          type: string
+          default: John Smith
+          description: Name of the agent who made or received the call
+        agent_email:
+          type: string
+          default: john@abc.com
+          description: Email id of the agent who made or received the call
+        agent_active:
+          type: string
+          default: Active
+          description: Whether the agent associated with the call is active or not
+        call_date:
+          type: string
+          default: '2017-12-18'
+          description: Date of call in UTC
+        call_user_date:
+          type: string
+          default: '2017-12-17'
+          description: Date of call in users timezone
+        call_time:
+          type: string
+          default: '13:55:43'
+          description: Timestamp of call in UTC
+        call_user_time:
+          type: string
+          default: '8:25:43'
+          description: Timestamp of call in users timezone
+        cost_incurred:
+          type: number
+          default: 0.005
+          description: Charge for the particular call
+        call_info:
+          $ref: '#/components/schemas/CallInfoDTO'
+        call_duration:
+          $ref: '#/components/schemas/CallDurationDTO'
+        ivr_info:
+          $ref: '#/components/schemas/IvrCallsDTO'
+        queue_callback:
+          $ref: '#/components/schemas/QueueCallbackDTO'
+        queue:
+          $ref: '#/components/schemas/QueueCallDTO'
+        justcall_ai:
+          $ref: '#/components/schemas/JustCallAIDTO'
+    CallTranscriptionDTO:
+      type: object
+      properties:
+        speaker_id:
+          type: string
+          example: 1
+          description: speaker id
+        speaker_name:
+          type: string
+          example: John Doe
+          description: speaker name
+        sentence:
+          type: string
+          example: Hey, Can I know the status with the deal?
+          description: transcription sentence
+        timestamp:
+          example:
+            starttime: 0
+            endtime: 0
+          description: Transcription timestamp
+          allOf:
+          - $ref: '#/components/schemas/TranscriptionTimeStampDTO'
+    CallAgentAnalyticsRecordDto:
+      type: object
+      properties:
+        metadata:
+          description: Object containing metadata related to the analytics request.
+          allOf:
+          - $ref: '#/components/schemas/BaseCallAnalyticsMetadataDto'
+        agent_id:
+          type: number
+          description: Id of the agent.
+          example: 12345
+        agent_name:
+          type: string
+          example: John Smith
+          description: Name of the agent.
+        agent_email:
+          type: string
+          example: john@abc.com
+          description: Email id of the agent.
+        summary:
+          description: Object containing all the metrics for agent level analytics.
+          allOf:
+          - $ref: '#/components/schemas/CallAgentAnalyticsSummaryDto'
+    BaseCallAnalyticsMetadataDto:
+      type: object
+      properties:
+        from_date:
+          type: string
+          description: Analytics period start date in YYYY-MM-DD format
+          example: '2024-01-01'
+        to_date:
+          type: string
+          description: Analytics period end date in YYYY-MM-DD format
+          example: '2024-01-31'
+    CallDurationDTO:
+      type: object
+      properties:
+        ring_time:
+          type: number
+          default: 5
+          description: Time for which call rings before connecting with the system/agent
+        friendly_duration:
+          type: string
+          default: 00:00:05
+          description: Duration of call in standard hh:mm:ss format
+        total_duration:
+          type: number
+          default: 155
+          description: Duration of call in seconds = conversation_time+ hold_time
+        queue_wait_time:
+          type: number
+          default: 5
+          description: Time for which caller waited in the queue
+        hold_time:
+          type: number
+          default: 5
+          description: Time for which caller was put on hold, if not put on hold should be 0
+        conversation_time:
+          type: number
+          default: 5
+          description: Total duration without the Hold time
+        wrap_up_time:
+          type: number
+          default: 5
+          description: Time set by agent from adding notes & disposition after a call
+        handle_time:
+          type: number
+          default: 5
+          description: Total duration + Wrap up time
+    UpdateCallDTO:
+      type: object
+      properties:
+        notes:
+          type: string
+          description: Add or update the note for a call. If a note already exists, it will be completely overwritten. The input supports multiple languages, emojis, and special characters. The note is limited to 1600 encoded characters — content beyond this limit will be automatically truncated.
+          default: ''
+        disposition_code:
+          type: string
+          description: 'Add or update the disposition code for a call. The code must already be present in your JustCall account. Expected format example - if your list title is ‘Sales’ and your code is ‘Follow Up’ then your input in disposition field should be ‘Sales: Follow Up’.'
+          default: ''
+        rating:
+          type: number
+          description: Update the rating for a call. Please note that ratings should be from 0 to 5 and can contain a 0.5 decimal. Ratings like 2.5, 4.5 are allowed, while ratings like 2.3, 4.6 are not allowed.
+    CallVoiceAgentDynamicVariablesResponseDTO:
+      type: object
+      properties:
+        before_call:
+          default: {}
+          description: Dynamic variables injected into the agent before the call starts. These values can be used to personalize the conversation or prefill context.
+          example:
+          - name: CallerName
+            value: John
+            type: string
+          type: array
+          items:
+            $ref: '#/components/schemas/CallVoiceAgentDynamicVariableResponseDTO'
+        during_call:
+          default: {}
+          description: Dynamic variables captured or injected by the AI Agent while the call is in progress. These values can be updated in real time based on the conversation.
+          example:
+          - name: CallerId
+            value: '12345'
+            type: string
+          type: array
+          items:
+            $ref: '#/components/schemas/CallVoiceAgentDynamicVariableResponseDTO'
   securitySchemes:
-    ApiKeyAuth:
+    AccessToken:
       type: apiKey
       in: header
       name: Authorization
-      description: JustCall authentication. Pass the API key and API secret as defined in the JustCall Authentication documentation (typically combined and passed in the Authorization header).
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

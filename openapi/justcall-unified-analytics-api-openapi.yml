@@ -1,0 +1,1134 @@
+openapi: 3.2.0
+info:
+  title: JustCall Unified Analytics API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: Unified Analytics
+paths:
+  /v2/unified-analytics/calls/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsOverview
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls overview
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsOverview_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls overview v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsTimeSeriesOverview
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls time series overview
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsTimeSeriesOverview_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls time series overview v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/outgoing/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsOutgoingOverview
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls outgoing overview
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/outgoing/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsOutgoingOverview_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls outgoing overview v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/outgoing/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsOutgoingTimeSeries
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls outgoing time series
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/outgoing/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsOutgoingTimeSeries_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls outgoing time series v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/incoming/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsIncomingOverview
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls incoming overview
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/incoming/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsIncomingOverview_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls incoming overview v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/incoming/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsIncomingTimeSeries
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls incoming time series
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/incoming/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsIncomingTimeSeries_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls incoming time series v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/missed/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsMissedOverview
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls missed overview
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/missed/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsMissedOverview_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls missed overview v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/missed/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsMissedTimeSeries
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls missed time series
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/missed/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsMissedTimeSeries_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls missed time series v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/dispositions/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsDispositionOverview
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsDispositionAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls disposition overview
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/dispositions/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsDispositionOverview_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsDispositionAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls disposition overview v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/agents/dispositions/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsAgentDispositionAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsDispositionAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls agent disposition analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/agents/dispositions/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsAgentDispositionAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsDispositionAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls agent disposition analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/survey-ratings/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsPostCallSurveyOverview
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls post call survey overview
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/survey-ratings/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsPostCallSurveyOverview_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls post call survey overview v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/agents/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsAgentAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls agent analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/agents/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsAgentAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls agent analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/user-groups/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsUserGroupAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls user group analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/user-groups/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsUserGroupAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls user group analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/phone-numbers/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsPhoneNumberAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls phone number analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/phone-numbers/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsPhoneNumberAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls phone number analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/busy-hours/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsBusyHoursAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsBusyHoursAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls busy hours analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/busy-hours/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsBusyHoursAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsBusyHoursAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls busy hours analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/voicemails/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getVoiceMailAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsVoiceMailAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get voice mail analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/voicemails/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getVoiceMailAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsVoiceMailAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get voice mail analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/voicebot/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsVoicebotOverviewAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsVoicebotAnalyticsRequestDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls voicebot overview analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/voicebot/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsVoicebotOverviewAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsVoicebotAnalyticsRequestDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls voicebot overview analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/calls/voicebot/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsVoicebotOverviewAnalyticsTimeSeries
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsVoicebotAnalyticsRequestDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls voicebot overview analytics time…
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/voicebot/overview/time-series:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsVoicebotOverviewAnalyticsTimeSeries_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsVoicebotAnalyticsRequestDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls voicebot overview analytics time…
+      x-summary-source: derived
+  /v2/unified-analytics/calls/voicebot/agents/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsVoicebotAgentAnalyticsOverviewAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsVoicebotAnalyticsRequestDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls voicebot agent analytics overview…
+      x-summary-source: derived
+  /v2.1/unified-analytics/calls/voicebot/agents/overview:
+    post:
+      operationId: CallsUnifiedAnalyticsController_getCallsVoicebotAgentAnalyticsOverviewAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedCallsVoicebotAnalyticsRequestDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Calls unified analytics controller get calls voicebot agent analytics overview…
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsOverview
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls overview
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsOverview_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls overview v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/overview/time-series:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsHumanVsMachineTimeSeries
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls human vs machine time series
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/overview/time-series:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsHumanVsMachineTimeSeries_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsTimeSeriesFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls human vs machine time series…
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/overview/reports:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsOverviewReports
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsOverviewReportsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls overview reports
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/overview/reports:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsOverviewReports_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsOverviewReportsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls overview reports v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/agents/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsAgentAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls agent analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/agents/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsAgentAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls agent analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/teams/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsTeamAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls team analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/teams/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsTeamAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls team analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/phone-numbers/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsPhoneNumberAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls phone number analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/phone-numbers/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsPhoneNumberAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls phone number analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/countries/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsCountryAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls country analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/countries/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsCountryAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls country analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/campaigns/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsCampaignAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls campaign analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/campaigns/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsCampaignAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls campaign analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/busy-hours/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsBusyHoursAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsBusyHoursAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls busy hours analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/busy-hours/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsBusyHoursAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsBusyHoursAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls busy hours analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/dispositions/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsDispositionAnalytics
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsDispositionAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls disposition analytics
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/dispositions/overview:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsDispositionAnalytics_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSDCallsDispositionAnalyticsFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls disposition analytics v21
+      x-summary-source: derived
+  /v2/unified-analytics/sd-calls/campaigns/active/list:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsCampaignsActiveList
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsBaseFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls campaigns active list
+      x-summary-source: derived
+  /v2.1/unified-analytics/sd-calls/campaigns/active/list:
+    post:
+      operationId: SDCallsUnifiedAnalyticsController_getSDCallsCampaignsActiveList_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsBaseFilterDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: SD calls unified analytics controller get SD calls campaigns active list v21
+      x-summary-source: derived
+  /v2/unified-analytics/settings:
+    put:
+      operationId: UnifiedAnalyticsController_upsertSettings
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsSettingsRequestDto'
+      responses:
+        '200':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Unified analytics controller upsert settings
+      x-summary-source: derived
+    get:
+      operationId: UnifiedAnalyticsController_getSettings
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Unified analytics controller get settings
+      x-summary-source: derived
+  /v2.1/unified-analytics/settings:
+    put:
+      operationId: UnifiedAnalyticsController_upsertSettings_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsSettingsRequestDto'
+      responses:
+        '200':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Unified analytics controller upsert settings v21
+      x-summary-source: derived
+    get:
+      operationId: UnifiedAnalyticsController_getSettings_v21
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - Unified Analytics
+      summary: Unified analytics controller get settings v21
+      x-summary-source: derived
+components:
+  schemas:
+    UnifiedCallsDispositionAnalyticsFilterDto:
+      type: object
+      properties: {}
+    AnalyticsSettingsRequestDto:
+      type: object
+      properties: {}
+    UnifiedSDCallsAnalyticsTimeSeriesFilterDto:
+      type: object
+      properties: {}
+    UnifiedCallsAnalyticsTimeSeriesFilterDto:
+      type: object
+      properties: {}
+    UnifiedSDCallsBusyHoursAnalyticsFilterDto:
+      type: object
+      properties: {}
+    UnifiedSDCallsDispositionAnalyticsFilterDto:
+      type: object
+      properties: {}
+    UnifiedSDCallsOverviewReportsFilterDto:
+      type: object
+      properties: {}
+    UnifiedCallsVoiceMailAnalyticsFilterDto:
+      type: object
+      properties: {}
+    UnifiedCallsVoicebotAnalyticsRequestDto:
+      type: object
+      properties: {}
+    UnifiedSDCallsAnalyticsFilterDto:
+      type: object
+      properties: {}
+    UnifiedCallsAnalyticsFilterDto:
+      type: object
+      properties: {}
+    AnalyticsBaseFilterDto:
+      type: object
+      properties: {}
+    UnifiedCallsBusyHoursAnalyticsFilterDto:
+      type: object
+      properties: {}
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

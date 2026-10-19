@@ -1,0 +1,3056 @@
+openapi: 3.2.0
+info:
+  title: JustCall Sales Dialer API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: Sales Dialer
+paths:
+  /v2/sales_dialer/calls:
+    get:
+      operationId: sales_dialer_call_list
+      summary: List all calls
+      description: Retrieve all Sales Dialer calls linked to an account or customize the call selection by leveraging the extensive set of query parameters available.
+      parameters:
+      - name: campaign_id
+        required: false
+        in: query
+        description: Campaign ID of the Campaign for which you wish to fetch the calls. You can find the Campaign ID in the Campaigns tab in your Sales Dialer account below the name of each Campaign. Please use only the numerical part as the ID.
+        schema:
+          type: number
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the calls are to be fetched in <b>UTC Timezone</b>.
+        schema:
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the calls are to be fetched in <b>UTC Timezone</b>.
+        schema:
+          type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: 'Number of the contact for which calls are to be fetched.<br>Important: Please provide a valid contact number with country code.'
+        schema:
+          type: number
+      - name: sales_dialer_number
+        required: false
+        in: query
+        description: Sales Dialer number for which the calls are to be fetched.
+        schema:
+          type: number
+      - name: agent_id
+        required: false
+        in: query
+        description: ID of the agent for whom the calls are to be fetched. Agent ID can be accessed using <a href="https://developer.justcall.io/reference/users_list_v21">List all users API</a>.
+        schema:
+          type: number
+      - name: call_type
+        required: false
+        in: query
+        description: Enter the type of calls (answered, unanswered, abandoned) that need to be fetched.
+        schema:
+          enum:
+          - OUTGOING_ANSWERED_CALL
+          - OUTGOING_HUMAN_ANSWERED
+          - OUTGOING_MACHINE_ANSWERED
+          - OUTGOING_UNANSWERED_CALL
+          - OUTGOING_FAILED_CALL
+          - OUTGOING_RESTRICTED_CALL
+          - OUTGOING_BLOCKED_CALL
+          - OUTGOING_CANCELLED_CALL
+          - OUTGOING_ABANDONED_CALL
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which calls are to be fetched
+        schema:
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of calls to be fetched per page. Default value is 20 and maximum value is 100.
+        schema:
+          type: number
+      - name: sort
+        required: false
+        in: query
+        description: Select a parameter to sort the order of calls. By default we apply sorting on id field.
+        schema:
+          default: id
+          enum:
+          - id
+          - datetime
+          type: string
+      - name: order
+        required: false
+        in: query
+        description: Order in which the calls list should appear based on the 'sort' parameter selected above
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      - name: fetch_iq_data
+        required: false
+        in: query
+        description: Set fetch_iq_data to true to fetch coaching data by Justcall IQ. Default entry is false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCallResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/calls:
+    get:
+      operationId: sales_dialer_call_list_v21
+      summary: List all calls
+      description: Retrieve all Sales Dialer calls linked to an account or customize the call selection by leveraging the extensive set of query parameters available.
+      parameters:
+      - name: campaign_id
+        required: false
+        in: query
+        description: Campaign ID of the Campaign for which you wish to fetch the calls. You can find the Campaign ID in the Campaigns tab in your Sales Dialer account below the name of each Campaign. Please use only the numerical part as the ID.
+        schema:
+          type: number
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the calls are to be fetched in <b>user's timezone</b>.
+        schema:
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the calls are to be fetched in <b>user's timezone</b>.
+        schema:
+          type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: 'Number of the contact for which calls are to be fetched.<br>Important: Please provide a valid contact number with country code.'
+        schema:
+          type: number
+      - name: sales_dialer_number
+        required: false
+        in: query
+        description: Sales Dialer number for which the calls are to be fetched.
+        schema:
+          type: number
+      - name: agent_id
+        required: false
+        in: query
+        description: ID of the agent for whom the calls are to be fetched. Agent ID can be accessed using <a href="https://developer.justcall.io/reference/users_list_v21">List all users API</a>.
+        schema:
+          type: number
+      - name: call_type
+        required: false
+        in: query
+        description: Enter the type of calls (answered, unanswered, abandoned) that need to be fetched.
+        schema:
+          enum:
+          - OUTGOING_ANSWERED_CALL
+          - OUTGOING_HUMAN_ANSWERED
+          - OUTGOING_MACHINE_ANSWERED
+          - OUTGOING_UNANSWERED_CALL
+          - OUTGOING_FAILED_CALL
+          - OUTGOING_RESTRICTED_CALL
+          - OUTGOING_BLOCKED_CALL
+          - OUTGOING_CANCELLED_CALL
+          - OUTGOING_ABANDONED_CALL
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which calls are to be fetched
+        schema:
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of calls to be fetched per page. Default value is 20 and maximum value is 100.
+        schema:
+          type: number
+      - name: sort
+        required: false
+        in: query
+        description: Select a parameter to sort the order of calls. By default we apply sorting on id field.
+        schema:
+          default: id
+          enum:
+          - id
+          - datetime
+          type: string
+      - name: order
+        required: false
+        in: query
+        description: Order in which the calls list should appear based on the 'sort' parameter selected above
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      - name: fetch_ai_data
+        required: false
+        in: query
+        description: Set fetch_ai_data to true to fetch coaching data by Justcall AI. Default entry is false
+        schema:
+          type: boolean
+      - name: last_call_id_fetched
+        required: false
+        in: query
+        description: Id of the last call fetched in the previous query. This Id ensures that you won't receive any duplicate data when using the 'next_page_link' parameter.
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCallResponse21DTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2/sales_dialer/calls/{id}:
+    get:
+      operationId: sales_dialer_call_get
+      summary: Get a call
+      description: Utilize this endpoint to fetch comprehensive data for a Sales Dialer call, encompassing details like duration, call type, timestamps, notes, and dispositions.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by Sales Dialer
+        schema:
+          type: number
+      - name: fetch_iq_data
+        required: false
+        in: query
+        description: Set fetch_iq_data to true to fetch coaching data by Justcall IQ. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCallResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/calls/{id}:
+    get:
+      operationId: sales_dialer_call_get_v21
+      summary: Get a call
+      description: Utilize this endpoint to fetch comprehensive data for a Sales Dialer call, encompassing details like duration, call type, timestamps, notes, and dispositions.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the call generated by Sales Dialer
+        schema:
+          type: number
+      - name: fetch_ai_data
+        required: false
+        in: query
+        description: Set fetch_ai_data to true to fetch coaching data by Justcall AI. Default entry is false.
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCallResponse21DTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2/sales_dialer/campaigns:
+    get:
+      operationId: sales_dialer_campaign_list
+      summary: List all campaigns
+      description: Retrieve all Sales Dialer campaigns present in an account or use the diverse set of available filters to extract campaigns based on specific conditions.
+      parameters:
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the campaigns are to be fetched in <b>UTC Timezone</b>.
+        schema:
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the campaigns are to be fetched in <b>UTC Timezone</b>.
+        schema:
+          type: string
+      - name: type
+        required: false
+        in: query
+        description: Search for a particular type of campaign from Autodial, Predictive or Dynamic
+        schema:
+          enum:
+          - Autodial
+          - Predictive
+          - Dynamic
+          type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: Search for all campaigns where a particular contact has been added
+        schema:
+          example: 1213566XXXX
+          type: string
+      - name: sales_dialer_number
+        required: false
+        in: query
+        description: Search for all campaigns where a particular Sales Dialer number is set as the default number
+        schema:
+          example: 1813266XXXX
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which campaigns are to be fetched
+        schema:
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of campaigns to be fetched per page. Default value is 20 and maximum value is 100
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCampaignResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/campaigns:
+    get:
+      operationId: sales_dialer_campaign_list_v21
+      summary: List all campaigns
+      description: Retrieve all Sales Dialer campaigns present in an account or use the diverse set of available filters to extract campaigns based on specific conditions.
+      parameters:
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in yyyy-mm-dd hh:mm:ss or yyyy-mm-dd format starting from when the campaigns are to be fetched in user's timezone.
+        schema:
+          example: '2025-01-01 01:00:00'
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in yyyy-mm-dd hh:mm:ss  or yyyy-mm-dd  format till when the campaigns are to be fetched in user's timezone.
+        schema:
+          example: '2025-01-01 01:00:00'
+          type: string
+      - name: type
+        required: false
+        in: query
+        description: Search for a particular type of campaign from PowerDial, Predictive or Dynamic
+        schema:
+          example: PowerDial
+          enum:
+          - PowerDial
+          - Predictive
+          - Dynamic
+          type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: Search for all campaigns where a particular contact has been added
+        schema:
+          example: 1213566XXXX
+          type: string
+      - name: sales_dialer_number
+        required: false
+        in: query
+        description: Search for all campaigns where a particular Sales Dialer number is set as the default number
+        schema:
+          example: 1813266XXXX
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which campaigns are to be fetched. Default value is 0.
+        schema:
+          example: 0
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of campaigns to be fetched per page. Default value is 10 and maximum value is 50
+        schema:
+          example: 10
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the campaigns list should appear based on the ‘sort’ parameter used. Default value is desc
+        schema:
+          example: desc
+          type: string
+      - name: last_campaign_id_fetched
+        required: false
+        in: query
+        description: Id of the last campaign fetched in the previous query. This Id ensures that you won't receive any duplicate data when using the 'next_page_link' parameter.
+        schema:
+          example: 17284241
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCampaignResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+    post:
+      operationId: sales_dialer_create_campaign_v21
+      summary: Create campaign
+      description: Utilize this endpoint to create a new Sales Dialer campaign for your account.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCampaignDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCampaignResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2/sales_dialer/campaigns/{id}:
+    get:
+      operationId: sales_dialer_campaign_get
+      summary: Get a campaign
+      description: Access this endpoint to retrieve detailed information for a Sales Dialer campaign, including key details such as campaign type and default number.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the campaign generated by Sales Dialer. You can find the Campaign ID in the Campaigns tab in your Sales Dialer account below the name of each Campaign. Please use only the numerical part as the ID.
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCampaignResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/campaigns/{id}:
+    get:
+      operationId: sales_dialer_campaign_get_v21
+      summary: Get a campaign
+      description: Access this endpoint to retrieve detailed information for a Sales Dialer campaign, including key details such as campaign type and default number.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the campaign generated by Sales Dialer. You can find the Campaign ID in the Campaigns tab in your Sales Dialer account below the name of each Campaign. Please use only the numerical part as the ID.
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignData'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+    put:
+      operationId: sales_dialer_campaign_update_v21
+      summary: Update campaign
+      description: Utilize this endpoint to update an existing Sales Dialer campaign in your account.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the campaign generated by Sales Dialer. You can find the Campaign ID in the Campaigns tab in your Sales Dialer account below the name of each Campaign. Please use only the numerical part as the ID
+        schema:
+          example: 1234
+          type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaignDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCampaignResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/campaigns/contact:
+    post:
+      operationId: sales_dialer_add_contact_to_campaign_v21
+      summary: Add contact to a campaign
+      description: Use this endpoint to add a contact to a campaign.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddContactToCampaignPayloadDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCampaignContactDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+    delete:
+      operationId: sales_dialer_remove_contact_from_campaign_v21
+      summary: Remove contact from a campaign
+      description: Utilize this endpoint to remove a particular contact from a campaign or remove all contacts from the campaign.
+      parameters:
+      - name: campaign_id
+        required: true
+        in: query
+        description: Unique id of the campaign generated by Sales Dialer. You can find the Campaign ID in the Campaigns tab in your Sales Dialer account below the name of each Campaign. Please use only the numerical part as the ID.
+        schema:
+          example: 1234
+          type: number
+      - name: contact_id
+        required: false
+        in: query
+        description: Id of the contact to remove from the campaign. This field, if sent, will be used to search for the contact. Please send only one of contact_id and phone_number fields.
+        schema:
+          example: 12345
+          type: number
+      - name: phone_number
+        required: false
+        in: query
+        description: Phone number of the contact. This field, if sent, will be used by us to search the contact. Please send only one of contact_id and phone_number fields.
+        schema:
+          example: 1213566XXXX
+          type: string
+      - name: remove_all
+        required: false
+        in: query
+        description: Set this parameter to true to remove all contacts from a particular campaign. The default value is false.
+        schema:
+          default: false
+          example: 'false'
+          type: boolean
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveSDContactDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/campaigns/contacts:
+    get:
+      operationId: sales_dialer_campaign_contacts_list_v21
+      summary: List campaign contacts
+      description: Access this endpoint to fetch a list of all the contacts present in a particular Sales Dialer campaign or filter them based on their status or progress in the campaign.
+      parameters:
+      - name: campaign_id
+        required: true
+        in: query
+        description: Unique id of the campaign generated by Sales Dialer. You can find the Campaign ID in the Campaigns tab in your Sales Dialer account below the name of each Campaign. Please use only the numerical part as the ID
+        schema:
+          example: 1234
+          type: number
+      - name: contact_status
+        required: false
+        in: query
+        description: Set contact status to ‘Active’, ‘DNCA’, or ‘Invalid’ to filter based on the status of a contact’s number in a specific campaign
+        schema:
+          example: Active
+          enum:
+          - Active
+          - Invalid
+          - DNCA
+          type: string
+      - name: progress_status
+        required: false
+        in: query
+        description: Set progress status to ‘Dialed’, ‘Undialed’ or ‘Skipped’ to filter contacts in a campaign based on whether they have been contacted successfully or not
+        schema:
+          example: Dialed
+          enum:
+          - Dialed
+          - Skipped
+          - Undialed
+          type: string
+      - name: per_page
+        required: false
+        in: query
+        description: Number of contacts to be fetched per page. Default value will be 10.
+        schema:
+          example: 20
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number for which contacts are to be fetched. Default value will be 0.
+        schema:
+          example: 2
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the contacts list should appear (asc or desc). Sorting is done based on contact creation time and recent contacts are represented with larger ID values. Default value will be desc.
+        schema:
+          example: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCampaignContactsOutputDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/campaigns/has-run:
+    get:
+      operationId: SDCampaignController_hasRun_v21
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+      summary: SD campaign controller has run v21
+      x-summary-source: derived
+  /v2/sales_dialer/contacts/bulk_import:
+    post:
+      operationId: bulk_import_contacts
+      summary: Bulk import contacts
+      description: Utilize this endpoint to add or update contacts into Sales Dialer in bulk or add them to an existing campaign.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkImportSdContactsPayloadDTO'
+      responses:
+        '200':
+          description: Displays the status of the API request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkImportSdContactsResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/contacts/bulk_import:
+    post:
+      operationId: bulk_import_contacts_v21
+      summary: Bulk import contacts
+      description: Utilize this endpoint to add or update contacts into Sales Dialer in bulk or add them to an existing campaign.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkImportSdContactsPayloadDTO'
+      responses:
+        '200':
+          description: Displays the status of the API request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkImportSdContactsResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2/sales_dialer/contacts/bulk_import/status/{batch_id}:
+    get:
+      operationId: bulk_import_contacts_status
+      summary: Get bulk import status
+      description: Utilize this endpoint to track the status of a bulk contact import request.
+      parameters:
+      - name: batch_id
+        required: true
+        in: path
+        description: Unique id of the contact import batch generated by Sales Dialer. This id is returned in the response for the ‘Bulk import contacts’ API endpoint.
+        schema:
+          example: 01J17G1FRC9XXXXXX
+          type: string
+      responses:
+        '200':
+          description: Displays the status of the API request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkImportSdContactsStatusResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/contacts/bulk_import/status/{batch_id}:
+    get:
+      operationId: bulk_import_contacts_status_v21
+      summary: Get bulk import status
+      description: Utilize this endpoint to track the status of a bulk contact import request.
+      parameters:
+      - name: batch_id
+        required: true
+        in: path
+        description: Unique id of the contact import batch generated by Sales Dialer. This id is returned in the response for the ‘Bulk import contacts’ API endpoint.
+        schema:
+          example: 01J17G1FRC9XXXXXX
+          type: string
+      responses:
+        '200':
+          description: Displays the status of the API request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkImportSdContactsStatusResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/contacts:
+    post:
+      operationId: sd_create_contact_v21
+      summary: Create contact
+      description: Utilize this endpoint to create a new contact in Sales Dialer.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndividualSdContactPayloadDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDContactDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+    get:
+      operationId: sd_list_contact_v21
+      summary: List all contacts
+      description: Access this endpoint to fetch a list of all the contacts present in your Sales Dialer account.
+      parameters:
+      - name: phone_number
+        required: false
+        in: query
+        description: Find a contact using it’s phone number
+        schema:
+          example: 1213566XXXX
+          type: string
+      - name: email
+        required: false
+        in: query
+        description: Find a contact using it’s email id
+        schema:
+          example: rachel.green@friends.co
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: 'Search for contacts based on their status. The status can be out of: Active or DNCA (Do not call again)'
+        schema:
+          enum:
+          - Active
+          - DNCA
+          type: string
+      - name: last_contact_id_fetched
+        required: false
+        in: query
+        description: Id of the last contact fetched in the previous query. This Id ensures that you won't receive any duplicate data when using the 'next_page_link' parameter
+        schema:
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of contacts to be fetched per page
+        schema:
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number for which contacts are to be fetched
+        schema:
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the contacts list should appear. Sorting is done based on contact creation time and recent contacts are represented with larger ID values
+        schema:
+          default: DESC
+          enum:
+          - ASC
+          - DESC
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactListApiResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/contacts/{id}:
+    put:
+      operationId: sd_update_contact_v21
+      summary: Update contact
+      description: Utilize this endpoint to update a contact’s details in both default and custom fields using the ‘id’ of the contact.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Enter the Id of the contact which is to be updated.
+        schema:
+          type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SDContactUpdateDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDContactDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+    get:
+      operationId: sd_get_contact_v21
+      summary: Get a contact
+      description: Access this endpoint to retrieve detailed information of a contact added to Sales Dialer.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDContactDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+    delete:
+      operationId: sd_delete_contact_v21
+      summary: Delete contact
+      description: Utilize this endpoint to delete a specific contact from your Sales Dialer account using the ‘id’ of the contact.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the contact as generated by Sales Dialer
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDContactDeleteDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/contacts/custom-fields:
+    get:
+      operationId: sd_list_contact_custom_fields_v21
+      summary: List contact custom fields
+      description: Access this endpoint to retrieve custom fields added to the Sales Dialer Contacts Module.
+      parameters:
+      - name: id
+        required: false
+        in: query
+        description: Search for a custom field using the unique key generated by Sales Dialer.
+        schema:
+          example: 417094
+          type: number
+      - name: label
+        required: false
+        in: query
+        description: Search for a custom field via the label of the field as defined by you in Sales Dialer.
+        schema:
+          example: Custom Label
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListContactCustomFieldsApiResponse'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/contacts/bulk-add-dnca:
+    post:
+      operationId: sd_bulk_add_dnca_v21
+      summary: Bulk Add Contacts to DNCA
+      description: Utilize this endpoint to add one or more contact(s) to the DNCA (Do Not Call Again) list. Invalid numbers will be skipped, and the response will indicate added and skipped numbers.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkAddDncaRequestDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkAddDncaApiResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2/sales_dialer/analytics:
+    get:
+      operationId: sales_dialer_agent_analytics
+      summary: Agent analytics
+      description: Utilize this endpoint to obtain comprehensive analytics for a campaign or agent, including specific metrics such as pause time, total call duration, and connection rate.
+      parameters:
+      - name: from_date
+        required: false
+        in: query
+        description: Date in yyyy-mm-dd format starting from when the calls are to be fetched.
+        schema:
+          type: string
+      - name: to_date
+        required: false
+        in: query
+        description: Date in yyyy-mm-dd format till when the calls are to be fetched.
+        schema:
+          type: string
+      - name: campaign_id
+        required: false
+        in: query
+        description: Id of the campaign for which analytics are to be fetched.
+        schema:
+          type: number
+      - name: agent_id
+        required: false
+        in: query
+        description: Id of the agent for whom the analytics is to be fetched.
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCallsStatsResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+  /v2.1/sales_dialer/analytics:
+    get:
+      operationId: sales_dialer_agent_analytics_v21
+      summary: Agent analytics
+      description: Utilize this endpoint to obtain comprehensive analytics for a campaign or agent, including specific metrics such as pause time, total call duration, and connection rate.
+      parameters:
+      - name: from_date
+        required: false
+        in: query
+        description: Date in yyyy-mm-dd format starting from when the calls are to be fetched.
+        schema:
+          type: string
+      - name: to_date
+        required: false
+        in: query
+        description: Date in yyyy-mm-dd format till when the calls are to be fetched.
+        schema:
+          type: string
+      - name: campaign_id
+        required: false
+        in: query
+        description: Id of the campaign for which analytics are to be fetched.
+        schema:
+          type: number
+      - name: agent_id
+        required: false
+        in: query
+        description: Id of the agent for whom the analytics is to be fetched.
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SDCallsStatsResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Sales Dialer
+      security:
+      - AccessToken: []
+components:
+  schemas:
+    SDContactUpdateDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the contact
+          example: John Smith
+        email:
+          type: string
+          description: Email id of the contact
+          example: jhon.smith@example.com
+        birthday:
+          type: string
+          description: Birth date of the contact in yyyy-mm-dd format
+          example: '1996-01-25'
+        occupation:
+          type: string
+          description: Occupation of the contact
+          example: sales executive
+        address:
+          type: string
+          description: Address of the contact
+          example: 123, street 2
+        deal_size:
+          type: number
+          description: Deal size associated with the contact
+          example: 10000
+        custom_fields:
+          description: Array of objects
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldUpdateDTO'
+    SDCampaignResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          default: 173
+          description: Id of campaign to which the contact is added when dialing
+        name:
+          type: string
+          default: Summer Batch 2023
+          description: Name of campaign to which the contact is added when dialing
+        type:
+          type: string
+          default: Autodial
+          description: Autodial, Predictive or Dynamic campaign
+        default_number:
+          type: string
+          default: 1438729XXX
+          description: Default phone number set for the campaign
+    ListContactCustomFieldsApiResponse:
+      type: object
+      properties:
+        status_code:
+          type: number
+          description: HTTP status code of the response.
+          example: 200
+        status:
+          type: string
+          description: 'Displays the status of the API request: "success" for successful requests; error message for failed requests.'
+          example: success
+        total:
+          type: number
+          description: Total number of contact based custom fields present in your Sales Dialer account
+          example: '1'
+        data:
+          description: Array of custom contact field objects.
+          example:
+          - label: membership_status
+            id: 1090960
+            type: string
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomContactField'
+    JustCallIQDTO:
+      type: object
+      properties:
+        call_moments:
+          example:
+          - exams
+          - math
+          - confidence
+          description: List of most important keywords associated with a call
+          type: array
+          items:
+            type: string
+        customer_sentiment:
+          type: string
+          example: Positive
+          description: Overall analysis of the sentiment of the customer based on words and tone
+        call_score:
+          type: number
+          default: 0
+          description: Overall score of the call out of 10
+        call_score_parameters:
+          $ref: '#/components/schemas/CallScoreParameter'
+        tags:
+          default: []
+          example:
+          - demo
+          - follow-up
+          description: Tags added by the user(agent) for a call
+          type: array
+          items:
+            type: string
+        manual_call_score:
+          type: number
+          default: 0
+          example: 4
+          description: Average of all manual scores added
+        call_summary:
+          type: string
+          example: Call summary
+          description: A summary of the key highlights and takeaways from a call
+        call_transcription:
+          default: []
+          example:
+          - speaker_id: 1
+            sentence: Hey, Can I know the status with the deal?
+            timestamp:
+              starttime: 0
+              endtime: 0
+          description: A translation of the audio call into written text in a script like format
+          allOf:
+          - $ref: '#/components/schemas/CallTranscriptionDTO'
+    RemoveSDContactDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Displays the status of the API request
+          example: success
+    CampaignContacts:
+      type: object
+      properties:
+        uploaded:
+          type: number
+          description: Number of contacts successfully uploaded
+          example: 0
+        imported:
+          type: number
+          description: Number of contacts that were imported
+          example: 0
+        duplicate_contacts:
+          type: number
+          description: Number of duplicate contacts
+          example: 0
+        without_phone_number:
+          type: number
+          description: Count of contacts that do not have a valid phone number
+          example: 0
+    SDCallsStatsResponseDTO:
+      type: object
+      properties:
+        agent_id:
+          type: number
+          default: 142345
+          description: Id of the agent who made the call
+        agent_name:
+          type: string
+          default: John Smith
+          description: Name of the agent for whom report is generated
+        agent_email:
+          type: string
+          default: abc@xyz.com
+          description: Email id of the agent for whom report is generated
+        dialed_calls:
+          type: number
+          default: 228
+          description: Total number of calls dialed by agent in all campaigns
+        answered_calls:
+          type: number
+          default: 56
+          description: Total number of answered calls dialed by agent in all campaigns
+        abandoned_calls:
+          type: number
+          default: 25
+          description: Total number of calls dialed by an agent which get abandoned
+        connection_rate:
+          type: number
+          default: 24
+          description: Connection rate
+        total_call_duration:
+          type: string
+          default: 03:02:10
+          description: Total call duartion across campaigns by the agent
+        average_call_duration:
+          type: string
+          default: 05:00:10
+          description: Average call duration
+        max_call_duration:
+          type: string
+          default: 01:00:00
+          description: Maximum durations of any call during any campaign by the agent
+        agent_success_rate:
+          type: number
+          default: 86
+          description: Total number of calls where success disposition was added out of the total answered calls
+        total_unanswered_calls:
+          type: number
+          default: 77
+          description: Total number of calls not picked up end customers
+        total_voicemails_drops:
+          type: number
+          default: 23
+          description: Total calls in which voicemails are dropped
+        total_cost_incurred:
+          type: number
+          default: 60.17
+          description: Total cost incurred for all calls of an agent across all campaigns
+        campaigns_run:
+          type: number
+          default: 15
+          description: Number of compaigns run by each agent
+        total_after_call_work:
+          type: string
+          default: 02:54:44
+          description: Total time spent by an agent to fill in notes, dispotion and all other details after the call for all calls across campaigns for an agent
+        pause_time:
+          type: string
+          default: 0:10:45
+          description: Total pause time by the agent across campaigns
+        available_time_in_campaign:
+          type: string
+          default: '5:10:25'
+          description: Total time spent by agent running all campaigns
+      required:
+      - agent_name
+    BulkImportSdContactsImportSummary:
+      type: object
+      properties:
+        received:
+          type: number
+          example: 250
+          description: Total number of contacts received in the import request.
+        added:
+          type: number
+          example: 240
+          description: Number of contacts added or updated successfully at the time of this API hit.
+        queued:
+          type: number
+          example: 3
+          description: Number of contacts in the queue (yet to be processed) at the time of this API hit.
+        rejected:
+          type: number
+          example: 2
+          description: Number of contacts already rejected by the system at the time of this API hit.
+        rejected_list:
+          example:
+          - 0
+          - 220
+          description: Lists the array index positions of the rejected contacts.
+          type: array
+          items:
+            type: number
+        duplicate:
+          type: number
+          example: 5
+          description: Number of contacts already flagged as duplicate contacts (as a result removed from the process of adding to a campaign) at the time of this API hit.
+        duplicate_list:
+          example:
+          - 3
+          - 104
+          - 119
+          - 204
+          - 242
+          description: Lists the array index positions of the duplicate contacts.
+          type: array
+          items:
+            type: number
+    CustomFieldDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique Id of the field as generated by Sales Dialer.
+          example: 1101123
+        value:
+          type: string
+          description: Data to be stored in this custom field.
+          example: NewYork
+    BaseSDCampaignDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique ID of the campaign as generated by JustCall
+          example: 1234
+        name:
+          type: string
+          description: Name provided to the campaign
+          example: Website Leads
+        type:
+          type: string
+          description: Type of the campaign (e.g., Autodial, Predictive, Dynamic)
+          example: Autodial
+        default_number:
+          type: string
+          description: Default phone number set for the campaign
+          example: 1438729XXX
+        created_date:
+          type: string
+          description: Date of campaign creation
+          example: '2024-01-01'
+        created_time:
+          type: string
+          description: Time of campaign creation
+          example: '12:00:00'
+        created_by_id:
+          type: number
+          description: ID of the agent who created the campaign
+          example: 10090
+        created_by_name:
+          type: string
+          description: Name of the agent who created the campaign
+          example: John Doe
+        created_by_email:
+          type: string
+          description: Email ID of the agent who created the campaign
+          example: john@suits.co
+        assigned_to_id:
+          description: Assignment details for the campaign
+          allOf:
+          - $ref: '#/components/schemas/AssignedToId'
+        maximum_calls_per_agent:
+          type: number
+          description: Maximum number of calls allowed per agent in this campaign
+          example: 10
+        contact_dialing_order:
+          type: string
+          description: Order in which contact lists of this campaign are to be dialed
+          example: First in first out
+        contacts_count:
+          description: Contact count details for this campaign
+          allOf:
+          - $ref: '#/components/schemas/CampaignContacts'
+        status:
+          type: string
+          description: Whether the campaign is Completed or Remaining
+          example: Completed
+        voicemail_message_id:
+          type: number
+          description: Id of the audio message that will be played when your call goes to voicemail
+          example: 34567
+        abandoning_message_id:
+          type: number
+          description: Id of the audio message that will be played when the call is abandoned or disconnected from you
+          example: 34567
+        call_forwarding_number:
+          type: string
+          description: Number to which incoming calls to this campaign should be forwarded
+          example: +12125550XXX
+        country_code:
+          type: string
+          description: Default country code for phone numbers without a country code
+          example: IN
+        disposition_groups:
+          description: Details of disposition groups assigned to the campaign
+          type: array
+          items:
+            $ref: '#/components/schemas/DispositionGroup'
+        call_scripts:
+          description: Details of call scripts assigned to the campaign
+          type: array
+          items:
+            $ref: '#/components/schemas/CallScript'
+    DncaResponseData:
+      type: object
+      properties:
+        dnca:
+          description: List of successfully added DNCA numbers
+          example:
+          - '15556667890'
+          - '12223334567'
+          type: array
+          items:
+            type: string
+        skipped:
+          description: List of skipped contact numbers due to validation errors
+          example:
+          - '677889990'
+          - '126754321'
+          type: array
+          items:
+            type: string
+        dnca_ids:
+          description: List of successfully added DNCA IDs
+          example:
+          - 12345
+          - 67890
+          type: array
+          items:
+            type: string
+        skipped_ids:
+          description: List of skipped contact IDs due to validation errors
+          example:
+          - 12345
+          - 67890
+          type: array
+          items:
+            type: string
+    BulkAddDncaApiResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Response status
+        data:
+          description: Details of added and skipped DNCA numbers
+          allOf:
+          - $ref: '#/components/schemas/DncaResponseData'
+    UpdateCampaignResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Displays the status of the API request
+          example: success
+        data:
+          description: Sales Dialer Campaign object
+          allOf:
+          - $ref: '#/components/schemas/UpdatedCampaignData'
+    CustomContactField:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Label added by you for the custom field.
+          example: membership_status
+        key:
+          type: number
+          description: Unique key generated by Sales Dialer for the custom field.
+          example: 1090960
+        type:
+          type: string
+          description: Data type of the custom field.
+          example: string
+    ContactListApiResponseDto:
+      type: object
+      properties:
+        status_code:
+          type: number
+          description: Status code of the API request
+          example: 200
+        status:
+          type: string
+          description: Status of the API request (success or error)
+          enum:
+          - success
+          - error
+          example: success
+        count:
+          type: number
+          description: Number of Contacts present on the current page
+          example: 50
+        total_count:
+          type: number
+          description: Total number of Contacts fetched by the query
+          example: 2440
+        current_page:
+          type: number
+          description: Number of the current page
+          example: 3
+        per_page:
+          type: number
+          description: Maximum number of Contacts appearing per page
+          example: 20
+        next_page_link:
+          type: string
+          description: Link to the next page containing Contacts
+          example: https://api.justcall.io/v2.1/sales_dialer/contacts?page=4&per_page=20
+        prev_page_link:
+          type: string
+          description: Link to the previous page of Contacts
+          example: https://api.justcall.io/v2.1/sales_dialer/contacts?page=2&per_page=20
+        data:
+          description: Array of Contact objects
+          type: array
+          items:
+            $ref: '#/components/schemas/SDContactDTO'
+    CampaignContact:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the contact as generated by Sales Dialer
+          example: 1234
+        name:
+          type: string
+          description: Name of the contact
+          example: Jessica Pearson
+        phone_number:
+          type: string
+          description: Phone number of the contact
+          example: 1213566XXXX
+        email:
+          type: string
+          description: Email id of the contact
+          example: jessica.pearson@suits.co
+        birthday:
+          type: string
+          description: Birth date of the contact in yyyy-mm-dd format
+          example: '1990-01-01'
+        occupation:
+          type: string
+          description: Occupation of the contact
+          example: SDR
+        address:
+          type: string
+          description: Address of the contact
+          example: New York, United States
+        status:
+          type: string
+          description: 'Whether the contact can be called, is inavalid or is added to DNCA list. The response values can be: Active, Invalid or DNCA'
+          example: Active
+          enum:
+          - Active
+          - Invalid
+          - DNCA
+        progress_status:
+          type: string
+          description: Whther the contact has been dialed, scheduled for re-attempt, skipped, remains undialed for this campaign or is restricted for dialing due to geographic location. Values will be from among- Dialed, To be reattempted, Skipped, Undialed, Geo restricted
+          example: Dialed
+          enum:
+          - Dialed
+          - Skipped
+          - Undialed
+        status_updated_at:
+          type: string
+          description: Date when the contact was added or removed from the DNCA list
+          example: '2023-01-01'
+        created_at:
+          type: string
+          description: Date when the contact was created
+          example: '2023-01-01'
+        added_to_campaign_at:
+          type: string
+          description: Date when the contact was added to this specific campaign
+          example: '2023-01-01'
+        last_updated:
+          type: string
+          description: Date when the contact was last updated
+          example: '2023-01-01'
+        custom_fields:
+          description: Array of custom fields
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomField'
+    BulkImportSdContactsStatusResponseDTO:
+      type: object
+      properties:
+        batch_id:
+          type: string
+          default: ''
+          example: 01J17G1FRC9XXXXXX
+          description: Unique id of the contact import batch generated by Sales Dialer. This id is returned in the response for the ‘Bulk import contacts’ API endpoint.
+        import_status:
+          type: string
+          default: ''
+          example: InProgress
+          description: Can contain one of the following values - Pending (to be picked), InProgress (currently processing), Completed (processed successfully), Failed (failed due to some error).
+        import_summary:
+          default: {}
+          example:
+            received: 250
+            added: 240
+            queued: 3
+            rejected: 2
+            rejected_list:
+            - 0
+            - 220
+            duplicate: 5
+            duplicate_list:
+            - 3
+            - 104
+            - 119
+            - 204
+            - 242
+          description: Provides parameters which reflect the real time progress of the import process.
+          allOf:
+          - $ref: '#/components/schemas/BulkImportSdContactsImportSummary'
+        import_details:
+          default: {}
+          example: {}
+          allOf:
+          - $ref: '#/components/schemas/BulkImportSdContactsImportDetails'
+    UpdatedCampaignData:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique ID of the campaign as generated by JustCall
+          example: 1234
+        name:
+          type: string
+          description: Name provided to the campaign
+          example: Website Leads
+        type:
+          type: string
+          description: Type of the campaign (e.g., Autodial, Predictive, Dynamic)
+          example: Autodial
+        default_number:
+          type: string
+          description: Default phone number set for the campaign
+          example: 1438729XXX
+        created_date:
+          type: string
+          description: Date of campaign creation
+          example: '2024-01-01'
+        created_time:
+          type: string
+          description: Time of campaign creation
+          example: '12:00:00'
+        created_by_id:
+          type: number
+          description: ID of the agent who created the campaign
+          example: 10090
+        created_by_name:
+          type: string
+          description: Name of the agent who created the campaign
+          example: John Doe
+        created_by_email:
+          type: string
+          description: Email ID of the agent who created the campaign
+          example: john@suits.co
+        assigned_to_id:
+          description: Assignment details for the campaign
+          allOf:
+          - $ref: '#/components/schemas/AssignedToId'
+        maximum_calls_per_agent:
+          type: number
+          description: Maximum number of calls allowed per agent in this campaign
+          example: 10
+        contact_dialing_order:
+          type: string
+          description: Order in which contact lists of this campaign are to be dialed
+          example: First in first out
+        contacts_count:
+          description: Contact count details for this campaign
+          allOf:
+          - $ref: '#/components/schemas/CampaignContacts'
+        status:
+          type: string
+          description: Whether the campaign is Completed or Remaining
+          example: Completed
+        voicemail_message_id:
+          type: number
+          description: Id of the audio message that will be played when your call goes to voicemail
+          example: 34567
+        abandoning_message_id:
+          type: number
+          description: Id of the audio message that will be played when the call is abandoned or disconnected from you
+          example: 34567
+        call_forwarding_number:
+          type: string
+          description: Number to which incoming calls to this campaign should be forwarded
+          example: +12125550XXX
+        country_code:
+          type: string
+          description: Default country code for phone numbers without a country code
+          example: IN
+        disposition_groups:
+          description: Details of disposition groups assigned to the campaign
+          type: array
+          items:
+            $ref: '#/components/schemas/DispositionGroup'
+        call_scripts:
+          description: Details of call scripts assigned to the campaign
+          type: array
+          items:
+            $ref: '#/components/schemas/CallScript'
+    ListCampaignResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Displays the status of the API request
+          example: success
+        count:
+          type: number
+          description: Number of campaigns present on the current page
+          example: 20
+        total_count:
+          type: number
+          description: Total number of campaigns fetched by the API query.
+          example: 2440
+        current_page:
+          type: number
+          description: Number of the current page
+          example: 2
+        per_page:
+          type: number
+          description: Maximum number of campaigns appearing per page
+          example: 20
+        next_page_link:
+          type: string
+          description: Link to the next page containing contacts
+          example: https://api.justcall.io/v2.1/sales_dialer/campaigns?page=3
+        prev_page_link:
+          type: string
+          description: Link to the previous page of contacts
+          example: https://api.justcall.io/v2.1/sales_dialer/campaigns?page=1
+        data:
+          description: Array of SD Campaign Contact objects
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignData'
+      required:
+      - count
+      - total_count
+      - current_page
+      - per_page
+      - data
+    BulkAddDncaRequestDto:
+      type: object
+      properties:
+        contact_numbers:
+          description: Comma separated list of contact numbers to be added to DNCA list. If any of the provided numbers is invalid, it will be skipped. You can monitor the response to track skipped numbers. Please send only one of contact_numbers and contact_ids fields.
+          example:
+          - '15556667890'
+          - '12223334567'
+          type: array
+          items:
+            type: string
+        contact_ids:
+          description: Comma separated list of contact IDs to add in the campaign. Please send only one of contact_numbers and contact_ids fields.
+          example:
+          - 12345
+          - 67890
+          type: array
+          items:
+            type: number
+    ListCampaignContactsOutputDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Displays the status of the API request
+          example: success
+        count:
+          type: number
+          description: Number of contacts present on the current page
+          example: 20
+        total_count:
+          type: number
+          description: 'Total number of contacts fetched by the API query. This will give all the historical contacts unless specified otherwise. '
+          example: 2440
+        current_page:
+          type: number
+          description: Number of the current page
+          example: 2
+        per_page:
+          type: number
+          description: Maximum number of contacts appearing per page
+          example: 20
+        next_page_link:
+          type: string
+          description: Link to the next page containing contacts
+          example: https://api.justcall.io/v2.1/sales_dialer/campaigns/contacts?page=3
+        prev_page_link:
+          type: string
+          description: Link to the previous page of contacts
+          example: https://api.justcall.io/v2.1/sales_dialer/campaigns/contacts?page=1
+        data:
+          description: Array of SD Campaign Contact objects
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignContact'
+    NoteDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The id of the note
+          example: 1234
+        description:
+          type: string
+          description: Note added to the contact
+          example: wants a demo of AI features
+        added_at:
+          type: string
+          description: Date and time when the note was added
+          example: '2024-05-13 10:30:00'
+        last_updated_at:
+          type: string
+          description: Date and time when the note was last updated
+          example: '2024-05-13 10:30:00'
+    TeamMembers:
+      type: object
+      properties:
+        id:
+          type: number
+          description: ID of the team member assigned
+          example: 40090
+        name:
+          type: string
+          description: Name of the team member assigned
+          example: Micheal
+        email:
+          type: string
+          description: Email of the team member assigned
+          example: micheal@suit.co
+    CustomField:
+      type: object
+      properties:
+        key:
+          type: number
+          description: Unique key of the field as generated by Sales Dialer
+          example: 1090960
+        label:
+          type: string
+          description: Label or the field name added by you
+          example: membership_status
+        type:
+          type: string
+          description: Data type of the field
+          example: string
+        value:
+          type: string
+          description: Data stored in this custom field
+          example: member
+      required:
+      - key
+      - label
+      - type
+      - value
+    CampaignData:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique ID of the campaign as generated by JustCall
+          example: 1234
+        name:
+          type: string
+          description: Name provided to the campaign
+          example: Website Leads
+        type:
+          type: string
+          description: Type of the campaign (e.g., Autodial, Predictive, Dynamic)
+          example: Autodial
+        default_number:
+          type: string
+          description: Default phone number set for the campaign
+          example: 1438729XXX
+        created_date:
+          type: string
+          description: Date of campaign creation
+          example: '2024-01-01'
+        created_time:
+          type: string
+          description: Time of campaign creation
+          example: '12:00:00'
+        created_by_id:
+          type: number
+          description: ID of the agent who created the campaign
+          example: 10090
+        created_by_name:
+          type: string
+          description: Name of the agent who created the campaign
+          example: John Doe
+        created_by_email:
+          type: string
+          description: Email ID of the agent who created the campaign
+          example: john@suits.co
+        assigned_to_id:
+          description: Assignment details for the campaign
+          allOf:
+          - $ref: '#/components/schemas/AssignedToId'
+        maximum_calls_per_agent:
+          type: number
+          description: Maximum number of calls allowed per agent in this campaign
+          example: 10
+        contact_dialing_order:
+          type: string
+          description: Order in which contact lists of this campaign are to be dialed
+          example: First in first out
+        contacts_count:
+          description: Contact count details for this campaign
+          allOf:
+          - $ref: '#/components/schemas/CampaignContacts'
+        status:
+          type: string
+          description: Whether the campaign is Completed or Remaining
+          example: Completed
+        voicemail_message_id:
+          type: number
+          description: Id of the audio message that will be played when your call goes to voicemail
+          example: 34567
+        abandoning_message_id:
+          type: number
+          description: Id of the audio message that will be played when the call is abandoned or disconnected from you
+          example: 34567
+        call_forwarding_number:
+          type: string
+          description: Number to which incoming calls to this campaign should be forwarded
+          example: +12125550XXX
+        country_code:
+          type: string
+          description: Default country code for phone numbers without a country code
+          example: IN
+        disposition_groups:
+          description: Details of disposition groups assigned to the campaign
+          type: array
+          items:
+            $ref: '#/components/schemas/DispositionGroup'
+        call_scripts:
+          description: Details of call scripts assigned to the campaign
+          type: array
+          items:
+            $ref: '#/components/schemas/CallScript'
+    AddContactToCampaignPayloadDTO:
+      type: object
+      properties:
+        campaign_id:
+          type: number
+          description: Id of the campaign to which the contact is to be added
+          example: 1234
+        contact_id:
+          type: number
+          description: Id of the contact to add in the campaign. This field, if sent, will be used to search for the contact. Please send only one of contact_id and phone_number fields.
+          example: 12345
+        phone_number:
+          type: string
+          example: 1213566XXXX
+          description: Phone number of the contact. This field, if sent, will be used by us to search the contact. Please send only one of contact_id and phone_number fields.
+        name:
+          type: string
+          example: Rachel Green
+          description: Name of the contact
+        email:
+          type: string
+          example: rachel.green@friends.co
+          description: Email id of the contact
+        birthday:
+          type: string
+          example: yyyy-mm-dd
+          description: Birth date of the contact in yyyy-mm-dd format
+        occupation:
+          type: string
+          example: SDR
+          description: Occupation of the contact
+        address:
+          type: string
+          example: New York, United States
+          description: Address of the contact
+        custom_fields:
+          description: Set values for the existing custom fields associated with the contacts. You can find the list of such custom fields along with their Key (appearing to the left of Field Name) in your account settings under the ‘Custom Fields’ section
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldDTO'
+      required:
+      - campaign_id
+    SDCallResponseDTO:
+      type: object
+      properties:
+        call_id:
+          type: number
+          default: 95676
+          description: Id of the call in Sales Dialer
+        call_sid:
+          type: string
+          default: CA0247d967e9bb3c284163a37a43XXXX
+          description: Call sid of the call in Sales Dialer
+        contact_id:
+          type: number
+          default: 15162
+          description: Unique id of the contact as in Sales Dialer
+        contact_number:
+          type: string
+          default: 13801136XXX
+          description: Phone number of the contact
+        contact_name:
+          type: string
+          default: Rachel G.
+          description: Name of the contact
+        contact_email:
+          type: string
+          default: john@suits.co
+          description: Email id of the contact
+        sales_dialer_number:
+          type: string
+          default: 12707705XXX
+          description: JustCall number used by the agent to make the call
+        agent_id:
+          type: number
+          default: 1308
+          description: Id of the agent who made the call
+        agent_name:
+          type: string
+          default: John Smith
+          description: Name of the agent who made the call
+        agent_email:
+          type: string
+          default: john@abc.com
+          description: Email id of the agent who made or received the call
+        call_date:
+          type: string
+          default: '2017-12-18'
+          description: Date of call in UTC
+        call_user_date:
+          type: string
+          default: '2017-12-17'
+          description: Date of call in users timezone
+        call_time:
+          type: string
+          default: '13:55:43'
+          description: Timestamp of call in UTC
+        call_user_time:
+          type: string
+          default: '8:25:43'
+          description: Timestamp of call in users timezone
+        call_info:
+          $ref: '#/components/schemas/SDCallInfoDTO'
+        campaign:
+          $ref: '#/components/schemas/SDCampaignDTO'
+        justcall_iq:
+          $ref: '#/components/schemas/JustCallIQDTO'
+    SdContactPayloadDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the contact
+          example: John Smith
+        phone_number:
+          type: string
+          description: Phone number of the contact
+          example: '12731249494'
+        email:
+          type: string
+          description: Email id of the contact
+          example: jhon.smith@example.com
+        birthday:
+          type: string
+          description: Birth date of the contact in yyyy-mm-dd format
+          example: '1996-01-25'
+        occupation:
+          type: string
+          description: Occupation of the contact
+          example: sales executive
+        address:
+          type: string
+          description: Address of the contact
+          example: 123, street 2
+        deal_size:
+          type: number
+          description: Deal size associated with the contact
+          example: 10000
+        custom_fields:
+          description: Set values for the existing custom fields associated with the contacts. You can find the list of such custom fields along with their Key (appearing to the left of Field Name) in your account settings under the ‘Custom Fields’ section
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldDTO'
+      required:
+      - phone_number
+    SDCampaignDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          default: 173
+          description: Id of campaign to which the contact is added when dialing
+        name:
+          type: string
+          default: Summer Batch 2023
+          description: Name of campaign to which the contact is added when dialing
+        type:
+          type: string
+          default: Autodial
+          description: Autodial, Predictive or Dynamic campaign
+    SDCampaignContactDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Displays the status of the API request
+          example: success
+        data:
+          description: Sales Dialer Contact Object
+          allOf:
+          - $ref: '#/components/schemas/BaseSDCampaignDTO'
+    TranscriptionTimeStampDTO:
+      type: object
+      properties:
+        starttime:
+          type: number
+          default: 0
+        endtime:
+          type: number
+          default: 0
+    AssignedToId:
+      type: object
+      properties:
+        team_members:
+          description: List of team members to whom the campaign is assigned
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMembers'
+    JustCallAIDTO:
+      type: object
+      properties:
+        call_moments:
+          example:
+          - exams
+          - math
+          - confidence
+          description: List of most important keywords associated with a call
+          type: array
+          items:
+            type: string
+        customer_sentiment:
+          type: string
+          example: Positive
+          description: Overall analysis of the sentiment of the customer based on words and tone
+        call_score:
+          type: number
+          default: 0
+          description: Overall score of the call out of 10
+        call_score_parameters:
+          $ref: '#/components/schemas/CallScoreParameter'
+        tags:
+          default: []
+          example:
+          - demo
+          - follow-up
+          description: Tags added by the user(agent) for a call
+          type: array
+          items:
+            type: string
+        manual_call_score:
+          type: number
+          default: 0
+          example: 4
+          description: Average of all manual scores added
+        call_summary:
+          type: string
+          example: Call summary
+          description: A summary of the key highlights and takeaways from a call
+    CreateCampaignDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Provide a name for the campaign
+          example: Website Leads
+        country_code:
+          type: string
+          description: Default country code for phone numbers where the country code is not present.
+          example: US
+        type:
+          type: string
+          description: Select a type from Autodial, Predictive, or Dynamic. Default value is Autodial
+          enum:
+          - Autodial
+          - Predictive
+          - Dynamic
+          default: Autodial
+          example: Predictive
+        maximum_calls_per_agent:
+          type: number
+          description: Maximum number of calls allowed per agent in this campaign. This field accepts values between 2 to 10 calls per agent and is only applicable for Predictive dialer campaigns. Value, if sent, will be ignored for other dialer types.
+          example: 8
+        default_number:
+          type: string
+          description: Set a default phone number for the campaign. If no number is entered, we will use the randomize approach to set the number
+          example: +1681381XXXX
+        call_forwarding_number:
+          type: string
+          description: Number to which incoming calls to this campaign should be forwarded
+          example: +1213566XXXX
+        assign_agents:
+          type: string
+          description: Comma separated Ids of one or more agents (more than one supported only for Dynamic and Predictive dialers) to whom the campaign is to be assigned
+          example: 1234,2345
+        contact_dialing_order:
+          type: string
+          description: Order in which contact lists of this campaign are to be dialed. The dialing order can be one of the following - first_in_first_out,last_in_first_out.The default value is first_in_first_out
+          enum:
+          - first_in_first_out
+          - last_in_first_out
+          example: first_in_first_out
+        disposition_groups:
+          type: string
+          description: Add comma separated Ids of Disposition Groups to be assigned to the campaign
+          example: 3456,4567
+        call_scripts:
+          type: string
+          description: Add comma separated Ids of Call Scripts to be assigned to the campaign
+          example: 5678,6789
+        voicemail_message_id:
+          type: number
+          description: Enter the Id of the audio message to be played when your call goes to voicemail
+          example: 7890
+        abandoning_message_id:
+          type: number
+          description: Enter the Id of the audio message to be played when the call is abandoned or disconnected from you
+          example: 8901
+      required:
+      - name
+      - country_code
+    SDCallResponse21DTO:
+      type: object
+      properties:
+        call_id:
+          type: number
+          default: 95676
+          description: Id of the call in Sales Dialer
+        call_sid:
+          type: string
+          default: CA0247d967e9bb3c284163a37a43XXXX
+          description: Call sid of the call in Sales Dialer
+        contact_id:
+          type: number
+          default: 15162
+          description: Unique id of the contact as in Sales Dialer
+        contact_number:
+          type: string
+          default: 13801136XXX
+          description: Phone number of the contact
+        contact_name:
+          type: string
+          default: Rachel G.
+          description: Name of the contact
+        contact_email:
+          type: string
+          default: john@suits.co
+          description: Email id of the contact
+        sales_dialer_number:
+          type: string
+          default: 12707705XXX
+          description: JustCall number used by the agent to make the call
+        agent_id:
+          type: number
+          default: 1308
+          description: Id of the agent who made the call
+        agent_name:
+          type: string
+          default: John Smith
+          description: Name of the agent who made the call
+        agent_email:
+          type: string
+          default: john@abc.com
+          description: Email id of the agent who made or received the call
+        call_date:
+          type: string
+          default: '2017-12-18'
+          description: Date of call in UTC
+        call_user_date:
+          type: string
+          default: '2017-12-17'
+          description: Date of call in users timezone
+        call_time:
+          type: string
+          default: '13:55:43'
+          description: Timestamp of call in UTC
+        call_user_time:
+          type: string
+          default: '8:25:43'
+          description: Timestamp of call in users timezone
+        call_info:
+          $ref: '#/components/schemas/SDCallInfoDTO'
+        campaign:
+          $ref: '#/components/schemas/SDCampaignDTOV21'
+        justcall_ai:
+          $ref: '#/components/schemas/JustCallAIDTO'
+    IndividualSdContactPayloadDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the contact
+          example: John Smith
+        phone_number:
+          type: string
+          description: Phone number of the contact
+          example: '12731249494'
+        email:
+          type: string
+          description: Email id of the contact
+          example: jhon.smith@example.com
+        birthday:
+          type: string
+          description: Birth date of the contact in yyyy-mm-dd format
+          example: '1996-01-25'
+        occupation:
+          type: string
+          description: Occupation of the contact
+          example: sales executive
+        address:
+          type: string
+          description: Address of the contact
+          example: 123, street 2
+        deal_size:
+          type: number
+          description: Deal size associated with the contact
+          example: 10000
+        custom_fields:
+          description: Set values for the existing custom fields associated with the contacts. You can find the list of such custom fields along with their Key (appearing to the left of Field Name) in your account settings under the ‘Custom Fields’ section
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldDTO'
+      required:
+      - name
+      - phone_number
+    CallScript:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique identifier for the call script
+          example: 1020111
+        name:
+          type: string
+          description: Name of the call script
+          example: Welcome Call Script
+    UpdateCampaignDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Provide a name for the campaign
+          example: Website Leads
+        maximum_calls_per_agent:
+          type: number
+          description: Maximum number of calls allowed per agent in this campaign. This field accepts values between 2 to 10 calls per agent and is only applicable for Predictive dialer campaigns. Value, if sent, will be ignored for other dialer types.
+          example: 8
+        default_number:
+          type: string
+          description: Set a default phone number for the campaign. If no number is entered, the default number will be set randomly from your account.
+          example: +1681381XXXX
+        call_forwarding_number:
+          type: string
+          description: Number to which incoming calls to this campaign should be forwarded
+          example: +1213566XXXX
+        assign_agents:
+          type: string
+          description: Comma separated ids of one or more agents (more than one supported only for Dynamic and Predictive dialers) to whom the campaign is to be assigned
+          example: '9876'
+        country_code:
+          type: string
+          description: Default county code for phone numbers where the country code is not present
+          example: US
+        contact_dialing_order:
+          type: string
+          description: Order in which contact lists of this campaign are to be dialed. The dialing order can be one of the following - first_in_first_out, last_in_first_out.The default value is First in first out
+          enum:
+          - first_in_first_out
+          - last_in_first_out
+          example: first_in_first_out
+        disposition_groups:
+          type: string
+          description: Add comma separated ids of Disposition Groups to be assigned to the campaign
+          example: 2345,4567
+        call_scripts:
+          type: string
+          description: Add comma separated ids of Call Scripts to be assigned to the campaign
+          example: 3456,5678
+        abandoning_message_id:
+          type: number
+          description: Enter the Id of the audio message to be played when your call goes to voicemail. This field is only applicable for Predictive dialer campaigns. Value, if sent, will be ignored for other dialer types.
+          example: '3456'
+        voicemail_message_id:
+          type: number
+          description: Enter the Id of the audio message to be played when the call is abandoned or disconnected from you. This field is only applicable for Predictive dialer campaigns. Value, if sent, will be ignored for other dialer types.
+          example: '6789'
+    CallScoreParameter:
+      type: object
+      properties:
+        dead_air_time:
+          type: number
+          default: 0
+          description: dead_air_time
+        filler_word:
+          type: number
+          default: 0
+          description: filler_word
+        de_escalation:
+          type: number
+          default: 0
+          description: de_escalation
+        empathy:
+          type: number
+          default: 0
+          description: empathy
+        talk_listen_ratio:
+          type: number
+          default: 0
+          description: talk_listen_ratio
+        greetings:
+          type: number
+          default: 0
+          description: greetings
+        words_per_minute:
+          type: number
+          default: 0
+          description: words_per_minute
+        monologue_duration:
+          type: number
+          default: 0
+          description: monologue_duration
+        call_etiquette:
+          type: number
+          default: 0
+          description: call_etiquette
+        customer_sentiment_score:
+          type: number
+          default: 0
+          description: customer_sentiment_score
+    DispositionGroup:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique identifier for the disposition group
+          example: 11219110
+        name:
+          type: string
+          description: Name of the disposition group
+          example: Sales Follow-up
+    CreateCampaignResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Displays the status of the API request
+          example: success
+        data:
+          description: Sales Dialer Campaign object
+          allOf:
+          - $ref: '#/components/schemas/CampaignData'
+    CallTranscriptionDTO:
+      type: object
+      properties:
+        speaker_id:
+          type: string
+          example: 1
+          description: speaker id
+        speaker_name:
+          type: string
+          example: John Doe
+          description: speaker name
+        sentence:
+          type: string
+          example: Hey, Can I know the status with the deal?
+          description: transcription sentence
+        timestamp:
+          example:
+            starttime: 0
+            endtime: 0
+          description: Transcription timestamp
+          allOf:
+          - $ref: '#/components/schemas/TranscriptionTimeStampDTO'
+    BulkImportSdContactsResponseDTO:
+      type: object
+      properties:
+        batch_id:
+          type: string
+          default: ''
+          example: 01J17G1FRC9XXXXXX
+          description: Unique id of the contact import batch generated by Sales Dialer. This id is returned in the response for the ‘Bulk import contacts’ API endpoint.
+        import_status:
+          type: string
+          default: ''
+          example: Pending
+          description: Can contain one of the following values - Pending (to be picked), InProgress (currently processing), Completed (processed successfully), Failed (failed due to some error).
+        import_summary:
+          default: {}
+          example:
+            received: 250
+            added: 0
+            queued: 0
+            rejected: 0
+            rejected_list: []
+            duplicate: 0
+            duplicate_list: []
+          description: Provides parameters which reflect the real time progress of the import process.
+          allOf:
+          - $ref: '#/components/schemas/BulkImportSdContactsImportSummary'
+        import_details:
+          default: {}
+          example: {}
+          allOf:
+          - $ref: '#/components/schemas/BulkImportSdContactsImportDetails'
+    SDCampaignDTOV21:
+      type: object
+      properties:
+        id:
+          type: number
+          default: 173
+          description: Id of campaign to which the contact is added when dialing
+        name:
+          type: string
+          default: Summer Batch 2023
+          description: Name of campaign to which the contact is added when dialing
+        type:
+          type: string
+          example: PowerDial
+          description: PowerDial, Predictive or Dynamic campaign
+    CustomFieldUpdateDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique Key of the custom field as generated by Sales Dialer
+          example: 1101123
+        value:
+          type: string
+          description: Data to be stored in this custom field
+          example: NewYork
+    BulkImportSdContactsImportDetails:
+      type: object
+      properties:
+        rejected_contacts:
+          example:
+          - index: 2
+            reasons:
+            - phone_number is not allowed to be empty
+          description: Provides the reasons about why a contact present at the given index position in the request body was rejected.
+          type: array
+          items:
+            $ref: '#/components/schemas/RejectedContactDTO'
+    CustomFieldResponseDTO:
+      type: object
+      properties:
+        key:
+          type: number
+          description: Unique Id of the field as generated by Sales Dialer.
+          example: 1101123
+        label:
+          type: string
+          description: Label or the field name added by you
+          example: membership_status
+        type:
+          type: string
+          description: Data type of the field
+          example: string
+        value:
+          type: string
+          description: Data to be stored in this custom field.
+          example: NewYork
+    SDCallInfoDTO:
+      type: object
+      properties:
+        reattempt_number:
+          type: number
+          default: ''
+          description: The position of the call reattempt among all reattempts made to a particular contact in the campaign
+        cost_incurred:
+          type: number
+          default: 0.005
+          description: Charge for the particular call
+        call_answered_by:
+          type: string
+          default: Human Pickup
+          description: 'Call answered by: Human Pickup, Machine Pickup, Unclassified Pickup, Unanswered, Busy, Failed, Abandoned'
+          enum:
+          - Human Pickup
+          - Machine Pickup
+          - Unclassified Pickup
+          - Unanswered
+          - Busy
+          - Failed
+          - Abandoned
+          - Unidentified
+        direction:
+          type: string
+          default: Outgoing
+          description: Direction of the call
+        type:
+          type: string
+          default: Connected
+          description: 'Call type: No Status, Connected, Not Connected'
+          enum:
+          - No Status
+          - Connected
+          - Not Connected
+        duration:
+          type: number
+          default: 130
+          description: Total conversation time of a call
+        friendly_duration:
+          type: string
+          default: 0:02:10
+          description: Duration of call in standard hh:mm:ss format
+        disposition:
+          type: string
+          default: 'Sales: Lead'
+          description: Call outcome selected by agent at the end of a call in the JustCall dialer
+        notes:
+          type: string
+          default: abc
+          description: Notes added for a call
+        rating:
+          type: number
+          default: 5
+          description: Rating added by the agent at the end of a call in the JustCall Dialer
+        recording:
+          type: string
+          default: https://jc-recordings.s3.amazonaws.com/RE09b557475af8cxxxxxxxxx.mp3
+          description: Recording link of the call, should be a link restricted to JustCall users
+        vmdrop:
+          type: boolean
+          default: false
+          description: Whether a voicemail was left on the call
+    SDContactDeleteDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+    BulkImportSdContactsPayloadDTO:
+      type: object
+      properties:
+        campaign_id:
+          type: number
+          example: 12345
+          default: 0
+          description: If an Id is added for a campaign, the contacts will be added to the particular campaign. Existing contacts will be added directly, while the new ones will first be created and then added to the campaign.
+        callback_url:
+          type: string
+          default: ''
+          example: https://webhook.site/3afbb9a95e-69e20b2d9aa0
+          description: Callback URL to notify users when an import is complete.
+        contacts:
+          default: []
+          description: An array of objects containing information about a single Sales Dialer contact. Up to 250 contacts may be included in a single request. The suggested minimum number of contacts is 10.
+          type: array
+          items:
+            $ref: '#/components/schemas/SdContactPayloadDTO'
+      required:
+      - contacts
+    RejectedContactDTO:
+      type: object
+      properties:
+        index:
+          type: number
+          example: 1
+        reasons:
+          example:
+          - Phone number is not valid.
+          type: array
+          items:
+            type: string
+    SDContactDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the contact as generated by Sales Dialer
+          example: 1234
+        name:
+          type: string
+          description: Name of the contact
+          example: Rachel Green
+        phone_number:
+          type: string
+          description: Phone number of the contact
+          example: 1213566XXXX
+        email:
+          type: string
+          description: Email id of the contact
+          example: rachel.green@friends.co
+        birthday:
+          type: string
+          description: Birth date of the contact in yyyy-mm-dd format
+          example: '2000-02-10'
+        occupation:
+          type: string
+          description: Occupation of the contact
+          example: SDR
+        address:
+          type: string
+          description: Address of the contact
+          example: Ney York, United States
+        deal_size:
+          type: number
+          description: Deal size associated with the contact
+          example: 10000
+        status:
+          type: string
+          description: 'Whether the contact can be called or is added to DNCA list. The response values can be: Active or DNCA'
+          example: DNCA
+        status_updated_at:
+          type: string
+          description: Date when the contact was added or removed from the DNCA list
+          example: '2024-09-17'
+        created_at:
+          type: string
+          description: Date when the contact was created
+          example: '2024-08-10'
+        custom_fields:
+          description: Array of objects
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldResponseDTO'
+        notes:
+          description: Array of notes associated with the contact
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteDto'
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

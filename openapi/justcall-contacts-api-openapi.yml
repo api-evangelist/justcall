@@ -1,41 +1,1185 @@
 openapi: 3.2.0
 info:
-  title: JustCall REST Contacts API
-  description: REST API for the JustCall cloud phone and contact center platform. Covers placing and listing calls, sending SMS, managing contacts, users, phone numbers, and related resources. Authentication uses an API key and API secret obtained from the JustCall dashboard.
-  version: '2.1'
-  contact:
-    name: JustCall Developer Portal
-    url: https://developer.justcall.io/docs/overview
+  title: JustCall Contacts API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
 servers:
-- url: https://api.justcall.io/v2.1
-  description: JustCall production API (v2.1)
-security:
-- ApiKeyAuth: []
+- url: https://api.justcall.io
 tags:
 - name: Contacts
-  description: Create and manage contacts in the JustCall directory.
 paths:
-  /contacts:
-    post:
-      summary: Create a contact
-      description: Adds a new contact to the JustCall Contacts section.
-      operationId: createContact
+  /v2.1/contacts:
+    get:
+      operationId: contacts_list_v21
+      summary: List all contacts
+      description: Retrieve all contacts present in your account or filter the contacts based on one or more query parameters.
+      parameters:
+      - name: across_team
+        required: false
+        in: query
+        description: Send ‘true’ to fetch all contacts for all the agents from your JustCall account. Default value will be ‘false’.
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - name: agent_ids
+        required: false
+        in: query
+        description: Add a list of agent_ids to fetch contacts associated with multiple agents at once.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: Phone number of the contact
+        schema:
+          example: 1213566XXXX
+          type: string
+      - name: first_name
+        required: false
+        in: query
+        description: First name of the contact
+        schema:
+          example: Rachel
+          type: string
+      - name: last_name
+        required: false
+        in: query
+        description: Last name of the contact
+        schema:
+          example: Green
+          type: string
+      - name: company
+        required: false
+        in: query
+        description: Fetch contacts associated with this company
+        schema:
+          example: Saaslabs
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Status of the contact from among the following - Blacklist, DND, DNM
+        schema:
+          example:
+          - dnd
+          type: array
+          items:
+            type: string
+            enum:
+            - blacklist
+            - dnd
+            - dnm
+            - whitelist
+      - name: per_page
+        required: false
+        in: query
+        description: Number of contacts to be fetched per page. Default value is 50 and maximum value is 500.
+        schema:
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number for which contacts are to be fetched. Page number ‘0’ indicates first page containing records.
+        schema:
+          example: 0
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the contacts list should appear based on the ‘id’ of the contact. Recently added contacts are represented by larger ‘id’ values. Defaults to DESC (descending order).
+        schema:
+          example: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      - name: last_contact_id_fetched
+        required: false
+        in: query
+        description: Id of the last contact fetched in the previous query. This Id ensures that you won`t receive any duplicate data when using the "next_page_link" parameter
+        schema:
+          example: 233456
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListContactsResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
       tags:
       - Contacts
+      security:
+      - AccessToken: []
+    post:
+      operationId: create_contact_v21
+      summary: Create contact
+      description: Utilize this endpoint to add a new contact to JustCall’s ‘Contacts’ section.
+      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              description: New contact payload.
+              $ref: '#/components/schemas/CreateContactDto'
       responses:
         '200':
-          description: The created contact.
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateContactResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
+    put:
+      operationId: update_contact_v21
+      summary: Update contact
+      description: Utilize this endpoint to update an existing contact present in JustCall’s ‘Contacts’ section.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContactDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateContactResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
+    delete:
+      operationId: delete_contact_v21
+      summary: Delete contact
+      description: Utilize this endpoint to delete a specific contact from your JustCall account using the ‘id’ or the ‘contact_number’ of the contact. Send ‘across_team’ as true to perform the action for all agents in your account.
+      parameters:
+      - name: id
+        required: false
+        in: query
+        description: Unique id of the contact as generated by JustCall. Sending the ‘id’ will only delete the contact for the specific agent with whom this contact id is associated.
+        schema:
+          example: 1234
+          type: number
+      - name: contact_number
+        required: false
+        in: query
+        description: Phone number of the contact. If the phone number is sent, JustCall will delete all contacts containing the given phone number from the owner’s account. If across_team is sent true along with the phone number, then all contacts across all agents containing given phone number will be deleted.
+        schema:
+          example: '+1234567890'
+          type: string
+      - name: across_team
+        required: false
+        in: query
+        description: 'Choose to delete a contact for all agents or only for the account owner.<br>True: Delete contact for all agents<br>False: Delete contact for account owner (Default)<br><br>Note: Action across entire team only works when sent with contact_number.'
+        schema:
+          default: false
+          example: false
+          enum:
+          - true
+          - false
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteContactResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
+  /v2.1/contacts/list-custom-fields:
+    get:
+      operationId: contacts_list_custom_fields_v21
+      summary: List contact custom field definitions
+      description: Returns the custom field definitions configured for your account. Requires the LaunchDarkly flag `contacts-custom-fields-enabled`. User and manager context come from API authentication, not from the request body.
+      parameters: []
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListContactCustomFieldsResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
+  /v2.1/contacts/{id}:
+    get:
+      operationId: contact_get_v21
+      summary: Get a contact
+      description: Utilize this endpoint to retrieve data related to a specific Contact using the "id" of the contact
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the contact as generated by JustCall.
+        schema:
+          example: 87987456
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetContactResponse'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
+  /v2.1/contacts/status:
+    put:
+      operationId: update_contact_status_v21
+      summary: Update contact status
+      description: Utilize this endpoint to update the contact’s status.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContactStatusDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
+  /v2.1/contacts/bulk-add/blacklist:
+    post:
+      operationId: bulk_add_contacts_to_blacklist_v21
+      summary: Bulk add contacts to blacklist
+      description: Utilize this endpoint to add one or more contact(s) to DND, DNM, and/or Blacklist. Invalid and duplicate numbers will be skipped, and the response will indicate added, updated, failed and skipped numbers with their respective agent IDs.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkAddContactsToBlacklistPayloadDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkAddContactsToBlacklistResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
+  /v2.1/contacts/bulk-delete:
+    post:
+      operationId: bulk_delete_contact_v21
+      summary: Bulk delete contact
+      description: Utilize this endpoint to delete one or more contact(s) from your JustCall account using the ‘contact_ids’. Maximum of 100 contact ids are allowed.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkDeleteContactQueryDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteContactResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
+  /v2.1/contacts/blacklist:
+    get:
+      operationId: list_blacklist_contacts_v21
+      summary: List blacklist contacts
+      description: Utilize this endpoint to list blacklist contacts based on one or more query parameters.
+      parameters:
+      - name: across_team
+        required: false
+        in: query
+        description: Send "true" to fetch all blacklisted contacts for all the agents from your JustCall account. Default value will be "false".
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - name: agent_ids
+        required: false
+        in: query
+        description: Add a list of agent_ids to fetch blacklisted contacts associated with multiple agents at once.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: Phone number of the blacklisted contact
+        schema:
+          example: 1213566XXXX
+          type: string
+      - name: first_name
+        required: false
+        in: query
+        description: First name of the blacklisted contact
+        schema:
+          example: Rachel
+          type: string
+      - name: last_name
+        required: false
+        in: query
+        description: Last name of the blacklisted contact
+        schema:
+          example: Green
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Status of the blacklisted contact from among the following - blacklist, DND, DNM
+        schema:
+          example:
+          - dnd
+          type: array
+          items:
+            type: string
+            enum:
+            - blacklist
+            - dnd
+            - dnm
+            - whitelist
+      - name: per_page
+        required: false
+        in: query
+        description: Number of blacklisted contacts to be fetched per page. Default value is 50 and maximum value is 500.
+        schema:
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number for which blacklisted contacts are to be fetched. Page number "0" indicates first page containing records.
+        schema:
+          example: 0
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the blacklisted contacts list should appear based on the creation date of the blacklisted contacts. Defaults to desc (descending order).
+        schema:
+          example: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBlacklistContactsResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Contacts
+      security:
+      - AccessToken: []
 components:
+  schemas:
+    UpdateContactStatusDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the contact as generated by JustCall.
+          example: 87987456
+        contact_number:
+          type: string
+          description: Primary phone number of the contact
+          example: '19988776655'
+        add_to:
+          type: array
+          description: Add the contact number to one or more lists from DND, DNM and Blacklist.
+          example:
+          - dnd
+          - dnm
+          items:
+            type: string
+            enum:
+            - blacklist
+            - dnd
+            - dnm
+            - whitelist
+        remove_from:
+          type: array
+          description: Remove the contact number from one or more lists from DND, DNM and Blacklist
+          example:
+          - dnm
+          - blacklist
+          items:
+            type: string
+            enum:
+            - blacklist
+            - dnd
+            - dnm
+            - whitelist
+        across_team:
+          type: boolean
+          description: Choose to update a contact for all agents or only for the account owner
+          example: false
+          default: false
+        justcall_number:
+          type: string
+          description: JustCall number of the contact
+          example: '19988776655'
+    ListContactsResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request : ‘success’ for successful request; error message with description of error for failed request'
+          example: success
+        count:
+          type: number
+          description: Number of contacts present on the current page
+          example: 100
+        current_page:
+          type: number
+          description: Number of the current page
+          example: 2
+        per_page:
+          type: number
+          description: Maximum number of contact records appearing per page
+          example: 10
+        next_page_link:
+          type: string
+          description: Link to the next page containing contacts
+          example: https://api.justcall.io/v2.1/contacts?page=3&per_page=10
+        prev_page_link:
+          type: string
+          description: Link to the previous page of contacts
+          example: https://api.justcall.io/v2.1/contacts?page=1&per_page=10
+        data:
+          description: Array of JustCall Contact objects
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactResponseDto'
+    CreateContactDto:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: Rachel
+          description: First name of the contact
+        last_name:
+          type: string
+          example: Green
+          description: Last name of the contact
+        contact_number:
+          type: string
+          example: 1213566XXXX
+          description: Phone number of the contact
+        other_numbers:
+          example:
+          - label: Mobile
+            number: '19876543210'
+          - label: Landline
+            number: '12345678901'
+          description: 'Other phone numbers associated with the contact represented by an array of objects with fields: label and number'
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherPhoneNumberDto'
+        extension:
+          type: number
+          description: Assign an extension to the contact
+          example: 101
+        email:
+          type: string
+          example: rachel.green@friends.co
+          description: Email id of the contact
+        company:
+          type: string
+          description: Company with which the contact is associated
+          example: Friends.co
+        address:
+          type: string
+          example: New York, United States
+          description: Address of the contact
+        notes:
+          type: string
+          description: Additional information added for the contact in JustCall
+          example: Wants a demo of AI features
+        across_team:
+          type: number
+          default: false
+          example: false
+          description: 'Choose to add a contact for all agents or only for the account owner.<br>true: Add contact for all agents<br>false: Add contact for account owner (Default)'
+          enum:
+          - true
+          - false
+        agent_ids:
+          description: Specify the agent_ids to create contact only for a specific agents.
+          example:
+          - 1234
+          - 5678
+          type: array
+          items:
+            type: string
+        customFields:
+          example:
+          - value: Gold
+          - id: 1101123
+            value: Silver
+          description: Set values for custom fields. Each item has an optional `id` (field id) and `value`. When non-empty, the LaunchDarkly flag `contacts-custom-fields-enabled` must be on for your company.
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateContactCustomFieldItemDto'
+      required:
+      - first_name
+      - contact_number
+    ListBlacklistContactsResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request : "success" for successful request; error message with description of error for failed request'
+          example: success
+        count:
+          type: number
+          description: Number of blacklisted contacts present on the current page
+          example: 100
+        current_page:
+          type: number
+          description: Number of the current page
+          example: 2
+        per_page:
+          type: number
+          description: Maximum number of blacklisted contact records appearing per page
+          example: 10
+        next_page_link:
+          type: string
+          description: Link to the next page containing blacklisted contacts
+          example: https://api.justcall.io/v2.1/contacts/blacklist?page=3&per_page=10
+        prev_page_link:
+          type: string
+          description: Link to the previous page of blacklisted contacts
+          example: https://api.justcall.io/v2.1/contacts/blacklist?page=1&per_page=10
+        data:
+          description: Array of JustCall blacklisted Contact objects
+          type: array
+          items:
+            $ref: '#/components/schemas/ListBlacklistContactResponseDto'
+    NoteRequestDto:
+      type: object
+      properties:
+        note:
+          type: string
+          example: This is note 1
+          description: Note content for the contact
+    CreateContactResponseDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request: "success" for successful request; error message with description of error for failed request'
+          example: success
+        data:
+          description: Displays the contact details
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactResponseDto'
+    ContactResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1234
+          description: Unique id of the contact as generated by JustCall
+        parent_contact_id:
+          type: number
+          example: 1234
+          description: The ID of the parent contact in case this is a child contact. This field will be empty for parent contacts. The parent ID corresponds to the contact's primary phone number. A child contact represents one of the 'other numbers' added to the parent contact.
+        name:
+          type: string
+          example: Rachel Green
+          description: Full name of the contact
+        first_name:
+          type: string
+          example: Rachel
+          description: First name of the contact
+        last_name:
+          type: string
+          example: Green
+          description: Last name of the contact
+        contact_number:
+          type: string
+          example: 1213566XXXX
+          description: Primary phone number of the contact
+        other_numbers:
+          description: Other phone numbers of the contact
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherPhoneNumberResponseDto'
+        email:
+          type: string
+          example: rachel.green@friends.co
+          description: Email id of the contact
+        extension:
+          type: number
+          example: 101
+          description: Extension assigned to the contact
+        company:
+          type: string
+          example: Friends.co
+          description: Company with which the contact is associated
+        address:
+          type: string
+          example: New York, United States
+          description: Address of the contact
+        notes:
+          description: Notes of the contact
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteDto'
+        status:
+          description: Status of the contact
+          allOf:
+          - $ref: '#/components/schemas/StatusDto'
+        status_updated_at:
+          type: string
+          example: '2024-05-13'
+          description: Date when the status of the contact was last updated
+        created_at:
+          type: string
+          example: '2024-04-01'
+          description: Date when the contact was created
+        last_updated_at:
+          type: string
+          example: '2024-05-10'
+          description: Date when the contact was last updated
+        agent_id:
+          type: number
+          example: 105678
+          description: Id of the agent who created the contact
+        custom_fields:
+          description: Custom field values from the contacts service. Only present for JustCall app (internal) requests when Khosla returns at least one field; omitted if empty or absent.
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactCustomFieldItemDto'
+    ListContactCustomFieldsResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request: "success" for successful request; error message for failed request'
+          example: success
+        data:
+          type: object
+          description: Custom field definitions for the account. Shape follows the upstream contacts service (typically an array of field metadata objects).
+    BulkAddContactsToBlacklistResponseDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response
+          example: success
+        data:
+          description: Details of phone numbers processed against DND/DNM/Blacklist, including their status (added, updated, failed, or skipped) along with the corresponding agent IDs.
+          allOf:
+          - $ref: '#/components/schemas/BulkAddContactsToBlacklistResponseData'
+    CreateContactCustomFieldItemDto:
+      type: object
+      properties:
+        fieldId:
+          type: number
+          description: Optional id of the custom field as defined in your JustCall account (Custom Fields settings).
+          example: 1101123
+        value:
+          type: string
+          description: Value to store for this custom field.
+          example: New York
+        optionIds:
+          description: Option ids to store for this custom field dropdown.
+          example:
+          - 1
+          - 2
+          - 3
+          type: array
+          items:
+            type: string
+      required:
+      - value
+      - optionIds
+    GetContactResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request: "success" for successful request; error message with description of error for failed request'
+          example: success
+        data:
+          description: Displays the contact details
+          allOf:
+          - $ref: '#/components/schemas/ContactResponseDto'
+    NoteDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The id of the note
+          example: 1234
+        description:
+          type: string
+          description: Note added to the contact
+          example: wants a demo of AI features
+        added_at:
+          type: string
+          description: Date and time when the note was added
+          example: '2024-05-13 10:30:00'
+        last_updated_at:
+          type: string
+          description: Date and time when the note was last updated
+          example: '2024-05-13 10:30:00'
+    DeleteContactResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - failed
+          - success
+          description: The status of the response
+          example: success
+    BulkAddContactsToBlacklistPayloadDTO:
+      type: object
+      properties:
+        contact_numbers:
+          description: List of contact numbers to be added to the DNCA list
+          example:
+          - '19988776655'
+          - '19988776656'
+          - '19988776657'
+          type: array
+          items:
+            type: string
+        add_to:
+          description: Add the contact number to one or more lists from DND, DNM and Blacklist.
+          example:
+          - blacklist
+          - dnd
+          type: array
+          items:
+            type: string
+        across_team:
+          type: boolean
+          description: Choose to update a contact for all agents or only for the account owner
+          example: false
+          default: false
+      required:
+      - contact_numbers
+      - add_to
+    BulkAddContactsToBlacklistResponseData:
+      type: object
+      properties:
+        updated:
+          type: object
+          description: Contacts that were already marked as any of DND/DNM/Blacklist and were updated to all provided lists.
+          example:
+            numbers:
+            - '1234567890'
+            - '1234567891'
+            agent_ids:
+            - 1
+            - 2
+        added:
+          type: object
+          description: 'Contacts that were absent in any of DND/DNM/Blacklist and now added to the provided lists. '
+          example:
+            numbers:
+            - '1234567890'
+            - '1234567891'
+            agent_ids:
+            - 1
+            - 2
+        failed:
+          type: object
+          description: Contacts that failed to be added to the provided lists
+          example:
+            numbers:
+            - '1234567890'
+            - '1234567891'
+            agent_ids:
+            - 1
+            - 2
+        skipped:
+          type: object
+          description: Contacts that were not added to any of the provided lists
+          example:
+            numbers:
+            - '1234567890'
+            - '1234567891'
+            agent_ids:
+            - 1
+            - 2
+    ListBlacklistContactResponseDto:
+      type: object
+      properties:
+        ref_id:
+          type: string
+          description: A system-generated unique reference ID assigned to this blacklisted contact record.
+          example: 7362362abd78
+        parent_contact_id:
+          type: number
+          example: 1234
+          description: The ID of the parent contact in case this is a child contact. This field will be empty for parent contacts. The parent ID corresponds to the contact's primary phone number. A child contact represents one of the 'other numbers' added to the parent contact.
+        name:
+          type: string
+          example: Rachel Green
+          description: Full name of the blacklisted contact
+        first_name:
+          type: string
+          example: Rachel
+          description: First name of the blacklisted contact
+        last_name:
+          type: string
+          example: Green
+          description: Last name of the blacklisted contact
+        contact_number:
+          type: string
+          example: 1213566XXXX
+          description: Primary phone number of the blacklisted contact
+        other_numbers:
+          description: Other phone numbers of the blacklisted contact
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherPhoneNumberResponseDto'
+        email:
+          type: string
+          example: rachel.green@friends.co
+          description: Email id of the blacklisted contact
+        extension:
+          type: number
+          example: 101
+          description: Extension assigned to the blacklisted contact
+        company:
+          type: string
+          example: Friends.co
+          description: Company with which the blacklisted contact is associated
+        address:
+          type: string
+          example: New York, United States
+          description: Address of the blacklisted contact
+        notes:
+          description: Notes of the blacklisted contact
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteDto'
+        status:
+          description: Status of the blacklisted contact
+          allOf:
+          - $ref: '#/components/schemas/StatusDto'
+        status_updated_at:
+          type: string
+          example: '2024-05-13'
+          description: Date when the status of the blacklisted contact was last updated
+        created_at:
+          type: string
+          example: '2024-04-01'
+          description: Date when the blacklisted contact was created
+        last_updated_at:
+          type: string
+          example: '2024-05-10'
+          description: Date when the blacklisted contact was last updated
+        agent_id:
+          type: number
+          example: 105678
+          description: Id of the agent who created the blacklisted contact
+    ContactCustomFieldItemDto:
+      type: object
+      properties:
+        key:
+          type: number
+          example: 45
+          description: Custom field definition id
+        label:
+          type: string
+          example: City
+          description: Display label for the custom field
+        type:
+          type: string
+          example: Text
+          description: Field type
+        value:
+          type: string
+          example: Dawson
+          description: Stored value
+    UpdateContactDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the contact as generated by JustCall. Sending the 'id' will only update the contact for the specific agent with whom this contact id is associated.
+          example: 1234
+        contact_number:
+          type: string
+          description: Primary phone number of the contact. If 'contact_number' is sent but 'id' is not sent, the number will be used for searching. If sent with 'id', it will be used to update the primary number of the contact found via 'id'.
+          example: '19988776655'
+        first_name:
+          type: string
+          example: Rachel
+          description: First name of the contact
+        last_name:
+          type: string
+          example: Green
+          description: Last name of the contact
+        other_numbers:
+          example:
+          - label: Mobile
+            number: '19876543210'
+          - label: Landline
+            number: '12345678901'
+          description: 'Enter new values for the ''other phone numbers'' associated with the contact represented by an array of objects with fields: label and number'
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherPhoneNumberDto'
+        email:
+          type: string
+          example: rachel.green@friends.co
+          description: Email id of the contact
+        extension:
+          type: number
+          description: Assign an extension to the contact
+          example: 101
+        company:
+          type: string
+          description: Company with which the contact is associated
+          example: Friends.co
+        address:
+          type: string
+          example: New York, United States
+          description: Address of the contact
+        notes:
+          description: 'Add more details for the contact in notes to reference later. You can send an array of objects here like: [{ note: "This is note 1" }, { note: "This is note 2" }]'
+          example:
+          - note: This is note 1
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteRequestDto'
+        across_team:
+          type: boolean
+          description: 'Choose to update a contact for all agents or only for the account owner. True: Update contact for all agents. False: Update contact for account owner (Default). Action across entire team only works when sent with contact_number.'
+          example: false
+          default: false
+        agent_ids:
+          description: Specify the agent_ids to update contact only for a specific agent. All contacts are by default always available to the account owner along with respective agents(if any)
+          example:
+          - 1234
+          - 5678
+          type: array
+          items:
+            type: string
+        customFields:
+          example:
+          - value: Gold
+          - id: 1101123
+            value: Silver
+          description: Set values for custom fields. Each item has an optional `id` (field id) and `value`. When non-empty, the LaunchDarkly flag `contacts-custom-fields-enabled` must be on for your company.
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateContactCustomFieldItemDto'
+    OtherPhoneNumberDto:
+      type: object
+      properties:
+        label:
+          type: string
+          example: Mobile
+          description: The label for the phone number (e.g., Mobile, Home, Work)
+        number:
+          type: string
+          example: 1987654XXXX
+          description: The phone number associated with the label
+    StatusDto:
+      type: object
+      properties:
+        blacklist:
+          type: boolean
+          description: ' Returns true if the contact is blacklisted, otherwise returns false'
+          example: true
+        dnd:
+          type: boolean
+          description: Returns true if the contact is in DND list, otherwise returns false
+          example: false
+        dnm:
+          type: boolean
+          description: Returns true if the contact is DNM, otherwise returns false
+          example: false
+    BulkDeleteContactQueryDto:
+      type: object
+      properties:
+        contact_ids:
+          description: Unique ids of the contacts as generated by JustCall.
+          example:
+          - 1234
+          - 5678
+          type: array
+          items:
+            type: string
+      required:
+      - contact_ids
+    UpdateContactResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request: "success" for successful request; error message with description of error for failed request'
+          example: success
+        data:
+          description: Displays the contact details
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactResponseDto'
+    OtherPhoneNumberResponseDto:
+      type: object
+      properties:
+        label:
+          type: string
+          example: Mobile
+          description: The label for the phone number (e.g., Mobile, Home, Work)
+        number:
+          type: string
+          example: 1987654XXXX
+          description: The phone number associated with the label
+        contact_relation_id:
+          type: number
+          example: 1234
+          description: Unique identifier for the relationship between a parent contact and its other associated number.
   securitySchemes:
-    ApiKeyAuth:
+    AccessToken:
       type: apiKey
       in: header
       name: Authorization
-      description: JustCall authentication. Pass the API key and API secret as defined in the JustCall Authentication documentation (typically combined and passed in the Authorization header).
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

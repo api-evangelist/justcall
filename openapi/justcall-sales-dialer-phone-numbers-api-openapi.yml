@@ -1,0 +1,46 @@
+openapi: 3.2.0
+info:
+  title: JustCall Sales Dialer - Phone Numbers API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: Sales Dialer - Phone Numbers
+paths:
+  /v2/sales_dialer/phone-numbers/list:
+    get:
+      operationId: SDNumbersController_listNumbers
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - Sales Dialer - Phone Numbers
+      security:
+      - AccessToken: []
+      summary: SD numbers controller list numbers
+      x-summary-source: derived
+  /v2.1/sales_dialer/phone-numbers/list:
+    get:
+      operationId: SDNumbersController_listNumbers_v21
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - Sales Dialer - Phone Numbers
+      security:
+      - AccessToken: []
+      summary: SD numbers controller list numbers v21
+      x-summary-source: derived
+components:
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

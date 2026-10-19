@@ -1,0 +1,365 @@
+openapi: 3.2.0
+info:
+  title: JustCall Users API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: Users
+paths:
+  /v2.1/users:
+    get:
+      operationId: users_list_v21
+      summary: List all users
+      description: Utilize this endpoint to fetch a list of all the users added to your JustCall account and to filter a set of users via the query parameters.
+      parameters:
+      - name: available
+        required: false
+        in: query
+        description: Use available=true to get only those agents that are available as per their <a href='https://justcall.io/app/working-hours' target="_blank">working hours</a> in JustCall. By default, we will provide data for all agents irrespective of their availability.
+        schema:
+          default: ''
+          type: boolean
+      - name: email
+        required: false
+        in: query
+        description: Filter agents using the email associated with their JustCall account.
+        schema:
+          default: ''
+          type: string
+      - name: group_id
+        required: false
+        in: query
+        description: Filter agents based on the User Groups they belong to in JustCall.
+        schema:
+          default: ''
+          type: number
+      - name: role
+        required: false
+        in: query
+        description: Filter agents based on the role they are assigned in JustCall.
+        schema:
+          default: ''
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which user records are to be fetched
+        schema:
+          default: 0
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of user records to be fetched per page. Default value is 50 and maximum value is 100.
+        schema:
+          default: 50
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the user records should appear based on the agent_id
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Users
+      security:
+      - AccessToken: []
+  /v2.1/users/availability:
+    get:
+      operationId: list_user_availability_v21
+      summary: List user availability statuses
+      description: List current true availability statuses for agents in your JustCall account. Optional agent_id / agent_ids filters are forwarded upstream; unknown agents return an empty data array.
+      parameters:
+      - name: agent_id
+        required: false
+        in: query
+        description: Filter availability for a single agent by JustCall agent id.
+        schema:
+          example: 417094
+          type: number
+      - name: agent_ids
+        required: false
+        in: query
+        description: Filter availability for multiple agents. Accepts a comma-separated list or JSON array of agent ids.
+        schema:
+          example:
+          - 417094
+          - 417095
+          type: array
+          items:
+            type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserAvailabilityResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Users
+      security:
+      - AccessToken: []
+    put:
+      operationId: update_user_availability_v21
+      summary: Update user availability
+      description: Update the availability status of a user in JustCall.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserAvailabilityDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUserAvailabilityResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Users
+      security:
+      - AccessToken: []
+  /v2.1/users/{id}:
+    get:
+      operationId: users_get_v21
+      summary: Get a user
+      description: Get data for a specific user using this endpoint by sending their id (agent_id can be found via the List all users API)
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique Id of the agent (JustCall user)
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Users
+      security:
+      - AccessToken: []
+components:
+  schemas:
+    ListUserAvailabilityResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the API response
+          enum:
+          - failed
+          - success
+          example: success
+        data:
+          description: Availability status for each requested or company agent.
+          type: array
+          items:
+            $ref: '#/components/schemas/UserAvailabilityStatusItemDto'
+      required:
+      - status
+      - data
+    UpdateUserAvailabilityDto:
+      type: object
+      properties:
+        agent_id:
+          type: number
+          description: Unique id of the agent (JustCall user) as generated by JustCall.
+          example: 417094
+        is_available:
+          type: number
+          description: Enter true to set user as ’available’ and false to set as ‘unavailable’.
+          example: false
+          enum:
+          - true
+          - false
+        unavailability_reason:
+          type: string
+          description: 'Enter the unavailability reason for the user. Find reasons added to your account here - https://app.justcall.io/apex/settings. Please note that only the reasons added to your account '
+          example: Lunch Break
+      required:
+      - agent_id
+      - is_available
+    UserAvailabilityStatusItemDto:
+      type: object
+      properties:
+        agent_id:
+          type: number
+          description: Unique id of the agent (JustCall user) as generated by JustCall.
+          example: 417094
+        availability_status:
+          type: string
+          description: Current availability status from agent analytics (e.g. available, unavailable, busy, offline).
+          example: available
+        reason:
+          type:
+          - string
+          - 'null'
+          description: Human-readable reason for the current status, when provided by agent analytics.
+          example: Lunch Break
+      required:
+      - agent_id
+      - availability_status
+      - reason
+    UpdateUserAvailabilityResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the API response
+          enum:
+          - failed
+          - success
+          example: success
+    UsersResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique Id of the agent (JustCall user)
+          example: 1
+        role:
+          type: string
+          description: Role assigned to the user
+          example: Admin
+        name:
+          type: string
+          description: Full name of the user
+          example: John Doe
+        email:
+          type: string
+          description: Email id of the user
+          example: john.doe@example.com
+        extension:
+          type: number
+          description: Extension generated by JustCall for this user
+          example: 100
+        groups:
+          description: List of User Groups which the user is a member of as configured in your JustCall account
+          example:
+          - group_id: 111
+            group_name: Sales Team
+          - group_id: 222
+            group_name: Australia Sales
+          type: array
+          items:
+            type: string
+        owned_numbers:
+          description: List of phone numbers assigned uniquely to this user
+          example:
+          - '1234567890'
+          - '19876543210'
+          - '12345678901'
+          - '17654321098'
+          type: array
+          items:
+            type: string
+        shared_numbers:
+          description: List of phone numbers shared with this user
+          example:
+          - '1234567890'
+          - '19876543210'
+          - '12345678901'
+          - '17654321098'
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          description: Timestamp when the User was created, in UTC
+          example: '2025-01-01 10:00:00'
+        last_login_timestamp:
+          type: string
+          description: Timestamp when the user was last logged into his/her JustCall account
+          example: '2025-01-01 10:00:00'
+        timezone:
+          type: string
+          description: Timezone set by the user in his/her JustCall account
+          example: America/New_York
+        working_hours_type:
+          type: string
+          description: Returns the type of working hours set by the user
+          example: Custom
+        available:
+          type: string
+          description: Current availability status of the user as per their working hours.
+          enum:
+          - 'Yes'
+          - 'No'
+          example: 'Yes'
+        unavailability_reason:
+          type: string
+          description: If available is sent as "No", this parameter returns the latest unavailability reason selected by user in JustCall, otherwise it will remain empty
+          example: Break
+        on_call:
+          type: string
+          description: Returns "Yes" if the user is already on a call at the time of the API call otherwise return "No"
+          example: 'Yes'
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

@@ -1,0 +1,127 @@
+openapi: 3.2.0
+info:
+  title: JustCall OAuth API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: OAuth
+paths:
+  /v2.1/oauth/register:
+    post:
+      operationId: OAuthController_register_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterClientDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - OAuth
+      summary: OAuth controller register v21
+      x-summary-source: derived
+  /v2/oauth/authorize:
+    options:
+      operationId: OAuthController_authorizeOptions
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - OAuth
+      summary: OAuth controller authorize options
+      x-summary-source: derived
+  /v2.1/oauth/authorize:
+    options:
+      operationId: optionsV21OauthAuthorize
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - OAuth
+      summary: OAuth controller authorize options
+      x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: OAuthController_authorizeOptions
+    post:
+      operationId: OAuthController_authorize_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizeRequestDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - OAuth
+      summary: OAuth controller authorize v21
+      x-summary-source: derived
+  /v2/oauth/token:
+    options:
+      operationId: OAuthController_tokenOptions
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - OAuth
+      summary: OAuth controller token options
+      x-summary-source: derived
+  /v2.1/oauth/token:
+    options:
+      operationId: optionsV21OauthToken
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - OAuth
+      summary: OAuth controller token options
+      x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: OAuthController_tokenOptions
+    post:
+      operationId: OAuthController_token_v21
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequestDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+      - OAuth
+      summary: OAuth controller token v21
+      x-summary-source: derived
+components:
+  schemas:
+    RegisterClientDto:
+      type: object
+      properties: {}
+    AuthorizeRequestDto:
+      type: object
+      properties: {}
+    TokenRequestDto:
+      type: object
+      properties: {}
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

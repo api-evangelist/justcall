@@ -1,0 +1,12 @@
+{
+ "url": "https://api.justcall.io/v2/api-docs",
+ "final": "https://api.justcall.io/v2/api-docs",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 428651,
+ "sha256": "0430cdffa8d9a64182fbed41cf64ced065d9ad650d2e45da128a3f7ec283f001",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

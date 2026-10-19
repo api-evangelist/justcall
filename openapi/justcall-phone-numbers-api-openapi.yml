@@ -1,0 +1,477 @@
+openapi: 3.2.0
+info:
+  title: JustCall Phone Numbers API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: Phone Numbers
+paths:
+  /v2.1/phone-numbers:
+    get:
+      operationId: phone_number_list_v21
+      summary: List all phone numbers
+      description: Utilize this endpoint to fetch a list of all the phone numbers added to your JustCall account and to filter a set of numbers via the query parameters.
+      parameters:
+      - name: justcall_line_name
+        required: false
+        in: query
+        description: Search for the number details using the name of the JustCall phone line set by you for this number
+        schema:
+          example: Sales Line
+          type: string
+      - name: availability_setting
+        required: false
+        in: query
+        description: 'Get a list of phone numbers set to the same type of Business Hours setting in JustCall. Filter using the following options: Always Open, Always Closed, Custom Hours'
+        schema:
+          example: Custom Hours
+          enum:
+          - Always Open
+          - Always Closed
+          - Custom Hours
+          type: string
+      - name: number_type
+        required: false
+        in: query
+        description: 'Filter phone numbers based on the type of the number from the following option: local, mobile, toll_free'
+        schema:
+          example: mobile
+          enum:
+          - local
+          - mobile
+          - toll_free
+          type: string
+      - name: number_owner_id
+        required: false
+        in: query
+        description: Search for all the numbers owned by an agent
+        schema:
+          example: 1234
+          type: number
+      - name: shared_agent_id
+        required: false
+        in: query
+        description: Search for all the numbers shared with an agent
+        schema:
+          example: 9876
+          type: number
+      - name: shared_group_id
+        required: false
+        in: query
+        description: Search for all the numbers shared with group
+        schema:
+          example: 1276
+          type: number
+      - name: capabilities
+        required: false
+        in: query
+        description: Filter numbers based on the capabilities out of the following:call, sms, mms
+        schema:
+          example: sms
+          enum:
+          - call
+          - sms
+          - mms
+          type: string
+      - name: per_page
+        required: false
+        in: query
+        description: Count of phone number records to be fetched per page. Default value is 30 and maximum value is 100.
+        schema:
+          example: 30
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number for which phone number records are to be fetched
+        schema:
+          example: 2
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the phone number records should appear
+        schema:
+          example: DESC
+          enum:
+          - ASC
+          - DESC
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPhoneNumbersResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Phone Numbers
+      security:
+      - AccessToken: []
+  /v2.1/phone-numbers/detect:
+    post:
+      operationId: phone_number_detect_v21
+      summary: Detect incoming number
+      description: Utilize this endpoint to detect if an incoming call is from a Mobile/Landline/VOIP number. Please contact dev@justcall.io to enable this particular API for your account. Additional charges may apply for utilizing this endpoint.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DetectPhoneNumberDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetectPhoneNumberResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Phone Numbers
+      security:
+      - AccessToken: []
+  /v2.1/phone-numbers/{id}:
+    get:
+      operationId: phone_number_get_v21
+      summary: Get a phone number
+      description: Get data for a specific phone number or check it's current availability status using this endpoint by sending the id of the phone number.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Enter the unique id of the phone number as generated by JustCall.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPhoneNumberDataDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - Phone Numbers
+      security:
+      - AccessToken: []
+components:
+  schemas:
+    NumberOwner:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique identifier of the phone number owner.
+          example: 10012
+        email:
+          type: string
+          description: Email address associated with the owner of the phone number.
+          example: rachel.green@friends.co
+        name:
+          type: string
+          description: Full name of the individual or entity owning the phone number.
+          example: Rachel Green
+    ListPhoneNumbersResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status message
+          example: success
+        count:
+          type: number
+          description: Number of records on the current page
+          example: 50
+        total_count:
+          type: number
+          description: Total number of records available
+          example: 2440
+        current_page:
+          type: number
+          description: Current page number
+          example: 3
+        per_page:
+          type: number
+          description: Records per page
+          example: 50
+        next_page_link:
+          type: string
+          description: Link to the next page
+          example: https://api.justcall.io/v2.1/phone-numbers?page=4
+        prev_page_link:
+          type: string
+          description: Link to the previous page
+          example: https://api.justcall.io/v2.1/phone-numbers?page=2
+        data:
+          description: List of phone numbers
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumberDataDto'
+    GetPhoneNumberDataDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique Id of the Phone Number as generated by JustCall
+          example: 1234
+        justcall_number:
+          type: string
+          description: JustCall phone number as picked from your account
+          example: 12707705XXX
+        friendly_number:
+          type: string
+          description: Friendly representation of the JustCall number
+          example: (270) 770-5XXX
+        justcall_line_name:
+          type: string
+          description: Custom name of the JustCall phone line set by you for this number
+          example: Sales Line
+        availability_setting:
+          type: string
+          description: Details of if the phone number is set to Always Open, Always Closed or Custom Hours have been set on the number.
+          example: Custom Hours
+        current_status:
+          type: string
+          description: Availability status of the phone number at the time of API hit.
+          example: Available
+        number_type:
+          type: string
+          description: Type of the phone number from among local, mobile, national, toll_free, polyvalent, shared_cost, technical_platform
+          example: Local
+        sms_compliance:
+          type: string
+          description: 'Check if this number is verified to send SMS and MMS messages via JustCall (only applicable to US and Canada based numbers). Values can be one of: Verified, Unverified, Not Applicable'
+          example: Verified
+        number_owner:
+          description: Owner of the phone number as assigned in your JustCall account.
+          example:
+            id: 101
+            email: owner@example.com
+            name: John Doe
+          allOf:
+          - $ref: '#/components/schemas/NumberOwner'
+        shared_with:
+          description: List of agents and user groups with whom the phone number is shared.
+          example:
+            team_members:
+            - id: 201
+              name: Agent 1
+              email: agent1@example.com
+            user_groups:
+            - id: 301
+              name: Group 1
+              extension: '123'
+          allOf:
+          - $ref: '#/components/schemas/SharedWithDto'
+        capabilities:
+          description: Capabilities of the phone number for calls, SMS, and MMS.
+          example:
+            call: 'Yes'
+            sms: 'Yes'
+            mms: 'No'
+          allOf:
+          - $ref: '#/components/schemas/CapabilitiesDto'
+        business_registration:
+          type: string
+          description: 'Check if this number can be utilized for calling purposes and track status for unapproved cases. Values can be one of: Draft, In Review, Approved, Failed, Not Applicable (For phone numbers which do not belong to US)'
+          example: Approved
+    UserGroupDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The unique identifier of the user group
+          example: 1
+        name:
+          type: string
+          description: The name of the user group
+          example: Admins
+        extension:
+          type: string
+          description: The extension associated with the user group
+          example: '1234'
+    PhoneNumberDataDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique Id of the Phone Number as generated by JustCall
+          example: 1234
+        justcall_number:
+          type: string
+          description: JustCall phone number as picked from your account
+          example: 12707705XXX
+        friendly_number:
+          type: string
+          description: Friendly representation of the JustCall number
+          example: (270) 770-5XXX
+        justcall_line_name:
+          type: string
+          description: Custom name of the JustCall phone line set by you for this number
+          example: Sales Line
+        availability_setting:
+          type: string
+          description: Details of if the phone number is set to Always Open, Always Closed or Custom Hours have been set on the number.
+          example: Custom Hours
+        current_status:
+          type: string
+          description: Availability status of the phone number at the time of API hit.
+          example: Available
+        number_type:
+          type: string
+          description: Type of the phone number from among local, mobile, national, toll_free, polyvalent, shared_cost, technical_platform
+          example: Local
+        sms_compliance:
+          type: string
+          description: 'Check if this number is verified to send SMS and MMS messages via JustCall (only applicable to US and Canada based numbers). Values can be one of: Verified, Unverified, Not Applicable'
+          example: Verified
+        number_owner:
+          description: Owner of the phone number as assigned in your JustCall account.
+          example:
+            id: 101
+            email: owner@example.com
+            name: John Doe
+          allOf:
+          - $ref: '#/components/schemas/NumberOwner'
+        shared_with:
+          description: List of agents and user groups with whom the phone number is shared.
+          example:
+            team_members:
+            - id: 201
+              name: Agent 1
+              email: agent1@example.com
+            user_groups:
+            - id: 301
+              name: Group 1
+              extension: '123'
+          allOf:
+          - $ref: '#/components/schemas/SharedWithDto'
+        capabilities:
+          description: Capabilities of the phone number for calls, SMS, and MMS.
+          example:
+            call: 'Yes'
+            sms: 'Yes'
+            mms: 'No'
+          allOf:
+          - $ref: '#/components/schemas/CapabilitiesDto'
+        business_registration:
+          type: string
+          description: 'Check if this number can be utilized for calling purposes and track status for unapproved cases. Values can be one of: Draft, In Review, Approved, Failed, Not Applicable (For phone numbers which do not belong to US)'
+          example: Approved
+    TeamMemberDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: The unique identifier of the team member
+          example: 1
+        name:
+          type: string
+          description: The name of the team member
+          example: John Doe
+        email:
+          type: string
+          description: The email of the team member
+          example: john.doe@example.com
+    CapabilitiesDto:
+      type: object
+      properties:
+        call:
+          type: string
+          description: If the phone number is capable for making and receiving calls
+          example: 'Yes'
+        sms:
+          type: string
+          description: If the phone number is capable for sending and receiving text messages
+          example: 'Yes'
+        mms:
+          type: string
+          description: If the phone number is capable for sending and receiving multi-media messages
+          example: 'No'
+    SharedWithDto:
+      type: object
+      properties:
+        team_members:
+          description: List of team members.
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMemberDto'
+        user_groups:
+          description: List of user groups
+          type: array
+          items:
+            $ref: '#/components/schemas/UserGroupDto'
+    DetectPhoneNumberDto:
+      type: object
+      properties:
+        phone_number:
+          type: string
+          description: Enter the phone number from any incoming call to identify whether the caller is using a mobile, landline, or VOIP number. Ensure that each number you send begins with the country code in numerical form. Do not include any special characters (such as +, (, ), or -) when entering the phone number.
+          example: '16813813178'
+      required:
+      - phone_number
+    DetectPhoneNumberResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status message
+          example: success
+        data:
+          description: Phone Number detect object
+          allOf:
+          - $ref: '#/components/schemas/DetectResponseDto'
+    DetectResponseDto:
+      type: object
+      properties:
+        phone_number:
+          type: string
+          example: 1216533XXXX
+        type:
+          type: string
+          description: Type of the phone number from among Landline, Mobile, VOIP or Invalid Number
+          example: Mobile
+        operator:
+          type: string
+          example: ABC
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

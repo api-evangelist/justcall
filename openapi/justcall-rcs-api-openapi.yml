@@ -1,0 +1,1042 @@
+openapi: 3.2.0
+info:
+  title: JustCall RCS API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
+servers:
+- url: https://api.justcall.io
+tags:
+- name: RCS
+paths:
+  /v2.1/rcs/phones:
+    get:
+      operationId: rcs_phones_list_v21
+      summary: List RCS senders
+      description: Retrieve RCS sender agents linked to your JustCall account. Use the returned `id` as `rcs_phone_id` when sending or listing RCS messages.
+      parameters:
+      - name: status
+        required: false
+        in: query
+        description: Filter senders by status.
+        schema:
+          enum:
+          - pending
+          - active
+          - disabled
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RcsPhonesListResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+  /v2.1/rcs/messages:
+    get:
+      operationId: rcs_messages_list_v21
+      summary: List all messages
+      description: Retrieve RCS messages for an RCS sender, or refine the selection with the query parameter fields.
+      parameters:
+      - name: fetch_template_data
+        required: false
+        in: query
+        description: Set fetch_template_data to true to fetch template name, category and other template specific data. Default value is “false”.
+        schema:
+          default: false
+          type: boolean
+      - name: rcs_phone_id
+        required: true
+        in: query
+        description: Id of the RCS sender returned by List RCS senders.
+        schema:
+          example: 123456
+          type: number
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the messages are to be fetched.
+        schema:
+          example: '2025-03-12 00:00:00'
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the messages are to be fetched.
+        schema:
+          example: '2025-03-13 23:59:59'
+          type: string
+      - name: last_message_id_fetched
+        required: false
+        in: query
+        description: Id of the last RCS message fetched in the previous query. This Id ensures that you won't receive any duplicate data when using the 'next_page_link' parameter.
+        schema:
+          type: number
+      - name: contact_number
+        required: false
+        in: query
+        description: Number of the contact for which messages are to be fetched. Please follow the E.164 number format.
+        schema:
+          example: 13801136XXX
+          type: string
+      - name: message_direction
+        required: false
+        in: query
+        description: Enter the direction of the message to be fetched.
+        schema:
+          enum:
+          - incoming
+          - outgoing
+          type: string
+      - name: delivery_status
+        required: false
+        in: query
+        description: Fetch all the messages basis of the delivery status.
+        schema:
+          enum:
+          - read
+          - delivered
+          - sent
+          - received
+          - failed
+          - undelivered
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which messages are to be fetched.
+        schema:
+          default: 0
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of RCS messages to be fetched per page. Default value is 30 and maximum value is 50.
+        schema:
+          default: 30
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the RCS message list should appear based on ‘Date created’ for the message.
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagesPaginatedResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+  /v2.1/rcs/messages/templates:
+    get:
+      operationId: rcs_message_templates_list_v21
+      summary: List all templates
+      description: Fetch RCS templates added to your JustCall account. Templates are company-scoped and are not tied to a specific JustCall number.
+      parameters:
+      - name: content_type
+        required: false
+        in: query
+        description: Filter templates by RCS content type.
+        schema:
+          enum:
+          - text
+          - media
+          - card
+          - carousel
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which templates are to be fetched.
+        schema:
+          default: 0
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of templates to be fetched per page. Default value is 50 and maximum value is 250.
+        schema:
+          default: 50
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the RCS template list should appear based on ‘Date created’ for the template.
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplatesPaginatedResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+  /v2.1/rcs/messages/templates/text:
+    post:
+      operationId: rcs_message_templates_create_text_v21
+      summary: Create a text template
+      description: Create an RCS text template. Use `variables` when the body includes JC placeholders such as `{{firstname}}`. Optional SMS fallback is supported via `fallback_enabled`, `fallback_text`, and `fallback_media`.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RcsCreateTextTemplateBodyDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RcsCreateTemplateResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+  /v2.1/rcs/messages/templates/media:
+    post:
+      operationId: rcs_message_templates_create_media_v21
+      summary: Create a media template
+      description: Create an RCS media template with a required `media_url` and optional caption `body`. Supports `variables` and SMS fallback fields.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RcsCreateMediaTemplateBodyDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RcsCreateTemplateResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+  /v2.1/rcs/messages/templates/card:
+    post:
+      operationId: rcs_message_templates_create_card_v21
+      summary: Create a card template
+      description: Create an RCS card template using simplified fields (`title`, `body`, `media_url`, `actions`). Supports `variables` and SMS fallback fields.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RcsCreateCardTemplateBodyDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RcsCreateTemplateResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+  /v2.1/rcs/messages/templates/carousel:
+    post:
+      operationId: rcs_message_templates_create_carousel_v21
+      summary: Create a carousel template
+      description: Create an RCS carousel template with a required non-empty `cards` array. Supports `variables` and SMS fallback fields.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RcsCreateCarouselTemplateBodyDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RcsCreateTemplateResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+  /v2.1/rcs/messages/send:
+    post:
+      operationId: rcs_message_send_v21
+      summary: Send message
+      description: 'Send an RCS message from an RCS sender (`rcs_phone_id`). Supports freeform body, media, or an approved template. Do not combine `template_id` with `media_url`: when `template_id` is present, the template is delivered and `media_url` is ignored for send.'
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RcsSendMessageBodyDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RcsMessageResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+  /v2.1/rcs/messages/{id}:
+    get:
+      operationId: rcs_message_get_v21
+      summary: Get a message
+      description: Use this endpoint to access RCS message data, including direction, associated agent and delivery status.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the RCS message generated by JustCall.
+        schema:
+          example: 123456
+          type: number
+      - name: fetch_template_data
+        required: false
+        in: query
+        description: Set fetch_template_data to true to fetch template name, category and other template specific data. Default value is “false”.
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RcsMessageResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - RCS
+      security:
+      - AccessToken: []
+components:
+  schemas:
+    RcsMessageInfoDTO:
+      type: object
+      properties:
+        body:
+          type: string
+          example: Hello, how can I help you today?
+        is_mms:
+          type: string
+          example: 'No'
+        mms:
+          $ref: '#/components/schemas/RcsMmsDTO'
+        is_template:
+          type: string
+          example: 'No'
+          enum:
+          - 'Yes'
+          - 'No'
+        template:
+          $ref: '#/components/schemas/RcsTemplateDTO'
+        content_type:
+          type: string
+          enum:
+          - text
+          - media
+          - card
+          - carousel
+        rcs_content:
+          type: object
+        fallback:
+          $ref: '#/components/schemas/RcsFallbackDTO'
+    RcsFallbackDTO:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          example: true
+        text:
+          type: string
+          example: SMS fallback text
+        sent:
+          type: boolean
+          example: false
+        fallback_message_id:
+          type: number
+          example: 123456
+      required:
+      - enabled
+      - text
+      - sent
+    RcsFallbackMediaItemDTO:
+      type: object
+      properties:
+        url:
+          type: string
+          example: https://cdn.example.com/fallback.jpg
+        mime:
+          type: string
+          example: image/jpeg
+      required:
+      - url
+      - mime
+    RcsSendMessageBodyDTO:
+      type: object
+      properties:
+        rcs_phone_id:
+          type: number
+          description: Id of the RCS sender returned by List RCS senders.
+          example: 123456
+        contact_number:
+          type: string
+          description: Number of the contact. Please follow the E.164 number format.
+          example: 13801136XXX
+        body:
+          type: string
+          description: Content of the RCS message. Maximum character limit is 1600.
+        media_url:
+          type: string
+          description: Add URL of the media file to be sent with the message. Only one file is supported with a message. MIME type is derived from the URL extension. Ignored for delivery when `template_id` is also sent (template path wins).
+        template_id:
+          type: number
+          description: Id of the approved RCS template. When set, the message is sent as a template; do not send `media_url` with this field — media is ignored for delivery.
+          example: 1234
+      required:
+      - rcs_phone_id
+      - contact_number
+    RcsCreateTemplateResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 123456
+        content_type:
+          type: string
+          enum:
+          - text
+          - media
+          - card
+          - carousel
+          example: text
+        status:
+          type: string
+          enum:
+          - Approved
+          - Pending
+          - Deleted
+          - Rejected
+          example: Approved
+        template_sid:
+          type: string
+          example: HXxxxxxxxx
+      required:
+      - id
+      - content_type
+    RcsCreateCardTemplateBodyDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: welcome_text
+          description: Template name.
+        language:
+          type: string
+          example: en
+        category:
+          type: string
+          example: UTILITY
+        variables:
+          type: object
+          example:
+            firstname: Alex
+          description: Sample values for JC placeholders such as {{firstname}}. Values must be strings.
+        fallback_enabled:
+          type: boolean
+          default: false
+          description: Enable SMS/MMS fallback when RCS delivery fails.
+        fallback_text:
+          type: string
+          example: Your appointment reminder
+          description: SMS fallback body. Maximum 1600 characters.
+        fallback_media:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsFallbackMediaItemDTO'
+        title:
+          type: string
+          example: Appointment
+          description: Card title. Maximum 200 characters.
+        body:
+          type: string
+          example: Hi {{firstname}}
+          description: Card body. Maximum 1600 characters.
+        media_url:
+          type: string
+          example: https://cdn.example.com/a.jpg
+        actions:
+          maxItems: 4
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsTemplateActionDTO'
+      required:
+      - name
+    RcsCreateTextTemplateBodyDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: welcome_text
+          description: Template name.
+        language:
+          type: string
+          example: en
+        category:
+          type: string
+          example: UTILITY
+        variables:
+          type: object
+          example:
+            firstname: Alex
+          description: Sample values for JC placeholders such as {{firstname}}. Values must be strings.
+        fallback_enabled:
+          type: boolean
+          default: false
+          description: Enable SMS/MMS fallback when RCS delivery fails.
+        fallback_text:
+          type: string
+          example: Your appointment reminder
+          description: SMS fallback body. Maximum 1600 characters.
+        fallback_media:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsFallbackMediaItemDTO'
+        body:
+          type: string
+          example: Hi {{firstname}}, welcome!
+          description: Template body. Maximum 1600 characters.
+      required:
+      - name
+      - body
+    RcsCreateMediaTemplateBodyDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: welcome_text
+          description: Template name.
+        language:
+          type: string
+          example: en
+        category:
+          type: string
+          example: UTILITY
+        variables:
+          type: object
+          example:
+            firstname: Alex
+          description: Sample values for JC placeholders such as {{firstname}}. Values must be strings.
+        fallback_enabled:
+          type: boolean
+          default: false
+          description: Enable SMS/MMS fallback when RCS delivery fails.
+        fallback_text:
+          type: string
+          example: Your appointment reminder
+          description: SMS fallback body. Maximum 1600 characters.
+        fallback_media:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsFallbackMediaItemDTO'
+        media_url:
+          type: string
+          example: https://cdn.example.com/a.jpg
+        body:
+          type: string
+          example: Check this out
+          description: Optional caption. Maximum 1600 characters.
+      required:
+      - name
+      - media_url
+    RcsPhoneResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 123456
+        justcall_number:
+          type: string
+          example: 12707705XXX
+        brand_name:
+          type: string
+          example: Acme Corp
+        tag_line:
+          type: string
+          example: Customer support
+        logo:
+          type: string
+          example: https://cdn.example.com/logo.png
+        status:
+          type: string
+          enum:
+          - pending
+          - active
+          - disabled
+          example: active
+      required:
+      - id
+      - justcall_number
+      - brand_name
+      - tag_line
+      - logo
+    RcsPhonesListResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of RCS senders returned.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of RCS senders matching the query.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsPhoneResponseDTO'
+    RcsCreateTemplateCardItemDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Item A
+          description: Card title. Maximum 200 characters.
+        body:
+          type: string
+          example: Description for item A
+          description: Card body. Maximum 1600 characters.
+        media_url:
+          type: string
+          example: https://cdn.example.com/a.jpg
+        actions:
+          maxItems: 4
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsTemplateActionDTO'
+    RcsTemplateDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1234
+        name:
+          type: string
+          example: welcome_message
+        language:
+          type: string
+          example: en
+        category:
+          type: string
+          example: UTILITY
+        header_type:
+          type: string
+          example: Image
+        header_value:
+          type: string
+          example: https://cdn.example.com/header.jpg
+        footer:
+          type: string
+          example: Reply STOP to unsubscribe
+        actions_count:
+          type: number
+          example: 1
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsActionDTO'
+    RcsTemplateListDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1234
+        name:
+          type: string
+          example: welcome_message
+        language:
+          type: string
+          example: en
+        category:
+          type: string
+          example: UTILITY
+        header_type:
+          type: string
+          example: Image
+        header_value:
+          type: string
+          example: https://cdn.example.com/header.jpg
+        footer:
+          type: string
+          example: Reply STOP to unsubscribe
+        actions_count:
+          type: number
+          example: 1
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsActionDTO'
+        body:
+          type: string
+          example: Hello! Welcome to JustCall
+        status:
+          type: string
+          enum:
+          - Approved
+          - Pending
+          - Deleted
+          - Rejected
+          example: Approved
+        content_type:
+          type: string
+          enum:
+          - text
+          - media
+          - card
+          - carousel
+          example: text
+        fallback_enabled:
+          type: boolean
+          example: false
+        fallback_text:
+          type: string
+          example: SMS fallback text
+    TemplatesPaginatedResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of templates present on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of templates fetched by the API query.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of templates appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing templates.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of templates.
+        data:
+          default: []
+          description: Array of template objects
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsTemplateListDTO'
+    MessagesPaginatedResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of messages present on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of messages fetched by the API query.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of messages appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing messages.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of messages.
+        data:
+          default: []
+          description: Array of message objects
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsMessageResponseDTO'
+    RcsCreateCarouselTemplateBodyDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: welcome_text
+          description: Template name.
+        language:
+          type: string
+          example: en
+        category:
+          type: string
+          example: UTILITY
+        variables:
+          type: object
+          example:
+            firstname: Alex
+          description: Sample values for JC placeholders such as {{firstname}}. Values must be strings.
+        fallback_enabled:
+          type: boolean
+          default: false
+          description: Enable SMS/MMS fallback when RCS delivery fails.
+        fallback_text:
+          type: string
+          example: Your appointment reminder
+          description: SMS fallback body. Maximum 1600 characters.
+        fallback_media:
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsFallbackMediaItemDTO'
+        body:
+          type: string
+          example: Pick one
+          description: Carousel intro body. Maximum 1600 characters.
+        cards:
+          minItems: 1
+          maxItems: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/RcsCreateTemplateCardItemDTO'
+      required:
+      - name
+      - cards
+    RcsActionDTO:
+      type: object
+      properties:
+        action_type:
+          type: string
+          example: URL
+        action_text:
+          type: string
+          example: Visit our site
+        action_value:
+          type: string
+          example: https://example.com
+    RcsTemplateActionDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - URL
+          - PHONE_NUMBER
+          - QUICK_REPLY
+          example: QUICK_REPLY
+        title:
+          type: string
+          example: Confirm
+        value:
+          type: string
+          example: confirm
+          description: URL (type=URL), E.164 phone (type=PHONE_NUMBER), or quick-reply id (type=QUICK_REPLY).
+      required:
+      - type
+      - title
+      - value
+    RcsMmsDTO:
+      type: object
+      properties:
+        media_url:
+          type: string
+          example: https://example.com/media/image1.jpg
+          description: URL of the media file when is_mms is yes
+        content_type:
+          type: string
+          example: image/jpeg
+          description: MIME type of the media URL
+    RcsMessageResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 123456
+        rcs_phone_id:
+          type: number
+          example: 123456
+        contact_number:
+          type: string
+          example: 13801136XXX
+        contact_name:
+          type: string
+          example: Rachel G.
+        contact_email:
+          type: string
+          example: john@suits.co
+        justcall_number:
+          type: string
+          example: 12707705XXX
+        agent_id:
+          type: number
+          example: 1308
+        agent_name:
+          type: string
+          example: John Doe
+        message_date:
+          type: string
+          example: '2025-03-12'
+        message_user_date:
+          type: string
+          example: '2025-03-13'
+        message_time:
+          type: string
+          example: '19:28:45'
+        message_user_time:
+          type: string
+          example: 00:28:45
+        direction:
+          type: string
+          example: outgoing
+          enum:
+          - incoming
+          - outgoing
+        delivery_status:
+          type: string
+          example: delivered
+          enum:
+          - read
+          - delivered
+          - sent
+          - received
+          - failed
+          - undelivered
+        message_info:
+          $ref: '#/components/schemas/RcsMessageInfoDTO'
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'

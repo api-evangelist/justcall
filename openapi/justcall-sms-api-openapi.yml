@@ -1,41 +1,2083 @@
 openapi: 3.2.0
 info:
-  title: JustCall REST SMS API
-  description: REST API for the JustCall cloud phone and contact center platform. Covers placing and listing calls, sending SMS, managing contacts, users, phone numbers, and related resources. Authentication uses an API key and API secret obtained from the JustCall dashboard.
-  version: '2.1'
-  contact:
-    name: JustCall Developer Portal
-    url: https://developer.justcall.io/docs/overview
+  title: JustCall SMS API
+  description: 'REST APIs
+
+    The REST APIs provide programmatic access to read and write JustCall data. Create a new contact, read them, add notes, and more'
+  version: '2'
+  contact: {}
 servers:
-- url: https://api.justcall.io/v2.1
-  description: JustCall production API (v2.1)
-security:
-- ApiKeyAuth: []
+- url: https://api.justcall.io
 tags:
 - name: SMS
-  description: Send and manage SMS/MMS messages.
 paths:
-  /texts:
-    post:
-      summary: Send SMS or MMS
-      description: Sends an SMS or MMS message via JustCall. Useful for automation and outbound messaging flows.
-      operationId: sendText
+  /v2/texts:
+    get:
+      operationId: texts_list
+      summary: List all texts
+      description: Retrieve all text messages linked to an account or refine the message selection as needed by utilizing the various query parameter fields.
+      parameters:
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the sms are to be fetched in <b>UTC Timezone</b>.
+        schema:
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the sms are to be fetched in <b>UTC Timezone</b>.
+        schema:
+          type: string
+      - name: last_sms_id_fetched
+        required: false
+        in: query
+        description: Id of the last SMS fetched in the previous query. This Id ensures that you won't receive any duplicate data when using the 'next_page_link' parameter.
+        schema:
+          type: number
+      - name: contact_number
+        required: false
+        in: query
+        description: Number of the contact for which SMS are to be fetched. Please follow the E.164 number format.
+        schema:
+          type: string
+      - name: justcall_number
+        required: false
+        in: query
+        description: JustCall number for which the SMS are to be fetched. Please follow the E.164 number format.
+        schema:
+          type: string
+      - name: sms_direction
+        required: false
+        in: query
+        description: To fetch data only for incoming SMS or for outgoing SMS
+        schema:
+          enum:
+          - incoming
+          - outgoing
+          type: string
+      - name: sms_content
+        required: false
+        in: query
+        description: Keywords of the content of SMS
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which SMS are to be fetched
+        schema:
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of SMS to be fetched per page. Default value is 20 and maximum value is 100.
+        schema:
+          example: 20
+          type: number
+      - name: sort
+        required: false
+        in: query
+        description: By default we apply sorting on id field.
+        schema:
+          default: id
+          enum:
+          - id
+          - datetime
+          type: string
+      - name: order
+        required: false
+        in: query
+        description: Order in which the SMS list should appear based on the 'sort' parameter selected above.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsListApiResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
       tags:
       - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts:
+    get:
+      operationId: texts_list_v21
+      summary: List all texts
+      description: Retrieve all text messages linked to an account or refine the message selection as needed by utilizing the various query parameter fields.
+      parameters:
+      - name: from_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format starting from when the sms are to be fetched in <b>user's timezone</b>.
+        schema:
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Datetime in <b>yyyy-mm-dd hh:mm:ss</b> or <b>yyyy-mm-dd</b> format till when the sms are to be fetched in <b>user's timezone</b>.
+        schema:
+          type: string
+      - name: last_sms_id_fetched
+        required: false
+        in: query
+        description: Id of the last SMS fetched in the previous query. This Id ensures that you won't receive any duplicate data when using the 'next_page_link' parameter.
+        schema:
+          type: number
+      - name: contact_number
+        required: false
+        in: query
+        description: Number of the contact for which SMS are to be fetched. Please follow the E.164 number format.
+        schema:
+          type: string
+      - name: justcall_number
+        required: false
+        in: query
+        description: JustCall number for which the SMS are to be fetched. Please follow the E.164 number format.
+        schema:
+          type: string
+      - name: sms_direction
+        required: false
+        in: query
+        description: To fetch data only for incoming SMS or for outgoing SMS
+        schema:
+          enum:
+          - incoming
+          - outgoing
+          type: string
+      - name: sms_content
+        required: false
+        in: query
+        description: Keywords of the content of SMS
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: Page number for which SMS are to be fetched
+        schema:
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of SMS to be fetched per page. Default value is 20 and maximum value is 100.
+        schema:
+          example: 20
+          type: number
+      - name: sort
+        required: false
+        in: query
+        description: By default we apply sorting on id field.
+        schema:
+          default: id
+          enum:
+          - id
+          - datetime
+          type: string
+      - name: order
+        required: false
+        in: query
+        description: Order in which the SMS list should appear based on the 'sort' parameter selected above.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsListApiResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2/texts/{id}:
+    get:
+      operationId: texts_get
+      summary: Get a text
+      description: Use this endpoint to access SMS data, including information like direction, associated agent number and delivery status.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Id of the SMS
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/{id}:
+    get:
+      operationId: texts_get_v21
+      summary: Get a text
+      description: Use this endpoint to access SMS data, including information like direction, associated agent number and delivery status.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Id of the SMS
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2/texts/checkreply:
+    post:
+      operationId: texts_checkreply
+      summary: Check reply
+      description: Check the response for a specific SMS sent to a user by providing the contact's phone number and, optionally, the JustCall number. This endpoint returns the most recent inbound SMS from the associated contact.
+      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              description: Outbound text message payload (from number, to number, body, optional media).
+              $ref: '#/components/schemas/CheckReplyDTO'
       responses:
         '200':
-          description: The accepted outbound message.
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/checkreply:
+    post:
+      operationId: texts_checkreply_v21
+      summary: Check reply
+      description: Check the response for a specific SMS sent to a user by providing the contact's phone number and, optionally, the JustCall number. This endpoint returns the most recent inbound SMS from the associated contact.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckReplyDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2/texts/new:
+    post:
+      operationId: texts_new
+      summary: Send SMS/MMS
+      description: Utilize this endpoint to send SMS messages via the JustCall API and leverage it for setting up SMS automations in a third-party tool as well.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewSMSDataDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/new:
+    post:
+      operationId: texts_new_v21
+      summary: Send SMS/MMS
+      description: Utilize this endpoint to send SMS messages via the JustCall API and leverage it for setting up SMS automations in a third-party tool as well.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewSMSDataDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/tags:
+    post:
+      operationId: texts_tags_create_v21
+      summary: Create a tag
+      description: Utilise this endpoint to create a tag in your JustCall account.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmsTagsCreateDTO'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsTagsResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+    get:
+      operationId: texts_tags_list_v21
+      summary: List all tags
+      description: Utilise this endpoint to fetch a list of all the tags added to your JustCall account.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Page number for which tags are to be fetched.
+        schema:
+          default: 0
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of tags to be fetched per page. Default value is 30 and maximum value is 100.
+        schema:
+          default: 30
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: Order in which the tags should appear based on the tag id.
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagsPaginatedResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/tags/{id}:
+    get:
+      operationId: texts_tags_get_v21
+      summary: Get a tag
+      description: Get details of a specific tag by sending its id.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the tag as generated by JustCall.
+        schema:
+          example: '9876'
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsTagsResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+    delete:
+      operationId: texts_tags_delete_v21
+      summary: Delete a tag
+      description: Delete a specific tag by sending its id.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Unique id of the tag as generated by JustCall.
+        schema:
+          example: '9876'
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsDeleteTagResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/threads:
+    get:
+      operationId: texts_threads_list_v21
+      summary: List all threads
+      description: Utilize this endpoint to fetch a list of all the threads added to your JustCall account.
+      parameters:
+      - name: phone_id
+        required: true
+        in: query
+        description: Enter the unique Id of the SMS enabled JustCall phone number
+        schema:
+          example: 1234
+          type: number
+      - name: from_datetime
+        required: false
+        in: query
+        description: Date in yyyy-mm-dd hh:mm:ss or yyyy-mm-dd format starting from when the threads are to be fetched
+        schema:
+          example: '2024-01-01 12:22:23'
+          type: string
+      - name: to_datetime
+        required: false
+        in: query
+        description: Date in yyyy-mm-dd hh:mm:ss or yyyy-mm-dd format till when the threads are to be fetched
+        schema:
+          example: '2024-01-01 16:22:23'
+          type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: Number of the contact for which threads are to be fetched
+        schema:
+          example: 13801136XXX
+          type: string
+      - name: keyword
+        required: false
+        in: query
+        description: Filter threads containing texts with a particular keyword. <br>Enter a minimum of 3 and maximum of 15 characters.
+        schema:
+          example: pricing
+          type: string
+      - name: tag_id
+        required: false
+        in: query
+        description: Enter the 'Id' of a tag to find all the threads where the particular tag has been applied
+        schema:
+          example: 9876
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of threads to be fetched per page. Default value is 50 and maximum value is 100.
+        schema:
+          maximum: 100
+          default: 50
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number for which threads are to be fetched
+        schema:
+          default: 0
+          example: 0
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: 'Order in which the threads should appear based on Id of the thread. ASC: Older threads will appear first. DESC: Recent threads will appear first.'
+        schema:
+          example: desc
+          enum:
+          - asc
+          - desc
+          - natural
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadsPaginatedResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/threads/{thread_id}:
+    get:
+      operationId: texts_threads_get_v21
+      summary: Get a thread
+      description: Use this endpoint to access thread data, including messages associated with the thread and tags applied to the thread.
+      parameters:
+      - name: thread_id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: offset
+        required: false
+        in: query
+        description: The starting point from which to retrieve messages within a thread. Used in combination with the limit parameter to paginate results. The value provided will skip the specified number of messages in the texts array and return the next set of messages accordingly.
+        schema:
+          default: 0
+          example: 0
+          type: number
+      - name: limit
+        required: false
+        in: query
+        description: Count of messages per page in thread response
+        schema:
+          default: 10
+          example: 10
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageThreadResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/threads/tag:
+    post:
+      operationId: add_tag_to_thread_v21
+      summary: Add tag to thread
+      description: Utilize this endpoint to add a tag to the thread formed by a combination of a JustCall number and a contact number.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTagToThreadRequestDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddTagToThreadResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+    delete:
+      operationId: remove_tag_from_thread_v21
+      summary: Remove tag from thread
+      description: Use this endpoint to remove a tag from a thread or multiple threads associated with the same JustCall or contact number.
+      parameters:
+      - name: tag_id
+        required: true
+        in: query
+        description: Id of the tag generated by JustCall
+        schema:
+          example: 9876
+          type: number
+      - name: thread_id
+        required: false
+        in: query
+        description: Id of the thread generated by JustCall
+        schema:
+          example: bXhUCCCjUrUGNJMjI2SHR2Z3FGcDJ6WUVuRXXXXXXXX
+          type: string
+      - name: phone_id
+        required: false
+        in: query
+        description: Id of the JustCall phone number
+        schema:
+          example: 9876
+          type: number
+      - name: justcall_number
+        required: false
+        in: query
+        description: Enter a JustCall number to add this tag to all the threads associated with that number
+        schema:
+          example: 12135663XXX
+          type: string
+      - name: contact_number
+        required: false
+        in: query
+        description: Enter a contact number to add this tag to all the threads associated with that number
+        schema:
+          example: 1681381XXXX
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveTagFromThreadResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/groups:
+    get:
+      operationId: texts_groups_list_v21
+      summary: List all groups
+      description: Use this endpoint to fetch all SMS groups associated with a specific JustCall number.
+      parameters:
+      - name: justcall_number
+        required: true
+        in: query
+        description: Filter groups associated with a particular JustCall phone number (E.164 formatted).
+        schema:
+          example: '14155550100'
+          type: string
+      - name: per_page
+        required: false
+        in: query
+        description: Number of groups to be fetched per page. Default value is 50 and maximum value is 100.
+        schema:
+          maximum: 100
+          default: 50
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number (0-indexed) for which groups are to be fetched. Defaults to 0 (first page).
+        schema:
+          default: 0
+          example: 0
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: 'Order in which the groups should appear based on Id of the group. ASC: Older groups will appear first. DESC: Recent groups will appear first.'
+        schema:
+          default: desc
+          example: desc
+          enum:
+          - asc
+          - desc
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sms_groupsPaginatedResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+    post:
+      operationId: texts_groups_create_v21
+      summary: Create group
+      description: Use this endpoint to create a new SMS group.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSmsGroupRequestDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSmsGroupResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/groups/{group_id}:
+    get:
+      operationId: texts_groups_get_v21
+      summary: Get a group
+      description: Use this endpoint to retrieve the details of a specific SMS group.
+      parameters:
+      - name: group_id
+        required: true
+        in: path
+        description: Unique ID of the SMS group generated by JustCall.
+        schema:
+          example: 12345
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsGroupResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+    delete:
+      operationId: texts_groups_delete_v21
+      summary: Delete group
+      description: Use this endpoint to delete a specific SMS group by its ID.
+      parameters:
+      - name: group_id
+        required: true
+        in: path
+        description: Unique ID of the SMS group generated by JustCall.
+        schema:
+          example: 12345
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsGroupStatusResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/groups/{group_id}/messages:
+    get:
+      operationId: texts_groups_messages_list_v21
+      summary: List group messages
+      description: Use this endpoint to fetch messages sent in an SMS group.
+      parameters:
+      - name: group_id
+        required: true
+        in: path
+        description: Unique ID of the SMS group generated by JustCall.
+        schema:
+          example: 12345
+          type: number
+      - name: per_page
+        required: false
+        in: query
+        description: Number of messages to be fetched per page. Default value is 50 and maximum value is 100.
+        schema:
+          maximum: 100
+          default: 50
+          example: 50
+          type: number
+      - name: page
+        required: false
+        in: query
+        description: Page number (0-indexed) for which messages are to be fetched. Defaults to 0 (first page).
+        schema:
+          default: 0
+          example: 0
+          type: number
+      - name: order
+        required: false
+        in: query
+        description: 'Order in which the messages should appear based on Id of the message. ASC: Older messages will appear first. DESC: Recent messages will appear first.'
+        schema:
+          default: desc
+          example: desc
+          enum:
+          - asc
+          - desc
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sms_group_messagesPaginatedResponseDTO'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+    post:
+      operationId: texts_groups_messages_send_v21
+      summary: Send message in a group
+      description: Use this endpoint to send a new message in an SMS group.
+      parameters:
+      - name: group_id
+        required: true
+        in: path
+        description: Unique ID of the SMS group generated by JustCall.
+        schema:
+          example: 12345
+          type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendSmsGroupMessageRequestDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsGroupMessageResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/groups/messages/{message_id}:
+    get:
+      operationId: texts_groups_messages_get_v21
+      summary: Get a group message
+      description: Use this endpoint to retrieve the details of a specific message sent in an SMS group.
+      parameters:
+      - name: message_id
+        required: true
+        in: path
+        description: Unique ID of the SMS group message generated by JustCall.
+        schema:
+          example: 15112
+          type: number
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsGroupMessageResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+  /v2.1/texts/groups/{group_id}/members:
+    put:
+      operationId: texts_groups_members_add_v21
+      summary: Add members to a group
+      description: Use this endpoint to add one or more members (agents and/or contacts) to a specific SMS group.
+      parameters:
+      - name: group_id
+        required: true
+        in: path
+        description: Unique ID of the SMS group generated by JustCall.
+        schema:
+          example: 12345
+          type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSmsGroupParticipantsRequestDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsGroupResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
+    delete:
+      operationId: texts_groups_members_remove_v21
+      summary: Remove members from a group
+      description: Use this endpoint to remove one or more members (agents and/or contacts) from a specific SMS group.
+      parameters:
+      - name: group_id
+        required: true
+        in: path
+        description: Unique ID of the SMS group generated by JustCall.
+        schema:
+          example: 12345
+          type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSmsGroupParticipantsRequestDto'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmsGroupResponseDto'
+        '400':
+          description: Failed due to bad request params.
+        '401':
+          description: Failed due to unauthorized access.
+        '403':
+          description: This error occurred when there is some validation error or you don't have access to that resource.
+        '404':
+          description: Requested resource may not exist.
+        '500':
+          description: This is due to internal server error reason, in this case please contact our support team with attached uuid.
+      tags:
+      - SMS
+      security:
+      - AccessToken: []
 components:
+  schemas:
+    SmsGroupMemberInputDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Whether the member being added is an `agent` (JustCall user within the company) or an external `contact`.
+          enum:
+          - agent
+          - contact
+          example: contact
+        phone_number:
+          type: string
+          description: Phone number of the member in E.164 format.
+          example: '14155550999'
+      required:
+      - type
+      - phone_number
+    SmsGroupMessageResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the group SMS message as generated by JustCall.
+          example: 15112
+        group_id:
+          type: number
+          description: Id of the group to which this message belongs.
+          example: 12345
+        sent_by:
+          $ref: '#/components/schemas/SmsGroupMemberDto'
+        sms_date:
+          type: string
+          description: Date of the SMS in account timezone.
+          example: '2026-04-20'
+        sms_user_date:
+          type: string
+          description: Date of the SMS in user timezone.
+          example: '2026-04-22'
+        sms_time:
+          type: string
+          description: Time of the SMS in account timezone.
+          example: '13:55:43'
+        sms_user_time:
+          type: string
+          description: Time of the SMS in user timezone.
+          example: '13:55:43'
+        sms_info:
+          $ref: '#/components/schemas/SmsGroupInfoDto'
+        medium:
+          type: string
+          description: Medium through which the SMS was sent.
+          example: web
+    SmsTagsResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 9876
+          description: Unique id of the tag as generated by JustCall.
+        name:
+          type: string
+          example: Warm Lead
+          description: Name of the tag as added by you.
+        color_code:
+          type: string
+          example: '#721ea9'
+          description: Hex code of the color.
+        created_at:
+          type: string
+          example: '2025-03-12 19:28:45'
+          description: Date and time at which the tag was created in UTC timezone.
+        created_by:
+          description: Details of the Agent who created the tag.
+          allOf:
+          - $ref: '#/components/schemas/SmsTagCreatedByDTO'
+    ThreadTextDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the text as generated by JustCall
+          example: 1234
+        agent_id:
+          type: number
+          description: Unique id of the agent as generated by JustCall
+          example: 79885
+        agent_name:
+          type: string
+          description: Name of the agent
+          example: John Doe
+        agent_email:
+          type: string
+          description: Email of the agent
+          example: john.doe@example.com
+        sms_date:
+          type: string
+          description: Date of the text
+          example: '2024-01-01'
+        sms_user_date:
+          type: string
+          description: Date of the text in user timezone
+          example: '2024-01-01'
+        sms_time:
+          type: string
+          description: Time of the text
+          example: '12:00:00'
+        sms_user_time:
+          type: string
+          description: Time of the text in user timezone
+          example: '17:30:00'
+        direction:
+          type: string
+          description: Direction of the text
+          example: outbound
+        medium:
+          type: string
+          description: Medium of the text
+          example: ''
+        delivery_status:
+          type: string
+          description: Delivery status of the text
+          example: delivered
+        cost_incurred:
+          type: number
+          description: Cost incurred for the text
+          example: 10
+        sms_info:
+          $ref: '#/components/schemas/TextInfo'
+    ThreadTextsResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          description: Number of texts in current page
+          example: 1
+        total_count:
+          type: number
+          description: Total number of texts in the thread
+          example: 10
+        data:
+          description: Array of texts in the thread
+          type: array
+          items:
+            $ref: '#/components/schemas/ThreadTextDto'
+    Sms_groupsPaginatedResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of sms_groups present on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of sms_groups fetched by the API query.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of sms_groups appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing sms_groups.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of sms_groups.
+        data:
+          default:
+          - id: 12345
+            group_name: Sales Team
+            created_via:
+              justcall_number: '14155550100'
+              justcall_line_name: Support Line
+            total_members: 2
+            members:
+            - type: agent
+              member_type: internal
+              phone_number: '14155550111'
+              name: Akash
+            - type: contact
+              member_type: external
+              phone_number: '14155550999'
+              name: John
+          description: Array of sms_group objects
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsGroupResponseDto'
+    SmsGroupResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the SMS group as generated by JustCall.
+          example: 12345
+        group_name:
+          type: string
+          description: Name of the SMS group.
+          example: Sales Team
+        created_via:
+          $ref: '#/components/schemas/SmsGroupCreatedViaDto'
+        total_members:
+          type: number
+          description: Total number of members present in the group.
+          example: 2
+        members:
+          description: Array of members present in the group.
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsGroupMemberDto'
+    SmsTagsCreateDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Warm Lead
+          description: Enter a name for the tag.
+        color_code:
+          type: string
+          example: '#721ea9'
+          description: Add a hex color code to provide a color for the tag
+        agent_id:
+          type: number
+          example: 1234
+          description: Enter the id of an agent to associate the tag with. Fetch the id of the agent using the ‘List all users’.
+      required:
+      - name
+      - color_code
+    SmsGroupStatusResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request: "success" for successful request; error message with description of error for failed request.'
+          example: success
+      required:
+      - status
+    SmsThreadsResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          example: bXhUNVVjQjUrUGNJMjI2SHR2Z3FGcDJ6WUVuRldvYlRyZSXXXXXXXXX
+          description: Unique id of the message thread as generated by JustCall
+        thread_tags:
+          description: Array of tags applied to a thread
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsTagsResponseDTO'
+        latest_text:
+          description: Latest message in the thread
+          allOf:
+          - $ref: '#/components/schemas/LatestTextResponseDto'
+    SendSmsGroupMessageRequestDto:
+      type: object
+      properties:
+        justcall_number:
+          type: string
+          description: JustCall phone number of the agent sending the message in the group.
+          example: '14155550100'
+        body:
+          type: string
+          description: Body of the message to be sent in the group.
+          example: Hey! this is body.
+      required:
+      - justcall_number
+      - body
+    MessageThreadDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id of the message thread as generated by JustCall
+          example: bXhUNVVjQjUrUGNJMjI2SHR2Z3FGcDJ6WUVuRldvYlRyZSXXXXXXXXX
+        contact_id:
+          type: number
+          description: Unique id of the contact as generated by JustCall
+          example: 1234
+        contact_number:
+          type: string
+          description: Contact number of the thread
+          example: '1234567890'
+        contact_name:
+          type: string
+          description: Name of the contact
+          example: John Doe
+        contact_email:
+          type: string
+          description: Email of the contact
+          example: john.doe@example.com
+        justcall_number:
+          type: string
+          description: JustCall number of the thread
+          example: '1234567890'
+        justcall_line_name:
+          type: string
+          description: Name of the JustCall line
+          example: John Doe
+        thread_tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsTagsResponseDTO'
+        texts:
+          $ref: '#/components/schemas/ThreadTextsResponseDTO'
+    TextDTO:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 15112
+          description: Id of the SMS created by JustCall
+        contact_number:
+          type: string
+          example: 13801136XXX
+          description: Phone number of the contact.
+        contact_name:
+          type: string
+          example: Justcall New Contact.
+          description: Name of the contact
+        contact_email:
+          type: string
+          default: john@suits.co
+          description: Email id of the contact
+        justcall_number:
+          type: string
+          example: 127077XXXXX
+          description: JustCall number from which SMS was sent or receievd
+        justcall_line_name:
+          type: string
+          example: Sales Team
+          description: Name of the JustCall number used to send the SMS
+        agent_id:
+          type: number
+          example: 1308
+          description: Id of the agent who made or received the SMS
+        agent_name:
+          type: string
+          example: John Smith
+          description: Name of the gent who made or received the SMS
+        agent_email:
+          type: string
+          default: john@abc.com
+          description: Email id of the agent who sent the SMS
+        sms_date:
+          type: string
+          example: '2017-12-18'
+          description: Date of sms in UTC
+        sms_user_date:
+          type: string
+          example: '2017-12-17'
+          description: Date of sms in users timezone
+        sms_time:
+          type: string
+          example: '13:55:43'
+          description: Timestamp of sms in UTC
+        sms_user_time:
+          type: string
+          example: '8:25:43'
+          description: Timestamp of sms in users timezone
+        direction:
+          type: string
+          example: Outbound
+          description: Incoming or Outgoing
+        cost_incurred:
+          type: number
+          example: 0.005
+          description: Charge for the particular SMS
+        sms_info:
+          $ref: '#/components/schemas/TextInfo'
+        delivery_status:
+          type: string
+          example: Delivered
+          description: If the message could be delivered to the contact
+        is_deleted:
+          type: boolean
+          example: 'FALSE'
+          description: True if SMS is deleted, otherwise False
+        medium:
+          type: string
+          example: Zoho Automation
+          description: Source of the sent SMS from among the following:<br>One-To-One via App<br>One-To-One via API<br>IFS Automation<br>Hubspot Automation<br>Zoho Automation<br>Front Automation<br>ActiveCampaign Automation<br>Zapier Automation<br>Agile Automation<br>Bulk SMS
+    AddTagToThreadRequestDto:
+      type: object
+      properties:
+        tag_id:
+          type: number
+          description: Id of the tag generated by JustCall
+          example: 9876
+        thread_id:
+          type: string
+          description: Id of the thread generated by JustCall
+          example: bXhUCCCjUrUGNJMjI2SHR2Z3FGcDJ6WUVuRXXXXXXXX
+        phone_id:
+          type: number
+          description: Id of the JustCall phone number
+          example: 9876
+        justcall_number:
+          type: string
+          description: Enter a JustCall number to add this tag to all the threads associated with that number
+          example: 12135663XXX
+        contact_number:
+          type: string
+          description: Enter a contact number to add this tag to all the threads associated with that number
+          example: 1681381XXXX
+      required:
+      - tag_id
+    SmsTagCreatedByDTO:
+      type: object
+      properties:
+        agent_id:
+          type: number
+          example: 1234
+          description: Id of the agent who created the tag.
+        agent_name:
+          type: string
+          example: John Doe
+          description: Name of the agent who created the tag.
+        agent_email:
+          type: string
+          example: john.doe@gmail.com
+          description: Email id of the agent who created the tag.
+    AddTagToThreadResponseDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request: "success" for successful request; error message with description of error for failed request'
+      required:
+      - status
+    TextInfo:
+      type: object
+      properties:
+        body:
+          type: string
+          example: Hey! this is body.
+          description: Contents of the SMS
+        is_mms:
+          type: string
+          example: 'Yes'
+          description: Is this an MMS or not
+        mms:
+          type: array
+          items:
+            $ref: '#/components/schemas/MmsData'
+    Sms_group_messagesPaginatedResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of sms_group_messages present on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of sms_group_messages fetched by the API query.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of sms_group_messages appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing sms_group_messages.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of sms_group_messages.
+        data:
+          default:
+          - id: 15112
+            group_id: 12345
+            sent_by:
+              type: agent
+              member_type: internal
+              phone_number: '14155550111'
+              name: Akash Yadav
+            sms_date: '2026-04-20'
+            sms_user_date: '2026-04-22'
+            sms_time: '13:55:43'
+            sms_user_time: '13:55:43'
+            sms_info:
+              body: Hey! this is body.
+            medium: web
+          description: Array of sms_group_message objects
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsGroupMessageResponseDto'
+    NewSMSDataDto:
+      type: object
+      properties:
+        justcall_number:
+          type: string
+          description: JustCall number using which the SMS is to be sent. Please follow the E.164 number format (+141555XXXXX).
+        body:
+          type: string
+          description: Enter the content to be sent in the SMS. Maximum character limit for message is 1600.
+        contact_number:
+          type: string
+          description: Number of the contact with country code to which SMS is to be sent. Please follow the E.164 number format.
+        media_url:
+          type: string
+          description: 'If any media files need to be sent, add comma-separated URL links to media_url (Maximum 5 public links of the media having MIME type mentioned below & should not exceed the cumulative size of 5 MB. <br><br><br> Allowed mime type : image/jpeg, image/gif, image/x-png, image/png, image/vnd.wap.wbmp, image/x-bmp, audio/amr, audio/x-amr, audio/x-wav, audio/midi, audio/mid, audio/x-midi, audio/sp-midi, audio/rmf, audio/x-rmf, audio/x-beatnik-rmf, audio/basic, audio/mp3, video/3gpp, video/mp4, application/mp4, image/mp4, text/mp4, audio/mp4, text/vcard, text/csv, text/rtf, text/richtext, text/calendar, text/directory, application/pdf)'
+        restrict_once:
+          type: string
+          description: 'Set value to Yes to prevent the SMS from being sent to the same receiver in 24 hours. Default value is set to No and allows same SMS to be sent multiple times in 24 hours to the same contact. '
+          enum:
+          - 'Yes'
+          - 'No'
+        schedule_at:
+          type: string
+          description: Enter the date and time (YYYY-MM-DD HH:mm:ss) at which the SMS is to be sent. Incase no value is sent, the SMS will be sent out immediately when the API call is made.
+      required:
+      - justcall_number
+      - body
+      - contact_number
+    SmsDeleteTagResponseDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - failed
+          - success
+          example: success
+        message:
+          type: string
+          example: Tag deleted successfully
+    TagsPaginatedResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of tags present on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of tags fetched by the API query.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of tags appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing tags.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of tags.
+        data:
+          default:
+          - id: 9876
+            name: Warm Lead
+            color_code: '#721ea9'
+            created_at: '2025-03-12 19:28:45'
+            created_by:
+              agent_id: 1234
+              agent_name: John Doe
+              agent_email: john.doe@gmail.com
+          description: Array of tag objects
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsTagsResponseDTO'
+    MmsData:
+      type: object
+      properties:
+        media_url:
+          type: string
+          example: https://www.filepicker.io/api/file/NZsXXXXXXXXXXXXXXX
+          description: URL of the media file incase is_mms is true
+        content_type:
+          type: string
+          example: image/png
+          description: Content type of the media file incase is_mms is true
+    CreateSmsGroupResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the SMS group as generated by JustCall.
+          example: 12345
+        group_name:
+          type: string
+          description: Name of the SMS group.
+          example: Sales Team
+        created_via:
+          $ref: '#/components/schemas/SmsGroupCreatedViaDto'
+        total_members:
+          type: number
+          description: Total number of members present in the group.
+          example: 2
+        members:
+          description: Array of members present in the group.
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsGroupMemberDto'
+    RemoveTagFromThreadResponseDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 'Displays the status of the API request: "success" for successful request; error message with description of error for failed request'
+      required:
+      - status
+    MessageThreadResponseDto:
+      type: object
+      properties:
+        next_page_link:
+          type: string
+          description: Link to the next page of text results
+          example: https://api.justcall.io/v2.1/texts/threads?offset=0&limit=1
+        prev_page_link:
+          type: string
+          description: Link to the previous page of texts results
+          example: ''
+        data:
+          $ref: '#/components/schemas/MessageThreadDto'
+    SmsListApiResponseDto:
+      type: object
+      properties:
+        status_code:
+          type: number
+          description: Status code of the API request
+          example: 200
+        status:
+          type: string
+          description: Status of the API request (success or error)
+          enum:
+          - success
+          - error
+          example: success
+        count:
+          type: number
+          description: Number of SMS present on the current page
+          example: 50
+        total_texts:
+          type: number
+          description: Total number of SMS fetched by the query
+          example: 2440
+        current_page:
+          type: number
+          description: Number of the current page
+          example: 3
+        per_page:
+          type: number
+          description: Maximum number of SMS appearing per page
+          example: 20
+        next_page_link:
+          type: string
+          description: Link to the next page containing SMS
+          example: http://example.com/v2/texts?page=5
+        prev_page_link:
+          type: string
+          description: Link to the previous page of SMS
+          example: http://example.com/v2/texts?page=3
+        data:
+          description: Array of SMS objects
+          type: array
+          items:
+            $ref: '#/components/schemas/TextDTO'
+    SmsGroupInfoDto:
+      type: object
+      properties:
+        body:
+          type: string
+          description: Body of the SMS message sent in the group.
+          example: Hey! this is body.
+    CheckReplyDTO:
+      type: object
+      properties:
+        contact_number:
+          type: string
+          description: Number of the contact for which SMS are to be fetched. Please follow the E.164 number format .
+        justcall_number:
+          type: string
+          description: JustCall number for which the SMS are to be fetched. Please follow the E.164 number format .
+      required:
+      - contact_number
+    SmsGroupMemberDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Whether the member is an `agent` (JustCall user) or a `contact`.
+          enum:
+          - agent
+          - contact
+          example: agent
+        member_type:
+          type: string
+          description: Membership category of the participant. `internal` for agents within the company and `external` for external contacts.
+          enum:
+          - internal
+          - external
+          example: internal
+        phone_number:
+          type: string
+          description: Phone number of the member in E.164 format.
+          example: '14155550111'
+        name:
+          type: string
+          description: Display name of the member.
+          example: Akash
+    ThreadsPaginatedResponseDTO:
+      type: object
+      properties:
+        count:
+          type: number
+          default: 0
+          description: Number of threads present on the current page.
+        total_count:
+          type: number
+          default: 0
+          description: Total number of threads fetched by the API query.
+        current_page:
+          type: number
+          default: 0
+          description: Number of the current page.
+        per_page:
+          type: number
+          default: 0
+          description: Maximum number of threads appearing per page.
+        next_page_link:
+          type: string
+          default: ''
+          description: Link to the next page containing threads.
+        prev_page_link:
+          type: string
+          default: ''
+          description: Link to the previous page of threads.
+        data:
+          default:
+          - id: bXhUCCCjUrUGNJMjI2SHR2Z3FGcDJ6WUVuRXXXXXXXX
+            thread_tags:
+            - id: 9876
+              name: Warm Lead
+              color_code: '#721ea9'
+              created_at: '2025-03-12 19:28:45'
+              created_by:
+                agent_id: 1234
+                agent_name: John Doe
+                agent_email: john.doe@gmail.com
+            latest_text:
+              id: 15112
+              contact_id: 3279111
+              contact_number: 13801136XXX
+              contact_name: Rachel G.
+              contact_email: rachel@suits.co
+              justcall_number: 12707705XXX
+              justcall_line_name: Sales Team
+              agent_id: 1308
+              agent_name: John Smith
+              agent_email: john@suits.co
+              sms_date: '2025-04-22'
+              sms_user_date: '2025-04-22'
+              sms_time: '12:02:29'
+              sms_user_time: 08:02:29
+              direction: Incoming
+              cost_incurred: 0.05635
+              medium: Salesforce Automation
+              sms_info:
+                body: hey!
+                is_mms: 'Yes'
+                mms:
+                  media_url:
+                  - https://www.filepicker.io/api/file/NZsgbzvkTirEewmX79Sh
+                  content_type:
+                  - image/png
+              delivery_status: delivered
+          description: Array of thread objects
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsThreadsResponseDTO'
+    LatestTextResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique id of the text as generated by JustCall
+          example: 1234
+        agent_id:
+          type: number
+          description: Unique id of the agent as generated by JustCall
+          example: 79885
+        agent_name:
+          type: string
+          description: Name of the agent
+          example: John Doe
+        agent_email:
+          type: string
+          description: Email of the agent
+          example: john.doe@example.com
+        sms_date:
+          type: string
+          description: Date of the text
+          example: '2024-01-01'
+        sms_user_date:
+          type: string
+          description: Date of the text in user timezone
+          example: '2024-01-01'
+        sms_time:
+          type: string
+          description: Time of the text
+          example: '12:00:00'
+        sms_user_time:
+          type: string
+          description: Time of the text in user timezone
+          example: '17:30:00'
+        direction:
+          type: string
+          description: Direction of the text
+          example: outbound
+        medium:
+          type: string
+          description: Medium of the text
+          example: ''
+        delivery_status:
+          type: string
+          description: Delivery status of the text
+          example: delivered
+        contact_id:
+          type: number
+        contact_number:
+          type: string
+        contact_name:
+          type: string
+        contact_email:
+          type: string
+        justcall_number:
+          type: string
+        justcall_line_name:
+          type: string
+        cost_incurred:
+          type: number
+        sms_info:
+          $ref: '#/components/schemas/TextInfo'
+        mms:
+          $ref: '#/components/schemas/MmsData'
+    UpdateSmsGroupParticipantsRequestDto:
+      type: object
+      properties:
+        members:
+          description: Array of members (agents and/or contacts) to be added to or removed from the group. Duplicate `(type, phone_number)` entries are silently deduplicated. At least one unique member must be provided.
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsGroupMemberInputDto'
+      required:
+      - members
+    CreateSmsGroupRequestDto:
+      type: object
+      properties:
+        group_name:
+          type: string
+          description: Name of the SMS group to be created.
+          example: Sales Team
+        justcall_number:
+          type: string
+          description: JustCall phone number that will be used to create and own the group. The line will also be added as the first agent in the group.
+          example: '14155550100'
+        members:
+          description: Additional members (agents and/or contacts) to be added as participants of the group at creation time. At least one `contact` entry is required. If no `agent` entry is provided, the `justcall_number` itself is used as the first agent. Duplicate `(type, phone_number)` entries are silently deduplicated.
+          type: array
+          items:
+            $ref: '#/components/schemas/SmsGroupMemberInputDto'
+        body:
+          type: string
+          description: Initial message body sent on group creation.
+          example: Hey! this is body.
+      required:
+      - group_name
+      - justcall_number
+      - members
+      - body
+    SmsGroupCreatedViaDto:
+      type: object
+      properties:
+        justcall_number:
+          type: string
+          description: JustCall phone number used to create the group.
+          example: '14155550100'
+        justcall_line_name:
+          type: string
+          description: Friendly name of the JustCall line associated with the group.
+          example: Support Line
   securitySchemes:
-    ApiKeyAuth:
+    AccessToken:
       type: apiKey
       in: header
       name: Authorization
-      description: JustCall authentication. Pass the API key and API secret as defined in the JustCall Authentication documentation (typically combined and passed in the Authorization header).
+      description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'
