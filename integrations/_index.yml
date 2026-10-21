@@ -59,6 +59,122 @@
     builder: Fivetran
   status: not-a-workflow
   arazzo: null
+- slug: justcall-zapier
+  label: Zapier
+  partner: zapier
+  partner_name: Zapier
+  type: marketplace
+  marketplace: zapier-directory
+  channel: ipaas-listing
+  evidence: https://zapier.com/apps/justcall/integrations
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: Zapier app directory (zapier.com/api/v4/apps)
+    spec_file: null
+    role: ipaas-connector:zapier
+    registered_name: JustCall
+    matched_domain: justcall.io
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    app_slug: justcall
+    beta: false
+    builder: unknown (not in the directory record)
+  status: not-a-workflow
+  arazzo: null
+- slug: justcall-n8n
+  label: n8n
+  partner: n8n
+  partner_name: n8n
+  type: marketplace
+  marketplace: n8n-community
+  channel: open-source-node
+  evidence: https://www.npmjs.com/package/n8n-nodes-justcall
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: n8n community nodes (npm keyword n8n-community-node-package)
+    spec_file: null
+    role: ipaas-connector:n8n-community
+    registered_name: n8n-nodes-justcall
+    matched_domain: justcall.io
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    package: n8n-nodes-justcall
+    version: 1.0.4
+    published: '2026-03-06T13:46:08.070Z'
+    matched_on: publisher-email
+    builder: provider (package published from the provider's own domain)
+  status: not-a-workflow
+  arazzo: null
+- slug: justcall-pipedream
+  label: Pipedream
+  partner: pipedream
+  partner_name: Pipedream
+  type: marketplace
+  marketplace: pipedream-components
+  channel: open-source-node
+  evidence: https://github.com/PipedreamHQ/pipedream/tree/d5872355ef27b4efa769f05352f2820c299a456e/components/justcall
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: Pipedream components (PipedreamHQ/pipedream components/)
+    spec_file: null
+    role: ipaas-connector:pipedream
+    registered_name: justcall
+    matched_domain: justcall.io
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    app_slug: justcall
+    actions: true
+    sources: true
+    builder: Pipedream repo (component)
+  status: not-a-workflow
+  arazzo: null
+- slug: justcall-salesforce-appexchange-security-review
+  label: Salesforce AppExchange Security Review
+  partner: salesforce
+  partner_name: Salesforce AppExchange Security Review
+  category: AppExchange security-reviewed publisher
+  type: register
+  channel: standard-directory
+  evidence: https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_overview.htm
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Salesforce AppExchange public listings (listing JSON) under the AgentExchange Security Review requirement
+    standard: Salesforce AppExchange Security Review
+    spec_file: null
+    role: security-reviewed-publisher
+    registered_name: JustCall
+    register_country: null
+    matched_domain: justcall.io
+    matched_by: domain
+    identity_source: the listing's own publisher.website (no lookup)
+    certified_products:
+    - product: Agentforce agent / action (security-reviewed)
+      product_type: force/copilot
+      certifier: Salesforce (AgentExchange / AppExchange Security Review)
+      listings: 1
+      example_listing: https://appexchange.salesforce.com/appxListingDetail?listingId=ef96853b-f453-43d6-9a13-18506e98705c
+      latest_approval: '2025-01-16'
+      lapsed: false
+      lapsed_note: the listing JSON prints solution.securityReview.approvalDate on a LIVE public listing; Salesforce
+        publishes no expiry, so no entry is marked lapsed (latest_approval is context)
+    signal_note: certified_products = ONE entry per product type (listing technology) with a printed securityReview.approvalDate,
+      never per listing or version; a listing with no approval date reads nothing; listing counts / versions are
+      context
+    requirement: https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_overview.htm
+    detected_by: sweep-salesforce-appexchange.py
+    detected: '2026-10-21'
+  status: not-a-workflow
+  arazzo: null
 - slug: justcall-gorgias-own
   label: Gorgias (own)
   partner: gorgias
@@ -174,81 +290,16 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
-- slug: justcall-zapier
-  label: Zapier
-  partner: zapier
-  partner_name: Zapier
+- slug: justcall-salesforce-own
+  label: Salesforce (own)
+  partner: salesforce
+  partner_name: Salesforce (own)
+  category: customerService
   type: marketplace
-  marketplace: zapier-directory
-  channel: ipaas-listing
-  evidence: https://zapier.com/apps/justcall/integrations
+  marketplace: own
+  channel: partner-built
+  evidence: https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FOm57UAD
   source: edge
-  relationship: ipaas-bridge
-  contract_reference:
-    register: Zapier app directory (zapier.com/api/v4/apps)
-    spec_file: null
-    role: ipaas-connector:zapier
-    registered_name: JustCall
-    matched_domain: justcall.io
-    matched_by: domain
-    detected_by: sweep-workflow-automation.py
-    detected: '2026-10-15'
-    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
-    app_slug: justcall
-    beta: false
-    builder: unknown (not in the directory record)
-  status: not-a-workflow
-  arazzo: null
-- slug: justcall-n8n
-  label: n8n
-  partner: n8n
-  partner_name: n8n
-  type: marketplace
-  marketplace: n8n-community
-  channel: open-source-node
-  evidence: https://www.npmjs.com/package/n8n-nodes-justcall
-  source: edge
-  relationship: ipaas-bridge
-  contract_reference:
-    register: n8n community nodes (npm keyword n8n-community-node-package)
-    spec_file: null
-    role: ipaas-connector:n8n-community
-    registered_name: n8n-nodes-justcall
-    matched_domain: justcall.io
-    matched_by: domain
-    detected_by: sweep-workflow-automation.py
-    detected: '2026-10-15'
-    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
-    package: n8n-nodes-justcall
-    version: 1.0.4
-    published: '2026-03-06T13:46:08.070Z'
-    matched_on: publisher-email
-    builder: provider (package published from the provider's own domain)
-  status: not-a-workflow
-  arazzo: null
-- slug: justcall-pipedream
-  label: Pipedream
-  partner: pipedream
-  partner_name: Pipedream
-  type: marketplace
-  marketplace: pipedream-components
-  channel: open-source-node
-  evidence: https://github.com/PipedreamHQ/pipedream/tree/d5872355ef27b4efa769f05352f2820c299a456e/components/justcall
-  source: edge
-  relationship: ipaas-bridge
-  contract_reference:
-    register: Pipedream components (PipedreamHQ/pipedream components/)
-    spec_file: null
-    role: ipaas-connector:pipedream
-    registered_name: justcall
-    matched_domain: justcall.io
-    matched_by: domain
-    detected_by: sweep-workflow-automation.py
-    detected: '2026-10-15'
-    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
-    app_slug: justcall
-    actions: true
-    sources: true
-    builder: Pipedream repo (component)
+  relationship: platform-app
   status: not-a-workflow
   arazzo: null
