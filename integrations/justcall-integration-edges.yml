@@ -30,6 +30,7 @@ checked:
 - https://ecosystem.hubspot.com/marketplace/explore?eco_PRODUCT_TYPE=APP&eco_CERTIFIED=true
 - https://ecosystem.hubspot.com/marketplace/solutions
 - hubspot/integrations/hubspot-integration-edges.yml
+- pipedrive/integrations/pipedrive-integration-edges.yml
 source:
 - okta/integrations/okta-integration-edges.yml
 edges:
@@ -428,3 +429,20 @@ edges:
   detected: '2026-10-21'
   detected_by: mirror-platform-listings.py
   category: SMS
+- partner_name: Pipedrive (own)
+  partner: pipedrive
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.pipedrive.com/en/marketplace/app/just-call/d401831fa27bdb38
+  mirror_of: pipedrive/integrations/pipedrive-integration-edges.yml
+  apps:
+  - JustCall
+  listing_count: 1
+  detected: '2026-10-22'
+  detected_by: mirror-platform-listings.py
+  category: Attract new leads
