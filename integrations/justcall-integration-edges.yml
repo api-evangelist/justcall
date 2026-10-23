@@ -31,6 +31,7 @@ checked:
 - https://ecosystem.hubspot.com/marketplace/solutions
 - hubspot/integrations/hubspot-integration-edges.yml
 - pipedrive/integrations/pipedrive-integration-edges.yml
+- intercom/integrations/intercom-integration-edges.yml
 source:
 - okta/integrations/okta-integration-edges.yml
 edges:
@@ -446,3 +447,21 @@ edges:
   detected: '2026-10-22'
   detected_by: mirror-platform-listings.py
   category: Attract new leads
+- partner_name: Intercom (own)
+  partner: intercom
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.intercom.com/app-store/?app_package_code=justcall-direct
+  mirror_of: intercom/integrations/intercom-integration-edges.yml
+  apps:
+  - JustCall Direct
+  - JustCall Phone Integration
+  listing_count: 1
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Phone & Video
