@@ -3054,3 +3054,9 @@ components:
       in: header
       name: Authorization
       description: 'The API key can be put in the Authorization header. i.e Authorization: api_key:api_secret. If you use cURL, specify -u “api_key:api_secret”'
+x-provenance:
+  method: harvested
+  publisher: JustCall
+  source: https://api.justcall.io/v2/api-docs
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
