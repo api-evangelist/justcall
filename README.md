@@ -1,4 +1,4 @@
-# JustCall (justcall)
+# JustCall
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,64 +66,113 @@
 
 JustCall is a cloud-based phone system and contact center platform that provides voice calling, SMS/MMS messaging, IVR, call analytics, and contact management for small and mid-sized businesses. The platform integrates with CRMs, helpdesks, and automation tools. JustCall exposes REST APIs and webhooks for programmatically managing calls, SMS, contacts, phone numbers, and call dispositions, authenticated via API key plus API secret in headers.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/justcall/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/justcall/refs/heads/main/apis.yml)
+**Areas:** Voice · SMS · Cloud Phone · Contact Center · Telephony · Communications
 
-## Scope
+## JustCall on APIs.io
 
-- **Type:** Index
+Everything profiled for JustCall is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/justcall/](https://apis.io/providers/justcall/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (4)
 
-- Voice
-- SMS
-- Cloud Phone
-- Contact Center
-- Telephony
-- Communications
+- [JustCall REST API](https://apis.io/apis/justcall/rest-api/) — REST API for placing calls, sending SMS and MMS messages, managing contacts, phone numbers, users, and call dispositions in JustCall. Authentication uses an…
+- [JustCall Calls API](https://apis.io/apis/justcall/justcall-calls-api/) — Manage and query voice calls handled through JustCall.
+- [JustCall Contacts API](https://apis.io/apis/justcall/justcall-contacts-api/) — Create and manage contacts in the JustCall directory.
+- [JustCall SMS API](https://apis.io/apis/justcall/justcall-sms-api/) — Send and manage SMS/MMS messages.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-05-11
-- **Modified:** 2026-05-11
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### MCP servers (1)
 
-### JustCall REST API
+Model Context Protocol servers that expose the API to agents.
 
-REST API for placing calls, sending SMS and MMS messages, managing contacts, phone numbers, users, and call dispositions in JustCall. Authentication uses an API key and API secret passed in the Authorization header. Webhooks notify on completed calls and SMS events.
+- [Moved to /providers/justcall/](https://apis.io/servers/justcall/justcall/)
 
-- **Human URL:** [https://developer.justcall.io/docs/overview](https://developer.justcall.io/docs/overview)
-- **Base URL:** `https://api.justcall.io/v2.1`
+#### Agentic access (1)
 
-#### Tags
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- Voice
-- SMS
-- Telephony
-- Contact Center
-- Webhooks
+- [Justcall Agentic Access](https://apis.io/agentic-access/justcall/justcall-agentic-access/)
 
-#### Properties
+#### Collections (4)
 
-- [Documentation](https://developer.justcall.io/docs/overview)
-- [API Reference](https://developer.justcall.io/reference)
-- [Send  S M S  Endpoint](https://developer.justcall.io/reference/texts_new_v21)
-- [Webhooks](https://justcall.io/product/api-and-webhooks/)
-- [Postman Collection](collections/justcall.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/justcall.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Postman and Open Collection request collections.
 
-## Common Properties
+- [JustCall REST API](https://apis.io/collections/justcall/open-justcall/)
+- [JustCall REST Calls API](https://apis.io/collections/justcall/open-justcall-calls-api/)
+- [JustCall REST Calls Contacts API](https://apis.io/collections/justcall/open-justcall-contacts-api/)
+- [JustCall REST Calls SMS API](https://apis.io/collections/justcall/open-justcall-sms-api/)
 
-- [LinkedIn](https://www.linkedin.com/company/justcall-io)
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Justcall Authentication](https://apis.io/security/justcall/justcall-authentication/)
+- [Justcall Domain Security](https://apis.io/security/justcall/justcall-domain-security/)
+- [Justcall Trust Center](https://apis.io/security/justcall/justcall-trust-center/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://justcall.io)
 - [Documentation](https://developer.justcall.io/docs/overview)
-- [Developer  Portal](https://justcall.io/developer-docs/)
 - [Pricing](https://justcall.io/pricing)
-- [Sign Up](https://justcall.io/signup)
 - [Support](https://help.justcall.io)
-- [L L Ms Txt](https://developer.justcall.io/llms.txt)
+- [Blog](https://justcall.io/blog/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 34.0** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 47.1 |
+| Contract governance | 0.0 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 45.2 |
+| Access clarity | 31.6 |
+
+**Agent readiness 29.9** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | unknown |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | — |
+
+**Regulatory alignment 14.2** — Telecommunications
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/justcall/](https://apis.io/providers/justcall/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for JustCall: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/justcall/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
